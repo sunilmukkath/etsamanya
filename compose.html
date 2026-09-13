@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Compose a gift — ET samanya</title>
+  <meta name="description" content="Compose a personalised ET samanya gift of spices and dry fruits for someone you love." />
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Outfit:wght@300;400;500;600&family=Tiro+Devanagari+Hindi&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <a class="skip" href="#atelierForm">Skip to compose</a>
+  <header class="site-header" id="header">
+    <div class="header-inner">
+      <a class="brand" href="index.html" aria-label="ET samanya home">
+        <img src="assets/logo.svg" alt="" />
+        <span class="brand-name"><small>ET</small><strong>samanya</strong></span>
+      </a>
+      <nav class="nav" id="nav" aria-label="Primary">
+        <a href="index.html#land">The land</a>
+        <a href="index.html#collections">Collections</a>
+        <a href="index.html#craft">The craft</a>
+        <a href="index.html#occasions">Occasions</a>
+        <a href="about.html">About</a>
+        <a href="compose.html" aria-current="page">Compose</a>
+      </nav>
+      <div class="header-cta">
+        <a class="btn btn-primary" href="compose.html">Compose a gift</a>
+        <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="nav" aria-label="Open menu">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap compose">
+    <div class="compose-intro">
+      <p class="kicker">The atelier</p>
+      <h1 class="display compose-title">Compose a gift as if you knew their kitchen.</h1>
+      <p>Four quiet questions. We reply within a day with a proposed box, a price, and when it can leave the atelier.</p>
+      <p>Natural spices and dry fruits only — traditional, Indian, locally sourced, packed from this week’s lots.</p>
+    </div>
+
+    <form class="atelier" id="atelierForm" novalidate>
+      <div class="progress" aria-hidden="true">
+        <span class="is-on"></span><span></span><span></span><span></span>
+      </div>
+
+      <div class="panel is-on" data-step="1">
+        <h2 class="display" style="font-size: 2.2rem; margin-bottom: 18px;">What is the occasion?</h2>
+        <div class="choice-grid">
+          <button type="button" class="choice" data-field="occasion" data-value="Festival">Festival</button>
+          <button type="button" class="choice" data-field="occasion" data-value="Wedding">Wedding</button>
+          <button type="button" class="choice" data-field="occasion" data-value="Corporate">Corporate</button>
+          <button type="button" class="choice" data-field="occasion" data-value="Housewarming">Housewarming</button>
+          <button type="button" class="choice" data-field="occasion" data-value="Birthday">Birthday</button>
+          <button type="button" class="choice" data-field="occasion" data-value="Just because">Just because</button>
+        </div>
+      </div>
+
+      <div class="panel" data-step="2">
+        <h2 class="display" style="font-size: 2.2rem; margin-bottom: 18px;">What should the pantry lean toward?</h2>
+        <div class="choice-grid">
+          <button type="button" class="choice" data-field="palette" data-value="Spice-led">Spice-led — masalas, pepper, chilli, turmeric</button>
+          <button type="button" class="choice" data-field="palette" data-value="Orchard-led">Orchard-led — almonds, cashews, figs, raisins</button>
+          <button type="button" class="choice" data-field="palette" data-value="Balanced">Balanced — spice and orchard together</button>
+          <button type="button" class="choice" data-field="palette" data-value="You decide">You decide — compose as you would for family</button>
+        </div>
+      </div>
+
+      <div class="panel" data-step="3">
+        <h2 class="display" style="font-size: 2.2rem; margin-bottom: 18px;">Who receives it?</h2>
+        <div class="fields">
+          <div class="field">
+            <label for="recipient">Their name</label>
+            <input id="recipient" name="recipient" required placeholder="e.g. Amma, or Vikram" />
+          </div>
+          <div class="field">
+            <label for="palate">Palate or dietary notes</label>
+            <input id="palate" name="palate" placeholder="Mild heat, no walnuts, loves cardamom…" />
+          </div>
+          <div class="field">
+            <label for="scale">Scale</label>
+            <select id="scale" name="scale">
+              <option>Intimate — one person</option>
+              <option>Household</option>
+              <option>Wedding return gifts</option>
+              <option>Corporate — 10 or more</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="note">A line for the card</label>
+            <textarea id="note" name="note" rows="3" placeholder="From our kitchen to yours."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" data-step="4">
+        <h2 class="display" style="font-size: 2.2rem; margin-bottom: 18px;">Where shall we write back?</h2>
+        <div class="fields">
+          <div class="field">
+            <label for="name">Your name</label>
+            <input id="name" name="name" required />
+          </div>
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" required />
+          </div>
+          <div class="field">
+            <label for="phone">Phone or WhatsApp</label>
+            <input id="phone" name="phone" required />
+          </div>
+          <div class="field">
+            <label for="city">City for delivery</label>
+            <input id="city" name="city" placeholder="Bengaluru, Mumbai…" />
+          </div>
+        </div>
+        <ul class="summary" id="summary" style="margin-top: 18px;"></ul>
+      </div>
+
+      <div class="success" id="success">
+        <p class="kicker">Received</p>
+        <h2 class="display">Your request is with the curator.</h2>
+        <p>We will reply within a day with a proposed box from this week’s lots. If it is urgent, write to us on WhatsApp.</p>
+        <a class="btn btn-primary" href="index.html" style="margin-top: 24px;">Back to the pantry</a>
+      </div>
+
+      <div class="atelier-nav" id="atelierNav">
+        <button type="button" class="btn btn-ghost" id="backBtn">Back</button>
+        <button type="button" class="btn btn-primary" id="nextBtn">Continue</button>
+      </div>
+    </form>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap legal">
+      <span>© 2026 ET samanya · A little earth. A lot of heart.</span>
+      <a href="index.html#location">Thenkulapakkam, Tamil Nadu</a>
+    </div>
+  </footer>
+  <script src="js/main.js"></script>
+</body>
+</html>
