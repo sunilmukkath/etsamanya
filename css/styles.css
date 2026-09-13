@@ -289,7 +289,7 @@ ul {
 
 .hero-copy h1 {
   font-size: clamp(3.4rem, 8vw, 7.2rem);
-  max-width: 11ch;
+  max-width: 9ch;
   margin: 18px 0 22px;
 }
 
@@ -451,39 +451,6 @@ section {
   font-size: 0.75rem;
   letter-spacing: 0.16em;
   color: var(--gold);
-}
-
-.land-grid {
-  display: grid;
-  grid-template-columns: 1.15fr 0.85fr 0.85fr;
-  grid-template-rows: 260px 260px;
-  gap: 14px;
-}
-
-.land-shot {
-  position: relative;
-  overflow: hidden;
-  border-radius: 24px;
-  background: #d7c8b4;
-}
-
-.land-shot img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.land-shot.tall {
-  grid-row: span 2;
-}
-
-.land-shot figcaption {
-  position: absolute;
-  left: 18px;
-  bottom: 16px;
-  color: var(--ivory);
-  font-size: 0.86rem;
-  text-shadow: 0 1px 12px rgba(36, 21, 15, 0.55);
 }
 
 .collections {
@@ -958,19 +925,8 @@ section {
   .pillars-3,
   .occasions,
   .lots-grid,
-  .choice-grid,
-  .land-grid {
+  .choice-grid {
     grid-template-columns: 1fr;
-  }
-
-  .land-grid {
-    grid-template-rows: none;
-  }
-
-  .land-shot,
-  .land-shot.tall {
-    min-height: 240px;
-    grid-row: auto;
   }
 
   .card.featured {
