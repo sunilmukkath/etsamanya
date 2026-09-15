@@ -10,14 +10,14 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Manrope:wght@400;500;600;700&family=Noto+Sans+Tamil:wght@500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/styles.css?v=17" />
+  <link rel="stylesheet" href="css/styles.css?v=19" />
 </head>
 <body class="wizard-page">
   <a class="skip" href="#giftBuilder">Skip to customisation</a>
   <header class="site-header" id="header">
     <div class="header-inner">
-      <a class="brand" href="index.html" aria-label="samanya home">
-        <span class="brand-name">s<span class="a-macron">a</span>m<span class="a-macron">a</span>nya</span>
+      <a class="brand" href="index.html" aria-label="Sāmānya home">
+        <img class="brand-mark" src="assets/samanya-wordmark.png" width="220" height="45" alt="Sāmānya" />
       </a>
       <nav class="nav" id="nav" aria-label="Primary">
         <a href="index.html#collections">Collections</a>
@@ -91,28 +91,6 @@
 
         <div class="preset-row" id="giftPresets"></div>
 
-        <div class="qty-panel">
-          <p class="preset-label">How many of this gift?</p>
-          <div class="qty-chips" id="qtyChips">
-            <button type="button" class="qty-chip is-on" data-qty="1">1</button>
-            <button type="button" class="qty-chip" data-qty="5">5</button>
-            <button type="button" class="qty-chip" data-qty="10">10</button>
-            <button type="button" class="qty-chip" data-qty="25">25+</button>
-            <button type="button" class="qty-chip" data-qty="50">50+</button>
-          </div>
-          <label class="qty-exact" for="qtyInput">Exact number
-            <input id="qtyInput" type="number" min="1" max="500" value="1" />
-          </label>
-          <p class="qty-hint" id="qtyHint"></p>
-          <aside class="enquire-card" id="qtyEnquire" hidden>
-            <p>Twenty-five or more is packed with us — a wedding thaal, an office, a festival house. Tell us the number; we will confirm lots, wrapping, and a till that fits.</p>
-            <div class="hero-actions">
-              <a class="btn btn-primary" id="qtyWhatsApp" href="#">WhatsApp the atelier</a>
-              <a class="btn btn-ghost" id="qtyEmail" href="#">Email this order</a>
-            </div>
-          </aside>
-        </div>
-
         <div class="gift-fill-layout">
           <div id="giftItems"></div>
 
@@ -144,13 +122,35 @@
                   <input id="city" name="city" placeholder="Chennai, Bengaluru…" />
                 </div>
               </div>
-              <aside class="review" id="giftReview"></aside>
-              <div class="gift-actions" id="giftActions">
-                <button type="submit" class="btn btn-xl btn-primary gift-send" id="giftSend">Add to cart</button>
-                <button type="submit" class="btn btn-xl btn-ghost gift-send" id="giftCheckout" name="intent" value="checkout">Add &amp; checkout</button>
-              </div>
             </form>
           </aside>
+        </div>
+
+        <div class="qty-panel">
+          <p class="preset-label">How many of this gift?</p>
+          <div class="qty-chips" id="qtyChips">
+            <button type="button" class="qty-chip is-on" data-qty="1">1</button>
+            <button type="button" class="qty-chip" data-qty="5">5</button>
+            <button type="button" class="qty-chip" data-qty="10">10</button>
+            <button type="button" class="qty-chip" data-qty="25">25+</button>
+            <button type="button" class="qty-chip" data-qty="50">50+</button>
+          </div>
+          <label class="qty-exact" for="qtyInput">Exact number
+            <input id="qtyInput" type="number" min="1" max="500" value="1" />
+          </label>
+          <p class="qty-hint" id="qtyHint"></p>
+          <aside class="enquire-card" id="qtyEnquire" hidden>
+            <p>Twenty-five or more is packed with us — a wedding thaal, an office, a festival house. Tell us the number; we will confirm lots, wrapping, and a till that fits.</p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" id="qtyWhatsApp" href="#">WhatsApp the atelier</a>
+              <a class="btn btn-ghost" id="qtyEmail" href="#">Email this order</a>
+            </div>
+          </aside>
+        </div>
+        <aside class="review" id="giftReview"></aside>
+        <div class="gift-actions" id="giftActions">
+          <button type="submit" form="giftForm" class="btn btn-xl btn-primary gift-send" id="giftSend">Add to cart</button>
+          <button type="submit" form="giftForm" class="btn btn-xl btn-ghost gift-send" id="giftCheckout" name="intent" value="checkout">Add &amp; checkout</button>
         </div>
       </div>
 
