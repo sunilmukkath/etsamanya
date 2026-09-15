@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#42573A" />
+  <title>Your cart — samanya</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css?v=15" />
+</head>
+<body>
+  <header class="site-header" id="header">
+    <div class="header-inner">
+      <a class="brand" href="index.html" aria-label="samanya home"><span class="brand-name">samanya</span></a>
+      <nav class="nav" id="nav" aria-label="Primary">
+        <a href="index.html#collections">Collections</a>
+        <a href="index.html#craft">The craft</a>
+        <a href="index.html#occasions">Occasions</a>
+        <a href="about.html">About</a>
+      </nav>
+      <div class="header-cta">
+        <a class="cart-link" href="cart.html" aria-current="page" aria-label="Open cart">
+          <svg class="ico" aria-hidden="true"><use href="assets/icons.svg#bag"></use></svg>
+          <span class="cart-count" data-cart-count hidden>0</span>
+        </a>
+        <a class="btn btn-primary" href="customise.html">Customise a gift</a>
+        <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="nav" aria-label="Open menu">
+          <svg class="ico" aria-hidden="true"><use href="assets/icons.svg#menu"></use></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap shop-page">
+    <p class="kicker">The cart</p>
+    <h1 class="display">Gifts waiting to be packed.</h1>
+    <p class="lede">Ten or more of the same gift receive a small courtesy. Twenty-five or more, we pack with you directly.</p>
+    <div id="cartEmpty" class="shop-empty" hidden>
+      <p>The cart is quiet. Compose a box or potli, then add it here.</p>
+      <a class="btn btn-primary" href="customise.html">Customise a gift</a>
+    </div>
+    <div id="cartBody" class="cart-layout" hidden>
+      <div id="cartList" class="cart-list"></div>
+      <aside class="cart-summary">
+        <p class="kicker">To pay</p>
+        <h2 class="display" id="cartPayable">₹0</h2>
+        <p id="cartMeta"></p>
+        <div id="cartEnquire" class="enquire-card" hidden>
+          <p>Twenty-five or more of a gift is a conversation — weddings, offices, and festival thaals.</p>
+          <a class="btn btn-primary" id="cartWhatsApp" href="#">WhatsApp the atelier</a>
+          <a class="btn btn-ghost" id="cartEmail" href="#">Email this order</a>
+        </div>
+        <a class="btn btn-xl btn-primary" id="cartCheckout" href="checkout.html">Proceed to checkout</a>
+        <a class="btn btn-ghost" href="customise.html">Add another gift</a>
+      </aside>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap legal">
+      <span>© 2026 samanya</span>
+      <a href="index.html#location">Thenkulapakkam, Tamil Nadu</a>
+    </div>
+  </footer>
+  <script src="js/shop.js?v=1"></script>
+  <script src="js/main.js?v=9"></script>
+  <script>
+    (function () {
+      var shop = window.SamanyaShop;
+      var list = document.getElementById("cartList");
+      var empty = document.getElementById("cartEmpty");
+      var body = document.getElementById("cartBody");
+      var enquire = document.getElementById("cartEnquire");
+      var checkout = document.getElementById("cartCheckout");
+
+      function render() {
+        var items = shop.readCart();
+        empty.hidden = items.length > 0;
+        body.hidden = items.length === 0;
+        if (!items.length) return;
+        list.innerHTML = items.map(function (item) {
+          var line = shop.lineTotal(item.price, item.qty);
+          var note = shop.needsEnquire(item.qty)
+            ? "Reach out to pack this quantity"
+            : (shop.bulkLabel(item.qty) || "Ready for checkout");
+          return "<article class='cart-item' data-id='" + item.id + "'>" +
+            "<div><small>" + item.label + " · " + shop.rupees(item.price) + "</small>" +
+            "<h3>" + (item.recipient || item.label) + "</h3>" +
+            "<p>" + (item.items && item.items.length ? item.items.join(", ") : "Pantry to follow") + "</p>" +
+            "<p class='cart-note'>" + note + "</p></div>" +
+            "<div class='cart-item-tools'>" +
+            "<label>Qty <input type='number' min='1' max='500' value='" + item.qty + "' data-qty></label>" +
+            "<strong>" + shop.rupees(line) + "</strong>" +
+            "<button type='button' class='text-btn' data-remove>Remove</button></div></article>";
+        }).join("");
+        var totals = shop.totals();
+        document.getElementById("cartPayable").textContent = shop.rupees(totals.payable);
+        document.getElementById("cartMeta").textContent = totals.savings
+          ? totals.count + " gifts · " + shop.rupees(totals.savings) + " courtesy on ten or more"
+          : totals.count + " gifts";
+        var big = shop.enquireItems();
+        enquire.hidden = big.length === 0;
+        if (big.length) {
+          var text = shop.enquireText();
+          document.getElementById("cartWhatsApp").href = shop.whatsappUrl(text);
+          document.getElementById("cartEmail").href = shop.mailUrl(text);
+        }
+        checkout.hidden = totals.payable < 1;
+      }
+
+      list.addEventListener("change", function (event) {
+        var row = event.target.closest(".cart-item");
+        if (!row || !event.target.matches("[data-qty]")) return;
+        shop.setQty(row.getAttribute("data-id"), event.target.value);
+        render();
+      });
+      list.addEventListener("click", function (event) {
+        var row = event.target.closest(".cart-item");
+        if (!row || !event.target.matches("[data-remove]")) return;
+        shop.removeItem(row.getAttribute("data-id"));
+        render();
+      });
+      render();
+    })();
+  </script>
+</body>
+</html>

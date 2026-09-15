@@ -343,4 +343,11 @@
       <path d="M14 18h20M14 24h20M14 30h14"/>
     </g>
   </symbol>
+
+  <symbol id="bag" viewBox="0 0 48 48">
+    <g class="s">
+      <path d="M14 18h20l-1.5 22h-17L14 18Z"/>
+      <path d="M18 18c0-6 12-6 12 0"/>
+    </g>
+  </symbol>
 </svg>

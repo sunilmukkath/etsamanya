@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Payment received — samanya</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="css/styles.css?v=15" />
+</head>
+<body>
+  <main class="wrap shop-page">
+    <p class="kicker">Received</p>
+    <h1 class="display">Thank you. PayU has the till.</h1>
+    <p class="lede" id="okCopy">We will pack from this week’s lots and write when it leaves Thenkulapakkam.</p>
+    <p><a class="btn btn-primary" href="index.html">Back home</a></p>
+  </main>
+  <script src="js/shop.js?v=1"></script>
+  <script>
+    (function () {
+      var params = new URLSearchParams(location.search);
+      var txn = params.get("txnid");
+      if (txn) document.getElementById("okCopy").textContent = "Reference " + txn + ". We will pack from this week’s lots and write when it leaves Thenkulapakkam.";
+      try { localStorage.removeItem("samanya-cart"); localStorage.removeItem("samanya-pending-order"); } catch (err) {}
+    })();
+  </script>
+</body>
+</html>

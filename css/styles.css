@@ -1506,12 +1506,12 @@ section {
 
 .gift-fill {
   display: none;
-  margin-top: 32px;
-  padding: 28px;
-  border: 1px solid rgba(90, 58, 36, 0.1);
-  border-radius: 32px;
-  background: linear-gradient(180deg, #fcfaf6 0%, #f8f3ed 100%);
-  box-shadow: var(--shadow);
+  margin-top: 40px;
+  padding: 40px 36px 36px;
+  border: 1px solid color-mix(in srgb, var(--gold) 30%, var(--line));
+  border-radius: 36px;
+  background: #fbf8f2;
+  box-shadow: 0 32px 80px rgba(75, 46, 28, 0.08);
   scroll-margin-top: calc(var(--header) + 20px);
 }
 
@@ -1526,6 +1526,8 @@ section {
   justify-content: space-between;
   gap: 12px;
   margin-bottom: 8px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--line);
 }
 
 .gift-fill-head h2 {
@@ -1533,53 +1535,85 @@ section {
 }
 
 .preset-row {
-  margin: 22px 0 6px;
+  margin: 28px 0 8px;
 }
 
 .preset-label {
-  margin: 0 0 12px;
-  font-size: 0.72rem;
+  margin: 0 0 14px;
+  font-size: 0.7rem;
   font-weight: 600;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--leaf);
 }
 
 .preset-chips {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(188px, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
 }
 
 .preset-chip {
   display: flex;
+  flex-direction: column;
   align-items: center;
+  justify-content: flex-start;
   gap: 10px;
-  min-height: 68px;
-  padding: 10px 14px;
-  border: 1px solid var(--line);
-  border-radius: 18px;
-  background: var(--cream);
+  min-height: 148px;
+  padding: 20px 14px 16px;
+  border: 1px solid color-mix(in srgb, var(--gold) 22%, var(--line));
+  border-radius: 24px;
+  background: color-mix(in srgb, var(--ivory) 40%, white);
   cursor: pointer;
-  text-align: left;
+  text-align: center;
+  transition: border-color 0.3s var(--ease), background 0.3s var(--ease), transform 0.3s var(--ease);
 }
 
-.preset-chip span {
+.preset-chip:hover {
+  transform: translateY(-2px);
+  border-color: var(--leaf);
+}
+
+.preset-chip > .ico-well {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  min-height: 36px;
+  margin: 0;
+  padding: 0;
+  flex-direction: unset;
+  gap: 0;
+  box-shadow: none;
+}
+
+.preset-chip > .ico-well .ico {
+  width: 18px;
+  height: 18px;
+}
+
+.preset-chip > span:not(.ico-well) {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  line-height: 1.2;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  line-height: 1.25;
 }
 
 .preset-chip b {
-  font-size: 0.95rem;
-  font-weight: 600;
+  font-family: var(--font-display);
+  font-size: 1.28rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--leaf-deep);
 }
 
 .preset-chip small {
   color: var(--leaf);
   font-weight: 500;
-  font-size: 0.75rem;
+  font-size: 0.72rem;
+  line-height: 1.4;
+  max-width: 16ch;
 }
 
 .preset-chip.is-on {
@@ -1588,8 +1622,9 @@ section {
   border-color: var(--leaf-deep);
 }
 
+.preset-chip.is-on b,
 .preset-chip.is-on small {
-  color: var(--sand);
+  color: var(--cream);
 }
 
 .preset-chip.is-on .ico-well {
@@ -1599,78 +1634,165 @@ section {
   box-shadow: none;
 }
 
+.qty-panel {
+  margin: 28px 0 8px;
+  padding: 22px 24px;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background: color-mix(in srgb, var(--ivory) 55%, white);
+}
+
+.qty-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.qty-chip {
+  min-width: 52px;
+  min-height: 42px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--cream);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.qty-chip.is-on {
+  background: var(--leaf-deep);
+  color: var(--cream);
+  border-color: var(--leaf-deep);
+}
+
+.qty-exact {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--leaf);
+}
+
+.qty-exact input {
+  width: 88px;
+  min-height: 42px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--cream);
+}
+
+.qty-hint {
+  margin: 12px 0 0;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+}
+
+.enquire-card {
+  margin-top: 16px;
+  padding: 18px 20px;
+  border-radius: 18px;
+  background: var(--paper);
+}
+
+.enquire-card .btn {
+  margin-top: 12px;
+  margin-right: 8px;
+}
+
 .gift-fill-layout {
   display: grid;
   grid-template-columns: 1.15fr 0.85fr;
-  gap: 28px;
+  gap: 36px;
   align-items: start;
-  margin-top: 16px;
+  margin-top: 28px;
 }
 
 .gift-note {
   position: sticky;
   top: calc(var(--header) + 16px);
-  padding: 22px;
-  border-radius: 24px;
-  background: var(--cream);
-  border: 1px solid var(--line);
+  padding: 28px 24px;
+  border-radius: 28px;
+  background: color-mix(in srgb, var(--ivory) 30%, white);
+  border: 1px solid color-mix(in srgb, var(--gold) 22%, var(--line));
 }
 
 .gift-note h3 {
   font-family: var(--font-display);
-  font-size: 1.8rem;
+  font-size: 2rem;
   color: var(--leaf-deep);
   margin: 0 0 8px;
 }
 
 .gift-chips {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(118px, 1fr));
+  gap: 12px;
 }
 
 .gift-chip {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 10px;
-  min-height: 64px;
-  padding: 10px 14px;
-  border: 1px solid var(--line);
-  border-radius: 18px;
-  background: var(--cream);
+  justify-content: center;
+  gap: 8px;
+  min-height: 118px;
+  padding: 16px 10px 14px;
+  border: 1px solid color-mix(in srgb, var(--gold) 20%, var(--line));
+  border-radius: 22px;
+  background: color-mix(in srgb, var(--ivory) 35%, white);
   cursor: pointer;
-  text-align: left;
-  font-size: 0.95rem;
+  text-align: center;
+  font-size: 0.92rem;
   font-weight: 600;
+  transition: border-color 0.3s var(--ease), background 0.3s var(--ease), transform 0.3s var(--ease);
 }
 
-.gift-chip span {
+.gift-chip:hover:not(:disabled) {
+  transform: translateY(-2px);
+  border-color: var(--leaf);
+}
+
+.gift-chip > .ico-well {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  min-height: 32px;
+  margin: 0;
+  padding: 0;
+  background: var(--paper);
+  box-shadow: none;
+  flex-direction: unset;
+  gap: 0;
+}
+
+.gift-chip > .ico-well .ico {
+  width: 16px;
+  height: 16px;
+}
+
+.gift-chip > span:not(.ico-well) {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 2px;
   line-height: 1.2;
+  min-width: 0;
 }
 
 .gift-chip small {
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 500;
   letter-spacing: 0.04em;
   color: var(--leaf);
 }
 
 .gift-chip.is-on small {
-  color: var(--sand);
-}
-
-.gift-chip .ico-well {
-  width: 36px;
-  height: 36px;
-  background: var(--paper);
-}
-
-.gift-chip .ico-well .ico {
-  width: 18px;
-  height: 18px;
+  color: color-mix(in srgb, var(--cream) 80%, var(--sand));
 }
 
 .gift-chip.is-on {
@@ -1687,8 +1809,9 @@ section {
 }
 
 .gift-chip:disabled {
-  opacity: 0.38;
+  opacity: 0.34;
   cursor: not-allowed;
+  transform: none;
 }
 
 .gift-send {

@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Manrope:wght@400;500;600;700&family=Noto+Sans+Tamil:wght@500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/styles.css?v=14" />
+  <link rel="stylesheet" href="css/styles.css?v=16" />
 </head>
 <body class="wizard-page">
   <a class="skip" href="#giftBuilder">Skip to customisation</a>
@@ -26,6 +26,10 @@
         <a href="about.html">About</a>
       </nav>
       <div class="header-cta">
+        <a class="cart-link" href="cart.html" aria-label="Open cart">
+          <svg class="ico" aria-hidden="true"><use href="assets/icons.svg#bag"></use></svg>
+          <span class="cart-count" data-cart-count hidden>0</span>
+        </a>
         <a class="btn btn-primary" href="#giftBuilder">Customise a gift</a>
         <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="nav" aria-label="Open menu">
           <svg class="ico" aria-hidden="true"><use href="assets/icons.svg#menu"></use></svg>
@@ -88,21 +92,36 @@
 
         <div class="preset-row" id="giftPresets"></div>
 
+        <div class="qty-panel">
+          <p class="preset-label">How many of this gift?</p>
+          <div class="qty-chips" id="qtyChips">
+            <button type="button" class="qty-chip is-on" data-qty="1">1</button>
+            <button type="button" class="qty-chip" data-qty="5">5</button>
+            <button type="button" class="qty-chip" data-qty="10">10</button>
+            <button type="button" class="qty-chip" data-qty="25">25+</button>
+            <button type="button" class="qty-chip" data-qty="50">50+</button>
+          </div>
+          <label class="qty-exact" for="qtyInput">Exact number
+            <input id="qtyInput" type="number" min="1" max="500" value="1" />
+          </label>
+          <p class="qty-hint" id="qtyHint"></p>
+          <aside class="enquire-card" id="qtyEnquire" hidden>
+            <p>Twenty-five or more is packed with us — a wedding thaal, an office, a festival house. Tell us the number; we will confirm lots, wrapping, and a till that fits.</p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" id="qtyWhatsApp" href="#">WhatsApp the atelier</a>
+              <a class="btn btn-ghost" id="qtyEmail" href="#">Email this order</a>
+            </div>
+          </aside>
+        </div>
+
         <div class="gift-fill-layout">
           <div id="giftItems"></div>
 
           <aside class="gift-note">
             <p class="kicker">A note inside</p>
             <h3>Add a message</h3>
-            <p class="lede">This line is for the person who opens the box — meant to heal as much as the spices.</p>
-            <div class="message-grid" id="giftMessages">
-              <button type="button" class="message-btn" data-message="May this nourish you, slowly.">May this nourish you, slowly.</button>
-              <button type="button" class="message-btn" data-message="May your house be full, and the days gentle.">May your house be full, and the days gentle.</button>
-              <button type="button" class="message-btn" data-message="For both houses, and the kitchen that will be shared.">For both houses, and the kitchen that will be shared.</button>
-              <button type="button" class="message-btn" data-message="A little of India, for the desk and the evening.">A little of India, for the desk and the evening.</button>
-              <button type="button" class="message-btn" data-message="For the first kitchen, and the meals that will follow.">For the first kitchen, and the meals that will follow.</button>
-              <button type="button" class="message-btn" data-message="For the days that ask for gentleness.">For the days that ask for gentleness.</button>
-            </div>
+            <p class="lede" id="messageHint">This letter is for the person who opens the box — a few lines they will keep, not a slogan on the lid.</p>
+            <div class="message-grid" id="giftMessages"></div>
             <form id="giftForm" action="#" method="post">
               <div class="fields">
                 <div class="field">
@@ -111,7 +130,7 @@
                 </div>
                 <div class="field">
                   <label for="recipient">This gift is for</label>
-                  <input id="recipient" name="recipient" required placeholder="Their name" />
+                  <input id="recipient" name="recipient" required placeholder="Their name, or a team / family" />
                 </div>
                 <div class="field">
                   <label for="name">Your name</label>
@@ -127,17 +146,23 @@
                 </div>
               </div>
               <aside class="review" id="giftReview"></aside>
-              <button type="submit" class="btn btn-xl btn-primary gift-send" id="giftSend">Send this gift</button>
+              <div class="gift-actions" id="giftActions">
+                <button type="submit" class="btn btn-xl btn-primary gift-send" id="giftSend">Add to cart</button>
+                <button type="submit" class="btn btn-xl btn-ghost gift-send" id="giftCheckout" name="intent" value="checkout">Add &amp; checkout</button>
+              </div>
             </form>
           </aside>
         </div>
       </div>
 
       <div class="success" id="giftDone">
-        <p class="kicker">Received</p>
-        <h2 class="display">Thank you. We have your gift.</h2>
-        <p>We will call or message you within a day to confirm packing.</p>
-        <a class="btn btn-xl btn-primary" href="index.html">Back home</a>
+        <p class="kicker">In the cart</p>
+        <h2 class="display">This gift is waiting.</h2>
+        <p>Add another, or proceed to PayU. Orders of 25 or more are arranged with us directly.</p>
+        <div class="hero-actions">
+          <a class="btn btn-xl btn-primary" href="cart.html">View cart</a>
+          <a class="btn btn-xl btn-ghost" href="customise.html">Add another gift</a>
+        </div>
       </div>
     </section>
   </main>
@@ -148,7 +173,8 @@
       <a href="index.html#location">Thenkulapakkam, Tamil Nadu</a>
     </div>
   </footer>
-  <script src="js/main.js?v=8"></script>
+  <script src="js/shop.js?v=1"></script>
+  <script src="js/main.js?v=9"></script>
   <script>
     (function () {
       var SIZES = {
@@ -206,13 +232,26 @@
           { name: "Ceramic bowls", qty: "1 pc" }
         ]}
       ];
+      var GENERAL_MESSAGES = [
+        "May this nourish you, slowly — spice still bright from the mill, fruit of the tree, and a few lines meant to rest you.",
+        "Eat well. Rest well. Be held. The rest of the week can wait until you have tasted something kind.",
+        "I thought of your kitchen. May what is here taste of care, not of hurry — packed from this week’s lots, for you.",
+        "A little warmth for the person who will open this: something to cook with, something to eat, and a sentence to keep."
+      ];
       var OCCASIONS = [
         {
           id: "festival",
           label: "Festival thaal",
           blurb: "Diwali, Eid, Pongal, Christmas",
           icon: "diya",
-          message: "May your house be full, and the days gentle.",
+          hint: "Lines written for a festival house.",
+          messages: [
+            "May this house be full — of light, of guests, of a kitchen that smells like the festival you remember, not a warehouse ribbon.",
+            "Before the lamps, before the first knock: eat something slow. This was packed so the days of gathering would also nourish you.",
+            "For the table that will be crowded, and the quiet hour after everyone has gone. May sweetness arrive without hurry.",
+            "A pantry for the festival — so the house is ready, the thaal is bright, and you are fed as well as those you welcome.",
+            "May your people sit long enough to taste this. Light the lamps; keep a little of the evening for yourself."
+          ],
           items: ["Cashew", "Almonds", "Pista", "Raisins", "Figs", "Saffron", "Cardamom", "Clove", "Turmeric", "Ceramic bowls"]
         },
         {
@@ -220,7 +259,14 @@
           label: "Wedding",
           blurb: "Return gifts and family thaals",
           icon: "garland",
-          message: "For both houses, and the kitchen that will be shared.",
+          hint: "Lines written for both houses.",
+          messages: [
+            "For both houses: a little of the kitchen you will make together, packed with the old wish that you eat well, and be held.",
+            "May this marriage smell of cardamom and patience — a gift for the table you will share, not only the day you are seen.",
+            "Return this as nourishment: something to cook with, serve from, and keep. A thaal that honours both families without looking identical.",
+            "For the kitchen that will belong to two houses, and the meals that will stitch them, slowly, year after year.",
+            "Packed for those who will feed you now, and the home you will feed in turn. Eat, rest, begin."
+          ],
           items: ["Pista", "Cashew", "Almonds", "Saffron", "Cardamom", "Figs", "Clove", "Cinnamon", "Ceramic bowls", "Wooden spoon"]
         },
         {
@@ -228,7 +274,14 @@
           label: "Corporate",
           blurb: "Named boxes for teams and clients",
           icon: "seal",
-          message: "A little of India, for the desk and the evening.",
+          hint: "Lines written for a named desk.",
+          messages: [
+            "A little of India for the desk and the evening after — spice, nut, and a bowl, named for you, not for a catalogue.",
+            "Thank you, packed as something you will actually use: a pantry for the weeks that ask a great deal, and the hour when they end.",
+            "For the work, and for the hour when the work is set down. Eat well. This was packed with your name, and with pepper still bright.",
+            "Named for you, not for the office. May this nourish the days between meetings, and the kitchen you return to.",
+            "With gratitude, and without a logo shouting over the spices. Use what is here; that is thanks enough."
+          ],
           items: ["Almonds", "Cashew", "Walnuts", "Chai masala", "Cardamom", "Pepper", "Cinnamon", "Roasted jeera", "Wooden spoon", "Ceramic bowls"]
         },
         {
@@ -236,7 +289,14 @@
           label: "Housewarming",
           blurb: "For the first kitchen",
           icon: "kitchen",
-          message: "For the first kitchen, and the meals that will follow.",
+          hint: "Lines written for a first kitchen.",
+          messages: [
+            "For the first kitchen: turmeric at the door, a spoon, a bowl, and the wish that meals will find you here, and stay.",
+            "May this house learn the smell of your cooking, slowly, and keep it. Unpack this before the guests; let the shelves be fed first.",
+            "A pantry to start a home — not a ribbon, but what you will reach for at dusk, the first week and the hundredth.",
+            "For the empty shelves, and the first supper that will make them less so. May the kettle know your hand.",
+            "Welcome. May there always be something on the fire, someone to share it, and a bowl that is yours."
+          ],
           items: ["Turmeric", "Pepper", "Cardamom", "Roasted jeera", "Chai masala", "Cashew", "Almonds", "Terracotta tumbler", "Wooden spoon", "Ceramic bowls"]
         },
         {
@@ -244,7 +304,14 @@
           label: "A quiet visit",
           blurb: "Recovery, just because",
           icon: "heart-leaf",
-          message: "For the days that ask for gentleness.",
+          hint: "Lines written for a gentler week.",
+          messages: [
+            "For the days that ask for gentleness: almonds, a warm cup, and a line you need not answer. Open when you are ready.",
+            "No hurry. Eat what is here. Rest as you can. You are thought of — that is the whole of this gift.",
+            "Packed for a quieter week: nourishment without a crowd, a kitchen that will wait, a sentence meant only for you.",
+            "May this meet you where you are — a little sweetness, a little spice, and no demand but that you be tended.",
+            "For tending, not for ceremony. Keep what comforts; leave the rest. I am with you in the slow hours."
+          ],
           items: ["Almonds", "Figs", "Raisins", "Walnuts", "Saffron", "Chai masala", "Ceramic bowls"]
         }
       ];
@@ -255,6 +322,9 @@
 
       var size = null;
       var chosen = [];
+      var qty = 1;
+      var checkoutAfterAdd = false;
+      var shop = window.SamanyaShop;
       var fill = document.getElementById("giftFill");
       var itemsBox = document.getElementById("giftItems");
       var presetsBox = document.getElementById("giftPresets");
@@ -312,6 +382,17 @@
         }
       }
 
+      function renderMessages(list, selected, hint) {
+        var html = "";
+        list.forEach(function (line) {
+          var on = line === selected ? " is-on" : "";
+          html += "<button type='button' class='message-btn" + on + "' data-message=\"" + line.replace(/"/g, "&quot;") + "\">" + line + "</button>";
+        });
+        document.getElementById("giftMessages").innerHTML = html;
+        document.getElementById("messageHint").textContent = hint || "This letter is for the person who opens the box — a few lines they will keep, not a slogan on the lid.";
+        if (selected) form.note.value = selected;
+      }
+
       function renderItems() {
         var html = "";
         GROUPS.forEach(function (group) {
@@ -331,6 +412,57 @@
         });
         html += "</div>";
         presetsBox.innerHTML = html;
+      }
+
+      function currentGift() {
+        var occ = matchingPreset();
+        return {
+          size: size.id,
+          label: size.label,
+          price: size.price,
+          slots: size.slots,
+          occasion: occ ? findOccasion(occ).label : "",
+          items: chosen.slice(),
+          message: form.note.value.trim(),
+          recipient: form.recipient.value.trim(),
+          name: form.name.value.trim(),
+          phone: form.phone.value.trim(),
+          city: form.city.value.trim(),
+          qty: qty
+        };
+      }
+
+      function enquireDraft() {
+        if (!size) return shop.enquireText();
+        return shop.enquireText(shop.formatGift(currentGift()));
+      }
+
+      function paintQty() {
+        var chips = document.querySelectorAll(".qty-chip");
+        for (var i = 0; i < chips.length; i++) {
+          var n = parseInt(chips[i].getAttribute("data-qty"), 10);
+          chips[i].classList.toggle("is-on", n === qty || (n === 25 && qty >= 25 && qty < 50) || (n === 50 && qty >= 50));
+        }
+        document.getElementById("qtyInput").value = qty;
+        var enquire = shop.needsEnquire(qty);
+        document.getElementById("qtyEnquire").hidden = !enquire;
+        document.getElementById("giftActions").hidden = enquire;
+        if (size) {
+          var line = shop.lineTotal(size.price, qty);
+          var hint = qty + " × " + rupees(size.price);
+          if (shop.bulkLabel(qty)) hint += " · " + shop.bulkLabel(qty);
+          if (!enquire) hint += " · " + rupees(line);
+          document.getElementById("qtyHint").textContent = hint;
+        } else {
+          document.getElementById("qtyHint").textContent = enquire
+            ? "Twenty-five or more: write to us, and we will pack it with you."
+            : "Ten or more of the same gift receive a 5% courtesy at checkout.";
+        }
+        if (enquire) {
+          var text = enquireDraft();
+          document.getElementById("qtyWhatsApp").href = shop.whatsappUrl(text);
+          document.getElementById("qtyEmail").href = shop.mailUrl(text);
+        }
       }
 
       function chosenLine() {
@@ -361,15 +493,17 @@
           document.getElementById("giftHint").textContent = size.label + " · " + rupees(size.price) + ". Each item is a ₹90 portion. Tap a preset, or pick up to " + size.slots + ".";
           document.getElementById("giftCount").textContent = chosen.length + " of " + size.slots + " chosen";
           var occ = current ? findOccasion(current) : null;
-          document.getElementById("giftReview").innerHTML = "<p><strong>" + size.label + "</strong> · " + rupees(size.price) + (occ ? " · " + occ.label : "") + "</p><p>" + (chosen.length ? chosenLine() : "No ingredients yet.") + "</p>";
+          var line = shop.lineTotal(size.price, qty);
+          document.getElementById("giftReview").innerHTML = "<p><strong>" + size.label + "</strong> · " + rupees(size.price) + " × " + qty + (occ ? " · " + occ.label : "") + "</p><p>" + (chosen.length ? chosenLine() : "No ingredients yet.") + "</p><p>" + (shop.needsEnquire(qty) ? "Reach out to pack " + qty + "." : "Cart line · " + rupees(line)) + "</p>";
         }
+        paintQty();
       }
 
       function applyOccasion(id) {
         var occ = findOccasion(id);
         if (!occ || !size) return;
         chosen = occ.items.slice(0, size.slots);
-        setMessage(occ.message);
+        renderMessages(occ.messages, occ.messages[0], occ.hint);
         paint();
       }
 
@@ -391,6 +525,7 @@
 
       renderPresets();
       renderItems();
+      renderMessages(GENERAL_MESSAGES, "", "This letter is for the person who opens the box — a few lines they will keep, not a slogan on the lid. Tap an occasion above for lines written to that day.");
 
       document.getElementById("sizeGrid").addEventListener("click", function (event) {
         var card = event.target.closest(".size-card");
@@ -425,6 +560,22 @@
         paint();
       });
 
+      document.getElementById("qtyChips").addEventListener("click", function (event) {
+        var chip = event.target.closest(".qty-chip");
+        if (!chip) return;
+        qty = parseInt(chip.getAttribute("data-qty"), 10) || 1;
+        paint();
+      });
+      document.getElementById("qtyInput").addEventListener("input", function () {
+        qty = Math.max(1, Math.min(500, parseInt(this.value, 10) || 1));
+        paint();
+      });
+      document.getElementById("giftCheckout").addEventListener("click", function () {
+        checkoutAfterAdd = true;
+      });
+      document.getElementById("giftSend").addEventListener("click", function () {
+        checkoutAfterAdd = false;
+      });
       document.getElementById("giftMessages").addEventListener("click", function (event) {
         var btn = event.target.closest(".message-btn");
         if (!btn) return;
@@ -452,20 +603,16 @@
           showAlert("Add a message, who it is for, your name, and your phone.");
           return;
         }
-        try {
-          localStorage.setItem("etsamanya-customise", JSON.stringify({
-            size: size.id,
-            label: size.label,
-            price: size.price,
-            occasion: matchingPreset(),
-            items: chosen.slice(),
-            message: form.note.value,
-            recipient: form.recipient.value,
-            name: form.name.value,
-            phone: form.phone.value,
-            city: form.city.value
-          }));
-        } catch (err) {}
+        if (shop.needsEnquire(qty)) {
+          showAlert("Twenty-five or more is packed with us. WhatsApp or email the atelier from the note above.");
+          document.getElementById("qtyEnquire").scrollIntoView({ behavior: "smooth", block: "center" });
+          return;
+        }
+        shop.addItem(currentGift());
+        if (checkoutAfterAdd) {
+          window.location.href = "checkout.html";
+          return;
+        }
         fill.classList.remove("is-open");
         document.getElementById("sizeGrid").style.display = "none";
         document.querySelector(".wizard-intro").style.display = "none";

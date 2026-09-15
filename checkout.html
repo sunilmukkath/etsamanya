@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#42573A" />
+  <title>Checkout — samanya</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css?v=15" />
+</head>
+<body>
+  <header class="site-header" id="header">
+    <div class="header-inner">
+      <a class="brand" href="index.html" aria-label="samanya home"><span class="brand-name">samanya</span></a>
+      <nav class="nav" id="nav" aria-label="Primary">
+        <a href="index.html#collections">Collections</a>
+        <a href="index.html#craft">The craft</a>
+        <a href="index.html#occasions">Occasions</a>
+        <a href="about.html">About</a>
+      </nav>
+      <div class="header-cta">
+        <a class="cart-link" href="cart.html" aria-label="Open cart">
+          <svg class="ico" aria-hidden="true"><use href="assets/icons.svg#bag"></use></svg>
+          <span class="cart-count" data-cart-count hidden>0</span>
+        </a>
+        <a class="btn btn-primary" href="customise.html">Customise a gift</a>
+        <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="nav" aria-label="Open menu">
+          <svg class="ico" aria-hidden="true"><use href="assets/icons.svg#menu"></use></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap shop-page">
+    <p class="kicker">Checkout</p>
+    <h1 class="display">Pay, then we pack.</h1>
+    <p class="lede">PayU holds the payment. Gifts of twenty-five or more stay out of this till — we arrange those by hand.</p>
+    <p class="wizard-alert" id="payAlert" role="status"></p>
+    <div class="cart-layout">
+      <form id="payForm" class="atelier checkout-form">
+        <div class="fields">
+          <div class="field"><label for="firstname">Your name</label><input id="firstname" name="firstname" required autocomplete="name" /></div>
+          <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" required autocomplete="email" /></div>
+          <div class="field"><label for="phone">Phone</label><input id="phone" name="phone" required inputmode="tel" autocomplete="tel" /></div>
+          <div class="field"><label for="gstin">GSTIN, if a company</label><input id="gstin" name="gstin" placeholder="Optional" /></div>
+          <div class="field"><label for="address">Delivery address</label><textarea id="address" name="address" rows="3" required></textarea></div>
+          <div class="field"><label for="city">City</label><input id="city" name="city" required /></div>
+          <div class="field"><label for="pincode">PIN code</label><input id="pincode" name="pincode" required inputmode="numeric" /></div>
+          <div class="field"><label for="state">State</label><input id="state" name="state" required /></div>
+        </div>
+        <button type="submit" class="btn btn-xl btn-primary gift-send" id="payBtn">Pay with PayU</button>
+      </form>
+      <aside class="cart-summary" id="paySummary"></aside>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap legal">
+      <span>© 2026 samanya</span>
+      <a href="index.html#location">Thenkulapakkam, Tamil Nadu</a>
+    </div>
+  </footer>
+  <script src="js/payu-config.js?v=1"></script>
+  <script src="js/shop.js?v=1"></script>
+  <script src="js/main.js?v=9"></script>
+  <script>
+    (function () {
+      var shop = window.SamanyaShop;
+      var payu = window.SAMANYA_PAYU || {};
+      var form = document.getElementById("payForm");
+      var alertBox = document.getElementById("payAlert");
+      var items = shop.checkoutItems();
+      var totals = shop.totals();
+
+      function showAlert(msg) {
+        alertBox.textContent = msg;
+        alertBox.className = "wizard-alert is-on";
+      }
+
+      document.getElementById("paySummary").innerHTML =
+        "<p class='kicker'>This till</p><h2 class='display'>" + shop.rupees(totals.payable) + "</h2>" +
+        (items.length
+          ? "<ul class='pay-lines'>" + items.map(function (item) {
+              return "<li><span>" + item.qty + " × " + item.label + "</span><strong>" + shop.rupees(shop.lineTotal(item.price, item.qty)) + "</strong></li>";
+            }).join("") + "</ul>"
+          : "<p>Nothing here is ready for PayU. Add a gift under 25, or write to us for a bulk packing.</p><a class='btn btn-ghost' href='cart.html'>Back to cart</a>");
+
+      if (!items.length) document.getElementById("payBtn").hidden = true;
+
+      form.addEventListener("submit", async function (event) {
+        event.preventDefault();
+        if (!items.length) {
+          showAlert("Add a gift under 25 to pay here. Larger orders are packed with us directly.");
+          return;
+        }
+        if (!form.reportValidity()) return;
+        if (!payu.key || !payu.hashUrl) {
+          showAlert("PayU is not live yet. Add your merchant key and hash URL in js/payu-config.js, then deploy workers/payu.js.");
+          return;
+        }
+        var txnid = shop.txnId();
+        var productinfo = items.map(function (item) { return item.qty + "x " + item.label; }).join(", ").slice(0, 100);
+        var payload = {
+          txnid: txnid,
+          amount: totals.payable,
+          productinfo: productinfo,
+          firstname: form.firstname.value.trim(),
+          email: form.email.value.trim(),
+          phone: form.phone.value.trim(),
+          udf1: txnid
+        };
+        document.getElementById("payBtn").disabled = true;
+        try {
+          var response = await fetch(payu.hashUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+          });
+          var data = await response.json();
+          if (!response.ok || !data.hash) throw new Error(data.error || "Could not start PayU.");
+          localStorage.setItem(shop.PENDING_KEY, JSON.stringify({
+            txnid: txnid,
+            items: items,
+            payable: totals.payable,
+            name: payload.firstname,
+            email: payload.email,
+            phone: payload.phone,
+            address: form.address.value.trim(),
+            city: form.city.value.trim(),
+            pincode: form.pincode.value.trim(),
+            state: form.state.value.trim(),
+            gstin: form.gstin.value.trim()
+          }));
+          var action = payu.mode === "live" ? "https://secure.payu.in/_payment" : "https://test.payu.in/_payment";
+          var post = document.createElement("form");
+          post.method = "POST";
+          post.action = action;
+          var fields = {
+            key: data.key || payu.key,
+            txnid: txnid,
+            amount: data.amount || Number(totals.payable).toFixed(2),
+            productinfo: productinfo,
+            firstname: payload.firstname,
+            email: payload.email,
+            phone: payload.phone,
+            surl: payu.hashUrl.replace(/\/hash\/?$/, "/return"),
+            furl: payu.hashUrl.replace(/\/hash\/?$/, "/return"),
+            hash: data.hash,
+            udf1: txnid
+          };
+          Object.keys(fields).forEach(function (name) {
+            var input = document.createElement("input");
+            input.type = "hidden";
+            input.name = name;
+            input.value = fields[name];
+            post.appendChild(input);
+          });
+          document.body.appendChild(post);
+          post.submit();
+        } catch (err) {
+          document.getElementById("payBtn").disabled = false;
+          showAlert(err.message || "PayU could not be reached.");
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
