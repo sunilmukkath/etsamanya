@@ -1212,18 +1212,60 @@ section {
   padding: 8px 0 12px;
 }
 
-.wizard-panel {
+.gift-tray {
   display: none;
-  scroll-margin-top: calc(var(--header) + 12px);
+  margin-top: 28px;
+  padding: 28px;
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  background: var(--ivory);
+  box-shadow: var(--shadow);
+  scroll-margin-top: calc(var(--header) + 16px);
 }
 
-.wizard-panel.is-on {
+.gift-tray[hidden] {
+  display: none !important;
+}
+
+.gift-tray.is-open {
   display: block;
 }
 
-.wizard-panel h2 {
-  font-size: clamp(1.9rem, 4vw, 2.8rem);
+.gift-tray-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: space-between;
+  gap: 12px;
   margin-bottom: 8px;
+}
+
+.gift-tray-head h2 {
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+}
+
+.gift-tray-layout {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 28px;
+  align-items: start;
+  margin-top: 12px;
+}
+
+.gift-note {
+  position: sticky;
+  top: calc(var(--header) + 16px);
+  padding: 22px;
+  border-radius: 24px;
+  background: var(--cream);
+  border: 1px solid var(--line);
+}
+
+.gift-note h3 {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  color: var(--leaf-deep);
+  margin: 0 0 8px;
 }
 
 .count-pill {
@@ -1349,11 +1391,6 @@ section {
   flex: 1;
 }
 
-.wizard-bar .btn.is-idle {
-  visibility: hidden;
-  pointer-events: none;
-}
-
 .wizard-page .site-footer {
   padding-top: 0;
 }
@@ -1408,8 +1445,13 @@ a.card {
     border-bottom: 1px solid var(--line);
   }
 
-  .wizard-page .fields {
+  .wizard-page .fields,
+  .gift-tray-layout {
     grid-template-columns: 1fr;
+  }
+
+  .gift-note {
+    position: static;
   }
 
   .wizard-steps button {
