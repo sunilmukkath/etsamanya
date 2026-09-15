@@ -128,9 +128,9 @@
                   <label for="note">Your message on the card</label>
                   <textarea id="note" name="note" rows="3" required placeholder="Tap a message above, or type here."></textarea>
                 </div>
-                <div class="field">
+                <div class="field" id="recipientField">
                   <label for="recipient">This gift is for</label>
-                  <input id="recipient" name="recipient" required placeholder="Their name, or a team / family" />
+                  <input id="recipient" name="recipient" required placeholder="Their name" />
                 </div>
                 <div class="field">
                   <label for="name">Your name</label>
@@ -447,6 +447,11 @@
         var enquire = shop.needsEnquire(qty);
         document.getElementById("qtyEnquire").hidden = !enquire;
         document.getElementById("giftActions").hidden = enquire;
+        var recipientField = document.getElementById("recipientField");
+        var recipientInput = document.getElementById("recipient");
+        var named = qty === 1;
+        recipientField.hidden = !named;
+        recipientInput.required = named;
         if (size) {
           var line = shop.lineTotal(size.price, qty);
           var hint = qty + " × " + rupees(size.price);
@@ -598,9 +603,11 @@
           showAlert("Please tap at least one ingredient.");
           return;
         }
-        if (!form.note.value.trim() || !form.recipient.value.trim() || !form.name.value.trim() || !form.phone.value.trim()) {
+        if (!form.note.value.trim() || !form.name.value.trim() || !form.phone.value.trim() || (qty === 1 && !form.recipient.value.trim())) {
           form.reportValidity();
-          showAlert("Add a message, who it is for, your name, and your phone.");
+          showAlert(qty === 1
+            ? "Add a message, who it is for, your name, and your phone."
+            : "Add a message, your name, and your phone.");
           return;
         }
         if (shop.needsEnquire(qty)) {
