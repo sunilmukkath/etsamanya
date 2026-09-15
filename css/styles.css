@@ -696,8 +696,8 @@ section {
 }
 
 .lots {
-  background: var(--ink);
-  color: var(--ivory);
+  background: var(--paper);
+  color: var(--ink);
 }
 
 .lots-grid {
@@ -708,15 +708,30 @@ section {
 
 .lot {
   padding: 28px;
-  border: 1px solid rgba(250, 246, 239, 0.12);
+  border: 1px solid var(--line);
   border-radius: 24px;
+  background: var(--ivory);
+}
+
+.lot span {
+  color: var(--leaf);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  font-weight: 600;
 }
 
 .lot b {
   display: block;
   font-family: var(--font-display);
   font-size: 1.8rem;
+  font-weight: 500;
+  color: var(--leaf-deep);
   margin: 12px 0 8px;
+}
+
+.lot p {
+  color: var(--ink-soft);
 }
 
 .quote-block {
@@ -754,6 +769,7 @@ section {
 .cta-band h2 {
   font-size: clamp(2.2rem, 4vw, 3.6rem);
   max-width: 14ch;
+  color: var(--clove);
 }
 
 .location {
