@@ -10,10 +10,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Manrope:wght@400;500;600;700&family=Noto+Sans+Tamil:wght@500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/styles.css?v=7" />
+  <link rel="stylesheet" href="css/styles.css?v=8" />
 </head>
 <body class="wizard-page">
-  <a class="skip" href="#wizard">Skip to customisation</a>
+  <a class="skip" href="#giftBuilder">Skip to customisation</a>
   <header class="site-header" id="header">
     <div class="header-inner">
       <a class="brand" href="index.html" aria-label="samanya home">
@@ -27,24 +27,24 @@
         <a href="customise.html" aria-current="page">Customise</a>
       </nav>
       <div class="header-cta">
-        <a class="btn btn-primary" href="#wizard">Customise a gift</a>
+        <a class="btn btn-primary" href="#giftBuilder">Customise a gift</a>
         <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="nav" aria-label="Open menu">☰</button>
       </div>
     </div>
   </header>
 
   <main>
-    <section class="wrap wizard" id="wizard">
+    <section class="wrap wizard" id="giftBuilder">
       <div class="wizard-intro">
         <p class="kicker">A ritual of nourishment</p>
         <h1 class="display">Choose a gift</h1>
         <p class="lede">Tap LUXE, Celebrations, or Rituals. The ingredients and a message card will open just below.</p>
       </div>
 
-      <p class="wizard-alert" id="wizardAlert" role="status"></p>
+      <p class="wizard-alert" id="giftAlert" role="status"></p>
 
-      <div class="size-grid">
-        <button type="button" class="size-card" data-size="luxe" onclick="return samanyaChoose('luxe')">
+      <div class="size-grid" id="sizeGrid">
+        <button type="button" class="size-card" data-size="luxe">
           <span class="size-icon" aria-hidden="true">
             <svg viewBox="0 0 48 48" fill="none"><rect x="8" y="18" width="32" height="22" rx="3" stroke="currentColor" stroke-width="1.8"/><path d="M8 24h32M24 18v22M16 18c0-6 16-6 16 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
           </span>
@@ -54,7 +54,7 @@
           <p>A plentiful box — ingredients, serveware, and a line meant to nourish.</p>
           <span class="size-cta">Tap to open</span>
         </button>
-        <button type="button" class="size-card" data-size="celebrations" onclick="return samanyaChoose('celebrations')">
+        <button type="button" class="size-card" data-size="celebrations">
           <span class="size-icon" aria-hidden="true">
             <svg viewBox="0 0 48 48" fill="none"><rect x="10" y="16" width="28" height="20" rx="3" stroke="currentColor" stroke-width="1.8"/><path d="M10 22h28M18 12l6 4 6-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="24" cy="30" r="2.2" fill="currentColor"/></svg>
           </span>
@@ -64,7 +64,7 @@
           <p>For gathering days — food, vessels, and a gentle word.</p>
           <span class="size-cta">Tap to open</span>
         </button>
-        <button type="button" class="size-card" data-size="rituals" onclick="return samanyaChoose('rituals')">
+        <button type="button" class="size-card" data-size="rituals">
           <span class="size-icon" aria-hidden="true">
             <svg viewBox="0 0 48 48" fill="none"><path d="M16 20c0-6 16-6 16 0v4c0 10-4 16-8 18-4-2-8-8-8-18v-4Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M16 24h16M24 14v6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
           </span>
@@ -76,70 +76,30 @@
         </button>
       </div>
 
-      <div class="gift-tray" id="giftTray" hidden>
-        <div class="gift-tray-head">
+      <div class="gift-fill" id="giftFill">
+        <div class="gift-fill-head">
           <div>
             <p class="kicker">Your gift</p>
-            <h2 class="display">Fill <span id="trayTitle">this</span></h2>
-            <p class="lede" id="fillHint">Tap the pictures to add. Tap again to remove.</p>
+            <h2 class="display">Fill <span id="giftTitle">this</span></h2>
+            <p class="lede" id="giftHint">Tap ingredients to add them. Tap again to remove.</p>
           </div>
-          <p class="count-pill" id="slotNote">0 chosen</p>
+          <p class="count-pill" id="giftCount">0 chosen</p>
         </div>
 
-        <div class="gift-tray-layout">
-          <div class="gift-items">
-            <div class="pantry-group">
-              <h3>Nuts &amp; dry fruits</h3>
-              <div class="pick-grid">
-                <button type="button" class="pick" data-item="Cashew"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M14 28c2-10 18-16 24-8 4 6-2 14-12 14-8 0-12-2-12-6Z" stroke="currentColor" stroke-width="1.8"/></svg><span>Cashew</span></button>
-                <button type="button" class="pick" data-item="Raisins"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><ellipse cx="18" cy="22" rx="5" ry="7" stroke="currentColor" stroke-width="1.8"/><ellipse cx="30" cy="26" rx="5" ry="7" stroke="currentColor" stroke-width="1.8"/><ellipse cx="24" cy="16" rx="4" ry="5" stroke="currentColor" stroke-width="1.8"/></svg><span>Raisins</span></button>
-                <button type="button" class="pick" data-item="Almonds"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M24 8c8 10 12 16 12 24a12 12 0 1 1-24 0c0-8 4-14 12-24Z" stroke="currentColor" stroke-width="1.8"/></svg><span>Almonds</span></button>
-                <button type="button" class="pick" data-item="Figs"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M24 10c8 6 12 14 12 22a12 12 0 1 1-24 0c0-8 4-16 12-22Z" stroke="currentColor" stroke-width="1.8"/><path d="M24 10c0 8 4 10 8 12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><span>Figs</span></button>
-                <button type="button" class="pick" data-item="Pista"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M18 16c6-6 16-4 18 6 2 10-6 18-14 18s-12-8-10-16c1-4 3-6 6-8Z" stroke="currentColor" stroke-width="1.8"/><path d="M22 22c2 4 6 8 10 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><span>Pista</span></button>
-                <button type="button" class="pick" data-item="Saffron"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M16 14c2 10 4 18 8 26M24 12c0 12 2 20 4 28M32 14c-2 10-2 18 0 26" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span>Saffron</span></button>
-                <button type="button" class="pick" data-item="Walnuts"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M24 10c10 0 14 8 14 16 0 10-6 14-14 14S10 36 10 26c0-8 4-16 14-16Z" stroke="currentColor" stroke-width="1.8"/><path d="M24 12v26M16 22c4 2 8 2 16 0" stroke="currentColor" stroke-width="1.6"/></svg><span>Walnuts</span></button>
-              </div>
-            </div>
-            <div class="pantry-group">
-              <h3>Whole spices</h3>
-              <div class="pick-grid">
-                <button type="button" class="pick" data-item="Pepper"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><circle cx="18" cy="22" r="5" stroke="currentColor" stroke-width="1.8"/><circle cx="30" cy="20" r="4" stroke="currentColor" stroke-width="1.8"/><circle cx="26" cy="30" r="5" stroke="currentColor" stroke-width="1.8"/></svg><span>Pepper</span></button>
-                <button type="button" class="pick" data-item="Clove"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M24 8v22M18 12h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="24" cy="34" r="6" stroke="currentColor" stroke-width="1.8"/></svg><span>Clove</span></button>
-                <button type="button" class="pick" data-item="Cinnamon"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M16 12c8 4 8 20 0 24M24 10c8 4 8 24 0 28M32 12c8 4 8 20 0 24" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span>Cinnamon</span></button>
-                <button type="button" class="pick" data-item="Cardamom"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M24 8c6 8 8 14 8 22a8 8 0 1 1-16 0c0-8 2-14 8-22Z" stroke="currentColor" stroke-width="1.8"/><path d="M24 18v16" stroke="currentColor" stroke-width="1.6"/></svg><span>Cardamom</span></button>
-                <button type="button" class="pick" data-item="Star anise"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M24 8l3 11 11 1-8 8 3 11-9-6-9 6 3-11-8-8 11-1L24 8Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="24" cy="24" r="3" fill="currentColor"/></svg><span>Star anise</span></button>
-                <button type="button" class="pick" data-item="Nutmeg"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><ellipse cx="24" cy="24" rx="12" ry="14" stroke="currentColor" stroke-width="1.8"/><path d="M16 18c6 4 10 4 16 0M16 30c6-3 10-3 16 0" stroke="currentColor" stroke-width="1.6"/></svg><span>Nutmeg</span></button>
-              </div>
-            </div>
-            <div class="pantry-group">
-              <h3>Podis</h3>
-              <div class="pick-grid">
-                <button type="button" class="pick" data-item="Turmeric"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M12 22h24v12a6 6 0 0 1-6 6H18a6 6 0 0 1-6-6V22Z" stroke="currentColor" stroke-width="1.8"/><path d="M16 22c2-8 14-8 16 0" stroke="currentColor" stroke-width="1.8"/></svg><span>Turmeric</span></button>
-                <button type="button" class="pick" data-item="Roasted jeera"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M12 30c6-12 10-16 18-20M18 34c6-10 12-14 18-16M22 36c6-8 10-10 16-12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span>Roasted jeera</span></button>
-                <button type="button" class="pick" data-item="Chai masala"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M12 18h20v14a8 8 0 0 1-8 8h-4a8 8 0 0 1-8-8V18Z" stroke="currentColor" stroke-width="1.8"/><path d="M32 22h4a4 4 0 0 1 0 8h-4M16 14c2 2 6 2 8 0s6-2 8 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span>Chai masala</span></button>
-              </div>
-            </div>
-            <div class="pantry-group">
-              <h3>Serveware</h3>
-              <div class="pick-grid">
-                <button type="button" class="pick" data-item="Terracotta tumbler"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M16 10h16l-2 28H18L16 10Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M16 18h16" stroke="currentColor" stroke-width="1.8"/></svg><span>Terracotta tumbler</span></button>
-                <button type="button" class="pick" data-item="Wooden spoon"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M20 40l12-22" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><ellipse cx="18" cy="16" rx="8" ry="10" transform="rotate(-28 18 16)" stroke="currentColor" stroke-width="1.8"/></svg><span>Wooden spoon</span></button>
-                <button type="button" class="pick" data-item="Ceramic bowls"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M10 20h20v6c0 8-5 12-10 12s-10-4-10-12v-6Z" stroke="currentColor" stroke-width="1.8"/><path d="M20 18h16v5c0 7-4 10-8 10" stroke="currentColor" stroke-width="1.8"/></svg><span>Ceramic bowls</span></button>
-              </div>
-            </div>
-          </div>
+        <div class="gift-fill-layout">
+          <div id="giftItems"></div>
 
           <aside class="gift-note">
             <p class="kicker">A note inside</p>
             <h3>Add a message</h3>
             <p class="lede">This line is for the person who opens the box — meant to heal as much as the spices.</p>
-            <div class="message-grid" id="messageGrid">
+            <div class="message-grid" id="giftMessages">
               <button type="button" class="message-btn" data-message="May this nourish you, slowly.">May this nourish you, slowly.</button>
               <button type="button" class="message-btn" data-message="For the days that ask for gentleness.">For the days that ask for gentleness.</button>
               <button type="button" class="message-btn" data-message="Eat well. Rest well. Be held.">Eat well. Rest well. Be held.</button>
               <button type="button" class="message-btn" data-message="A little warmth, packed for you.">A little warmth, packed for you.</button>
             </div>
-            <form id="customiseForm">
+            <form id="giftForm" action="#" method="post">
               <div class="fields">
                 <div class="field">
                   <label for="note">Your message on the card</label>
@@ -162,21 +122,18 @@
                   <input id="city" name="city" placeholder="Chennai, Bengaluru…" />
                 </div>
               </div>
-              <aside class="review" id="review"></aside>
+              <aside class="review" id="giftReview"></aside>
+              <button type="submit" class="btn btn-xl btn-primary gift-send" id="giftSend">Send this gift</button>
             </form>
           </aside>
         </div>
       </div>
 
-      <div class="success" id="success">
+      <div class="success" id="giftDone">
         <p class="kicker">Received</p>
         <h2 class="display">Thank you. We have your gift.</h2>
         <p>We will call or message you within a day to confirm packing.</p>
         <a class="btn btn-xl btn-primary" href="index.html">Back home</a>
-      </div>
-
-      <div class="wizard-bar" id="wizardBar">
-        <button type="button" class="btn btn-xl btn-primary" id="nextBtn" onclick="return samanyaContinue()">Continue</button>
       </div>
     </section>
   </main>
@@ -187,7 +144,170 @@
       <a href="index.html#location">Thenkulapakkam, Tamil Nadu</a>
     </div>
   </footer>
-  <script src="js/main.js?v=7"></script>
-  <script src="js/customise.js?v=7"></script>
+  <script src="js/main.js?v=8"></script>
+  <script>
+    (function () {
+      var SIZES = {
+        luxe: { id: "luxe", label: "LUXE", price: 1899, slots: 10 },
+        celebrations: { id: "celebrations", label: "Celebrations", price: 1299, slots: 7 },
+        rituals: { id: "rituals", label: "Rituals", price: 799, slots: 4 }
+      };
+      var GROUPS = [
+        { title: "Nuts & dry fruits", items: ["Cashew", "Raisins", "Almonds", "Figs", "Pista", "Saffron", "Walnuts"] },
+        { title: "Whole spices", items: ["Pepper", "Clove", "Cinnamon", "Cardamom", "Star anise", "Nutmeg"] },
+        { title: "Podis", items: ["Turmeric", "Roasted jeera", "Chai masala"] },
+        { title: "Serveware", items: ["Terracotta tumbler", "Wooden spoon", "Ceramic bowls"] }
+      ];
+
+      var size = null;
+      var chosen = [];
+      var fill = document.getElementById("giftFill");
+      var itemsBox = document.getElementById("giftItems");
+      var alertBox = document.getElementById("giftAlert");
+      var form = document.getElementById("giftForm");
+      var done = document.getElementById("giftDone");
+
+      function rupees(n) {
+        return "₹" + n.toLocaleString("en-IN");
+      }
+
+      function showAlert(msg) {
+        alertBox.textContent = msg;
+        alertBox.className = "wizard-alert is-on";
+        alertBox.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+
+      function hideAlert() {
+        alertBox.className = "wizard-alert";
+        alertBox.textContent = "";
+      }
+
+      function renderItems() {
+        var html = "";
+        GROUPS.forEach(function (group) {
+          html += "<div class='pantry-group'><h3>" + group.title + "</h3><div class='gift-chips'>";
+          group.items.forEach(function (item) {
+            var on = chosen.indexOf(item) !== -1 ? " is-on" : "";
+            html += "<button type='button' class='gift-chip" + on + "' data-item=\"" + item + "\"><b>" + item.charAt(0) + "</b><span>" + item + "</span></button>";
+          });
+          html += "</div></div>";
+        });
+        itemsBox.innerHTML = html;
+      }
+
+      function paint() {
+        var cards = document.querySelectorAll(".size-card");
+        for (var i = 0; i < cards.length; i++) {
+          cards[i].classList.toggle("is-picked", size && cards[i].getAttribute("data-size") === size.id);
+        }
+        var chips = document.querySelectorAll(".gift-chip");
+        for (var j = 0; j < chips.length; j++) {
+          var item = chips[j].getAttribute("data-item");
+          var on = chosen.indexOf(item) !== -1;
+          chips[j].classList.toggle("is-on", on);
+          chips[j].disabled = !!(size && !on && chosen.length >= size.slots);
+        }
+        if (size) {
+          document.getElementById("giftTitle").textContent = size.label;
+          document.getElementById("giftHint").textContent = size.label + " · " + rupees(size.price) + ". Tap up to " + size.slots + " items.";
+          document.getElementById("giftCount").textContent = chosen.length + " of " + size.slots + " chosen";
+          document.getElementById("giftReview").innerHTML = "<p><strong>" + size.label + "</strong> · " + rupees(size.price) + "</p><p>" + (chosen.length ? chosen.join(", ") : "No ingredients yet.") + "</p>";
+        }
+      }
+
+      function openGift(id) {
+        hideAlert();
+        size = SIZES[id] || null;
+        if (!size) {
+          showAlert("Please tap LUXE, Celebrations, or Rituals.");
+          return;
+        }
+        while (chosen.length > size.slots) chosen.pop();
+        fill.classList.add("is-open");
+        paint();
+        fill.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+
+      renderItems();
+
+      document.getElementById("sizeGrid").addEventListener("click", function (event) {
+        var card = event.target.closest(".size-card");
+        if (!card) return;
+        event.preventDefault();
+        openGift(card.getAttribute("data-size"));
+      });
+
+      itemsBox.addEventListener("click", function (event) {
+        var chip = event.target.closest(".gift-chip");
+        if (!chip || chip.disabled) return;
+        event.preventDefault();
+        if (!size) {
+          showAlert("Tap a gift above first.");
+          return;
+        }
+        var item = chip.getAttribute("data-item");
+        var index = chosen.indexOf(item);
+        if (index !== -1) chosen.splice(index, 1);
+        else if (chosen.length < size.slots) chosen.push(item);
+        paint();
+      });
+
+      document.getElementById("giftMessages").addEventListener("click", function (event) {
+        var btn = event.target.closest(".message-btn");
+        if (!btn) return;
+        event.preventDefault();
+        var buttons = document.querySelectorAll(".message-btn");
+        for (var i = 0; i < buttons.length; i++) buttons[i].classList.remove("is-on");
+        btn.classList.add("is-on");
+        form.note.value = btn.getAttribute("data-message");
+      });
+
+      form.addEventListener("submit", function (event) {
+        event.preventDefault();
+        hideAlert();
+        if (!size) {
+          showAlert("Tap LUXE, Celebrations, or Rituals first.");
+          return;
+        }
+        if (!fill.classList.contains("is-open")) {
+          openGift(size.id);
+          return;
+        }
+        if (!chosen.length) {
+          showAlert("Please tap at least one ingredient.");
+          return;
+        }
+        if (!form.note.value.trim() || !form.recipient.value.trim() || !form.name.value.trim() || !form.phone.value.trim()) {
+          form.reportValidity();
+          showAlert("Add a message, who it is for, your name, and your phone.");
+          return;
+        }
+        try {
+          localStorage.setItem("etsamanya-customise", JSON.stringify({
+            size: size.id,
+            label: size.label,
+            price: size.price,
+            items: chosen.slice(),
+            message: form.note.value,
+            recipient: form.recipient.value,
+            name: form.name.value,
+            phone: form.phone.value,
+            city: form.city.value
+          }));
+        } catch (err) {}
+        fill.classList.remove("is-open");
+        document.getElementById("sizeGrid").style.display = "none";
+        document.querySelector(".wizard-intro").style.display = "none";
+        done.classList.add("is-on");
+        done.scrollIntoView({ behavior: "smooth", block: "center" });
+      });
+
+      var preset = new URLSearchParams(window.location.search).get("size");
+      if (preset === "large") preset = "luxe";
+      if (preset === "medium") preset = "celebrations";
+      if (preset === "small") preset = "rituals";
+      if (preset && SIZES[preset]) openGift(preset);
+    })();
+  </script>
 </body>
 </html>
