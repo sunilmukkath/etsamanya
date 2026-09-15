@@ -59,6 +59,80 @@ body::before {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
+.sketch-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+main {
+  position: relative;
+}
+
+main > *:not(.sketch-layer) {
+  position: relative;
+  z-index: 1;
+}
+
+.sketch {
+  position: absolute;
+  opacity: 0.15;
+  mix-blend-mode: multiply;
+  user-select: none;
+}
+
+.sketch-gift {
+  top: 4%;
+  right: -3%;
+  width: min(300px, 36vw);
+}
+
+.sketch-pepper {
+  top: 22%;
+  left: -4%;
+  width: min(210px, 26vw);
+}
+
+.sketch-fig {
+  top: 48%;
+  right: 3%;
+  width: min(180px, 22vw);
+  opacity: 0.12;
+}
+
+.sketch-cardamom {
+  top: 72%;
+  left: 4%;
+  width: min(190px, 24vw);
+  opacity: 0.12;
+}
+
+.wizard-page .sketch-gift {
+  top: 6%;
+  right: -2%;
+  width: min(250px, 34vw);
+}
+
+.wizard-page .sketch-pepper {
+  top: auto;
+  bottom: 8%;
+  left: auto;
+  right: 2%;
+  width: min(190px, 24vw);
+}
+
+.wizard-page .sketch-fig {
+  top: 38%;
+  left: -2%;
+  right: auto;
+}
+
+.wizard-page .sketch-cardamom {
+  display: none;
+}
+
 img {
   max-width: 100%;
   display: block;
@@ -1532,6 +1606,17 @@ a.card {
 
   .hero-photo {
     min-height: 360px;
+  }
+
+  .sketch-fig,
+  .sketch-cardamom {
+    display: none;
+  }
+
+  .sketch-gift,
+  .sketch-pepper {
+    opacity: 0.08;
+    width: 150px;
   }
 
   .cta-band,
