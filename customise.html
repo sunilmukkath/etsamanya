@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Manrope:wght@400;500;600;700&family=Noto+Sans+Tamil:wght@500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/styles.css?v=11" />
+  <link rel="stylesheet" href="css/styles.css?v=12" />
 </head>
 <body class="wizard-page">
   <a class="skip" href="#giftBuilder">Skip to customisation</a>
@@ -86,7 +86,7 @@
           <div>
             <p class="kicker">Your gift</p>
             <h2 class="display">Fill <span id="giftTitle">this</span></h2>
-            <p class="lede" id="giftHint">Tap ingredients to add them. Tap again to remove.</p>
+            <p class="lede" id="giftHint">Each pantry item is a ₹90 portion. Tap to add; tap again to remove.</p>
           </div>
           <p class="count-pill" id="giftCount">0 chosen</p>
         </div>
@@ -158,11 +158,38 @@
         rituals: { id: "rituals", label: "Rituals", price: 799, slots: 4 }
       };
       var GROUPS = [
-        { title: "Nuts & dry fruits", items: ["Cashew", "Raisins", "Almonds", "Figs", "Pista", "Saffron", "Walnuts"] },
-        { title: "Whole spices", items: ["Pepper", "Clove", "Cinnamon", "Cardamom", "Star anise", "Nutmeg"] },
-        { title: "Podis", items: ["Turmeric", "Roasted jeera", "Chai masala"] },
-        { title: "Serveware", items: ["Terracotta tumbler", "Wooden spoon", "Ceramic bowls"] }
+        { title: "Nuts & dry fruits", items: [
+          { name: "Cashew", qty: "100g" },
+          { name: "Raisins", qty: "75g" },
+          { name: "Almonds", qty: "110g" },
+          { name: "Figs", qty: "75g" },
+          { name: "Pista", qty: "55g" },
+          { name: "Saffron", qty: "0.2g" },
+          { name: "Walnuts", qty: "90g" }
+        ]},
+        { title: "Whole spices", items: [
+          { name: "Pepper", qty: "130g" },
+          { name: "Clove", qty: "75g" },
+          { name: "Cinnamon", qty: "150g" },
+          { name: "Cardamom", qty: "35g" },
+          { name: "Star anise", qty: "90g" },
+          { name: "Nutmeg", qty: "100g" }
+        ]},
+        { title: "Podis", items: [
+          { name: "Turmeric", qty: "80g" },
+          { name: "Roasted jeera", qty: "200g" },
+          { name: "Chai masala", qty: "150g" }
+        ]},
+        { title: "Serveware", items: [
+          { name: "Terracotta tumbler", qty: "1 pc" },
+          { name: "Wooden spoon", qty: "1 pc" },
+          { name: "Ceramic bowls", qty: "1 pc" }
+        ]}
       ];
+      var QTY = {};
+      GROUPS.forEach(function (group) {
+        group.items.forEach(function (item) { QTY[item.name] = item.qty; });
+      });
 
       var size = null;
       var chosen = [];
@@ -192,12 +219,17 @@
         GROUPS.forEach(function (group) {
           html += "<div class='pantry-group'><h3>" + group.title + "</h3><div class='gift-chips'>";
           group.items.forEach(function (item) {
-            var on = chosen.indexOf(item) !== -1 ? " is-on" : "";
-            html += "<button type='button' class='gift-chip" + on + "' data-item=\"" + item + "\"><b>" + item.charAt(0) + "</b><span>" + item + "</span></button>";
+            html += "<button type='button' class='gift-chip' data-item=\"" + item.name + "\"><b>" + item.name.charAt(0) + "</b><span>" + item.name + "<small>" + item.qty + "</small></span></button>";
           });
           html += "</div></div>";
         });
         itemsBox.innerHTML = html;
+      }
+
+      function chosenLine() {
+        return chosen.map(function (name) {
+          return QTY[name] ? name + " · " + QTY[name] : name;
+        }).join(", ");
       }
 
       function paint() {
@@ -214,9 +246,9 @@
         }
         if (size) {
           document.getElementById("giftTitle").textContent = size.label;
-          document.getElementById("giftHint").textContent = size.label + " · " + rupees(size.price) + ". Tap up to " + size.slots + " items.";
+          document.getElementById("giftHint").textContent = size.label + " · " + rupees(size.price) + ". Each item is a ₹90 portion. Tap up to " + size.slots + ".";
           document.getElementById("giftCount").textContent = chosen.length + " of " + size.slots + " chosen";
-          document.getElementById("giftReview").innerHTML = "<p><strong>" + size.label + "</strong> · " + rupees(size.price) + "</p><p>" + (chosen.length ? chosen.join(", ") : "No ingredients yet.") + "</p>";
+          document.getElementById("giftReview").innerHTML = "<p><strong>" + size.label + "</strong> · " + rupees(size.price) + "</p><p>" + (chosen.length ? chosenLine() : "No ingredients yet.") + "</p>";
         }
       }
 

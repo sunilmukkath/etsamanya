@@ -1393,7 +1393,7 @@ section {
   display: flex;
   align-items: center;
   gap: 10px;
-  min-height: 56px;
+  min-height: 64px;
   padding: 10px 14px;
   border: 1px solid var(--line);
   border-radius: 18px;
@@ -1402,6 +1402,24 @@ section {
   text-align: left;
   font-size: 0.95rem;
   font-weight: 600;
+}
+
+.gift-chip span {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  line-height: 1.2;
+}
+
+.gift-chip small {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--leaf);
+}
+
+.gift-chip.is-on small {
+  color: var(--sand);
 }
 
 .gift-chip b {
