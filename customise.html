@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Customise a gift — ET samanya</title>
+  <meta name="description" content="Customise an ET samanya gift. Small potli ₹799, medium box ₹1,299, large box ₹1,899 — filled with cashews, almonds, spices, podis, and kitchen pieces of your choosing." />
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Outfit:wght@300;400;500;600&family=Tiro+Devanagari+Hindi&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <a class="skip" href="#sizes">Skip to sizes</a>
+  <header class="site-header" id="header">
+    <div class="header-inner">
+      <a class="brand" href="index.html" aria-label="ET samanya home">
+        <img src="assets/logo.svg" alt="" />
+        <span class="brand-name"><small>ET</small><strong>samanya</strong></span>
+      </a>
+      <nav class="nav" id="nav" aria-label="Primary">
+        <a href="index.html#collections">Collections</a>
+        <a href="index.html#craft">The craft</a>
+        <a href="index.html#occasions">Occasions</a>
+        <a href="about.html">About</a>
+        <a href="customise.html" aria-current="page">Customise</a>
+      </nav>
+      <div class="header-cta">
+        <a class="btn btn-primary" href="#sizes">Customise a gift</a>
+        <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="nav" aria-label="Open menu">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="wrap page-hero">
+      <p class="kicker">Three sizes, then your pantry</p>
+      <h1 class="display">Choose a vessel. Fill it as you would for family.</h1>
+      <p class="lede">The size sets the price. You choose what goes inside — nuts, spices, podis, and a few pieces for the kitchen. Packed to order from this week’s lots.</p>
+    </section>
+
+    <section class="wrap" id="sizes">
+      <div class="size-grid" role="list">
+        <button type="button" class="size-card" data-size="large" role="listitem">
+          <small>Large · Box</small>
+          <h2 class="display">The plentiful</h2>
+          <p class="size-price">₹1,899</p>
+          <p>A full box — up to 10 pieces from the pantry. For weddings, festivals, and a household that cooks.</p>
+          <span class="size-cta">Customise this box</span>
+        </button>
+        <button type="button" class="size-card" data-size="medium" role="listitem">
+          <small>Medium · Box</small>
+          <h2 class="display">The everyday</h2>
+          <p class="size-price">₹1,299</p>
+          <p>A considered box — up to 7 pieces. Birthdays, housewarmings, a thank-you that will be eaten.</p>
+          <span class="size-cta">Customise this box</span>
+        </button>
+        <button type="button" class="size-card" data-size="small" role="listitem">
+          <small>Small · Potli</small>
+          <h2 class="display">The handful</h2>
+          <p class="size-price">₹799</p>
+          <p>A tied potli — up to 4 pieces. Intimate, easy to send, still named for the person.</p>
+          <span class="size-cta">Customise this potli</span>
+        </button>
+      </div>
+    </section>
+
+    <section class="wrap customise-layout" id="fill">
+      <div>
+        <p class="kicker">The pantry</p>
+        <h2 class="display fill-title" id="fillTitle">Select a size to begin.</h2>
+        <p class="lede" id="fillHint">Tap a box or potli above. The price stays fixed; only what we pack changes.</p>
+
+        <form id="customiseForm" hidden>
+          <fieldset class="pantry-group">
+            <legend>Orchard &amp; kernel</legend>
+            <div class="chip-row">
+              <label class="chip"><input type="checkbox" name="item" value="Cashew" /><span>Cashew</span></label>
+              <label class="chip"><input type="checkbox" name="item" value="Raisins" /><span>Raisins</span></label>
+              <label class="chip"><input type="checkbox" name="item" value="Almonds" /><span>Almonds</span></label>
+              <label class="chip"><input type="checkbox" name="item" value="Walnuts" /><span>Walnuts</span></label>
+              <label class="chip"><input type="checkbox" name="item" value="Saffron" /><span>Saffron</span></label>
+            </div>
+          </fieldset>
+
+          <fieldset class="pantry-group">
+            <legend>Whole spices</legend>
+            <div class="chip-row">
+              <label class="chip"><input type="checkbox" name="item" value="Pepper" /><span>Pepper</span></label>
+              <label class="chip"><input type="checkbox" name="item" value="Clove" /><span>Clove</span></label>
+              <label class="chip"><input type="checkbox" name="item" value="Cinnamon" /><span>Cinnamon</span></label>
+              <label class="chip"><input type="checkbox" name="item" value="Cardamom" /><span>Cardamom</span></label>
+              <label class="chip"><input type="checkbox" name="item" value="Star anise" /><span>Star anise</span></label>
+              <label class="chip"><input type="checkbox" name="item" value="Nutmeg" /><span>Nutmeg</span></label>
+            </div>
+          </fieldset>
+
+          <fieldset class="pantry-group">
+            <legend>Podis</legend>
+            <div class="chip-row">
+              <label class="chip"><input type="checkbox" name="item" value="Turmeric podi" /><span>Turmeric</span></label>
+              <label class="chip"><input type="checkbox" name="item" value="Roasted jeera podi" /><span>Roasted jeera</span></label>
+              <label class="chip"><input type="checkbox" name="item" value="Chai masala" /><span>Chai masala</span></label>
+            </div>
+          </fieldset>
+
+          <fieldset class="pantry-group">
+            <legend>For the kitchen</legend>
+            <div class="chip-row">
+              <label class="chip"><input type="checkbox" name="item" value="Terracotta tumbler" /><span>Terracotta tumbler</span></label>
+              <label class="chip"><input type="checkbox" name="item" value="Wooden spoon" /><span>Wooden spoon</span></label>
+              <label class="chip"><input type="checkbox" name="item" value="Ceramic bowls" /><span>Ceramic bowls</span></label>
+            </div>
+          </fieldset>
+
+          <div class="fields" style="margin-top: 28px;">
+            <div class="field">
+              <label for="recipient">Who is it for?</label>
+              <input id="recipient" name="recipient" required placeholder="A name, or Amma, or the office" />
+            </div>
+            <div class="field">
+              <label for="note">A line for the card</label>
+              <textarea id="note" name="note" rows="3" placeholder="From our kitchen to yours."></textarea>
+            </div>
+            <div class="field">
+              <label for="name">Your name</label>
+              <input id="name" name="name" required />
+            </div>
+            <div class="field">
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" required />
+            </div>
+            <div class="field">
+              <label for="phone">Phone or WhatsApp</label>
+              <input id="phone" name="phone" required />
+            </div>
+            <div class="field">
+              <label for="city">City for delivery</label>
+              <input id="city" name="city" placeholder="Chennai, Bengaluru…" />
+            </div>
+          </div>
+
+          <p class="slot-note" id="slotNote"></p>
+          <button type="submit" class="btn btn-primary" style="margin-top: 18px;">Send this customisation</button>
+        </form>
+      </div>
+
+      <aside class="basket" id="basket" aria-live="polite">
+        <p class="kicker">Your gift</p>
+        <h2 class="display" id="basketTitle">Nothing chosen yet</h2>
+        <p class="basket-price" id="basketPrice"></p>
+        <ul class="summary" id="basketList"></ul>
+        <p class="lede" id="basketEmpty">Pick a size, then tap what should go inside.</p>
+      </aside>
+    </section>
+
+    <div class="wrap">
+      <div class="success" id="success">
+        <p class="kicker">Received</p>
+        <h2 class="display">Your customisation is with us.</h2>
+        <p>We will confirm the box or potli, this week’s lots, and a packing date within a day.</p>
+        <a class="btn btn-primary" href="index.html" style="margin-top: 24px;">Back to the pantry</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap legal">
+      <span>© 2026 ET samanya</span>
+      <a href="index.html#location">Thenkulapakkam, Tamil Nadu</a>
+    </div>
+  </footer>
+  <script src="js/main.js"></script>
+  <script src="js/customise.js"></script>
+</body>
+</html>

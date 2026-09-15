@@ -41,10 +41,10 @@
         <a href="#craft">The craft</a>
         <a href="#occasions">Occasions</a>
         <a href="about.html">About</a>
-        <a href="compose.html">Compose</a>
+        <a href="customise.html">Customise</a>
       </nav>
       <div class="header-cta">
-        <a class="btn btn-primary" href="compose.html">Compose a gift</a>
+        <a class="btn btn-primary" href="customise.html">Customise a gift</a>
         <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="nav" aria-label="Open menu">☰</button>
       </div>
     </div>
@@ -57,8 +57,8 @@
         <h1 class="display">The everyday, given <em>with care.</em></h1>
         <p class="lede">Curated gifts of spice, orchard, and tradition — natural, locally sourced, and packed from the freshest lot. Named for the person, not the catalogue.</p>
         <div class="hero-actions">
-          <a class="btn btn-primary" href="compose.html">Compose a gift</a>
-          <a class="btn btn-ghost" href="#collections">See the pantry</a>
+          <a class="btn btn-primary" href="customise.html">Customise a gift</a>
+          <a class="btn btn-ghost" href="#sizes">See the sizes</a>
         </div>
         <div class="hero-meta">
           <div><strong>सामान्य</strong><span>the ordinary, made sacred</span></div>
@@ -66,26 +66,9 @@
           <div><strong>By hand</strong><span>personal notes, names, palates</span></div>
         </div>
       </div>
-      <div class="thali" aria-hidden="true">
-        <div class="thali-ring"></div>
-        <div class="thali-ring"></div>
-        <figure class="plate plate-1">
-          <img src="https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=1200&q=80" alt="" />
-        </figure>
-        <figure class="plate plate-2">
-          <img src="https://images.unsplash.com/photo-1615485290382-441e4d049eab?auto=format&fit=crop&w=600&q=80" alt="" />
-        </figure>
-        <figure class="plate plate-3">
-          <img src="https://images.unsplash.com/photo-1536590900883-9d3ddae1380e?auto=format&fit=crop&w=600&q=80" alt="" />
-        </figure>
-        <figure class="plate plate-4">
-          <img src="https://images.unsplash.com/photo-1596797038530-2c107229654b?auto=format&fit=crop&w=600&q=80" alt="" />
-        </figure>
-        <figure class="plate plate-5">
-          <img src="https://images.unsplash.com/photo-1508747703725-719777637510?auto=format&fit=crop&w=600&q=80" alt="" />
-        </figure>
-        <div class="deva-mark">सामान्य</div>
-      </div>
+      <figure class="hero-photo">
+        <img src="assets/hero-gifting.jpg" alt="A gift box of spices, nuts, a potli, and a handwritten tag" />
+      </figure>
     </section>
 
     <div class="marquee" aria-hidden="true">
@@ -112,6 +95,39 @@
       </div>
     </section>
 
+    <section class="wrap" id="sizes">
+      <div class="section-head">
+        <div>
+          <p class="kicker">Three sizes</p>
+          <h2 class="display">A box, a box, or a potli.</h2>
+        </div>
+        <p class="lede">The size is the price. Then you choose cashews, spices, podis, a tumbler — whatever belongs in their kitchen.</p>
+      </div>
+      <div class="size-grid">
+        <a class="size-card" href="customise.html?size=large">
+          <small>Large · Box</small>
+          <h2 class="display">The plentiful</h2>
+          <p class="size-price">₹1,899</p>
+          <p>Up to 10 pieces. Weddings, festivals, a household that cooks.</p>
+          <span class="size-cta">Customise this box</span>
+        </a>
+        <a class="size-card" href="customise.html?size=medium">
+          <small>Medium · Box</small>
+          <h2 class="display">The everyday</h2>
+          <p class="size-price">₹1,299</p>
+          <p>Up to 7 pieces. Birthdays, housewarmings, a thank-you that will be eaten.</p>
+          <span class="size-cta">Customise this box</span>
+        </a>
+        <a class="size-card" href="customise.html?size=small">
+          <small>Small · Potli</small>
+          <h2 class="display">The handful</h2>
+          <p class="size-price">₹799</p>
+          <p>Up to 4 pieces. Intimate, easy to send, still named for someone.</p>
+          <span class="size-cta">Customise this potli</span>
+        </a>
+      </div>
+    </section>
+
     <section class="collections" id="collections">
       <div class="wrap">
         <div class="section-head">
@@ -119,7 +135,7 @@
             <p class="kicker">Collections</p>
             <h2 class="display">Choose a pantry, then make it theirs.</h2>
           </div>
-          <p class="lede">Every box can be named, noted, and balanced to a palate — milder, richer, festive, or daily.</p>
+          <p class="lede">Every size can be named, noted, and filled from the pantry — nuts, spices, podis, and kitchen pieces.</p>
         </div>
         <div class="filters" role="tablist" aria-label="Filter collections">
           <button class="filter is-active" data-filter="all">All</button>
@@ -129,46 +145,46 @@
           <button class="filter" data-filter="named">Personalised</button>
         </div>
         <div class="grid-cards">
-          <article class="card featured" data-cat="named spice orchard">
+          <a class="card featured" href="customise.html" data-cat="named spice orchard">
             <img src="https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=1400&q=80" alt="A wrapped gift box with natural twine" />
             <div class="card-body">
               <small>The Named Box</small>
               <h3>Composed for one person</h3>
-              <p>Occasion, palate, dietary notes, and a letter. Our curator builds the rest.</p>
+              <p>Occasion, palate, and a letter. Then you choose what fills the box or potli.</p>
             </div>
-          </article>
-          <article class="card" data-cat="spice">
+          </a>
+          <a class="card" href="customise.html" data-cat="spice">
             <img src="https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=900&q=80" alt="Bowls of Indian spices" />
             <div class="card-body">
               <small>Spice atelier</small>
               <h3>The masala dabba</h3>
-              <p>Whole pepper, chilli, turmeric, jeera — the cook’s gift.</p>
+              <p>Pepper, clove, cinnamon, cardamom, star anise, nutmeg — plus turmeric, jeera, and chai masala.</p>
             </div>
-          </article>
-          <article class="card" data-cat="orchard">
+          </a>
+          <a class="card" href="customise.html" data-cat="orchard">
             <img src="https://images.unsplash.com/photo-1508747703725-719777637510?auto=format&fit=crop&w=900&q=80" alt="Almonds in a bowl" />
             <div class="card-body">
               <small>Orchard &amp; kernel</small>
               <h3>Five from the tree</h3>
-              <p>Almond, cashew, pistachio, fig, raisin — the current lot only.</p>
+              <p>Almond, cashew, walnut, raisin, saffron — packed from the current lot.</p>
             </div>
-          </article>
-          <article class="card" data-cat="festival">
+          </a>
+          <a class="card" href="customise.html?size=large" data-cat="festival">
             <img src="https://images.unsplash.com/photo-1615485290382-441e4d049eab?auto=format&fit=crop&w=900&q=80" alt="Warm spices in ceramic bowls" />
             <div class="card-body">
               <small>Festival trunk</small>
               <h3>A thaal of abundance</h3>
-              <p>For Diwali, Eid, weddings — traditional plenty, quietly packed.</p>
+              <p>For Diwali, Eid, weddings — the large box, filled as you ask.</p>
             </div>
-          </article>
-          <article class="card" data-cat="spice orchard">
+          </a>
+          <a class="card" href="customise.html?size=medium" data-cat="spice orchard">
             <img src="https://images.unsplash.com/photo-1536590900883-9d3ddae1380e?auto=format&fit=crop&w=900&q=80" alt="Pistachios" />
             <div class="card-body">
               <small>Housewarming</small>
               <h3>The first kitchen</h3>
-              <p>Spices to start a home, nuts to fill a jar, a note on the lid.</p>
+              <p>Spices to start a home, a terracotta tumbler, a wooden spoon, a ceramic bowl.</p>
             </div>
-          </article>
+          </a>
         </div>
       </div>
     </section>
@@ -192,7 +208,7 @@
             <article class="step"><span class="num">3</span><div><strong>Packed by hand, sent as if from home</strong><p>Natural wraps, a named lid, a note. Ready for the doorstep or the office desk.</p></div></article>
           </div>
           <div class="hero-actions">
-            <a class="btn btn-primary" href="compose.html">Begin composing</a>
+            <a class="btn btn-primary" href="customise.html">Customise a gift</a>
           </div>
         </div>
       </div>
@@ -206,10 +222,18 @@
         </div>
       </div>
       <div class="occasions">
-        <article class="occasion"><small>01</small><h3>Festivals</h3><p>Diwali, Eid, Christmas, Pongal — a pantry that arrives before the guests.</p></article>
-        <article class="occasion"><small>02</small><h3>Weddings</h3><p>Return gifts and family thaals that honour both houses without looking identical.</p></article>
-        <article class="occasion"><small>03</small><h3>Corporate</h3><p>Named boxes for teams and clients. Indian, edible, and actually wanted.</p></article>
-        <article class="occasion"><small>04</small><h3>Just because</h3><p>A masala dabba for a new kitchen. Almonds for a recovery. Spice for a cook you love.</p></article>
+        <a class="occasion" href="customise.html">
+          <small>01</small><h3>Festivals</h3><p>Diwali, Eid, Christmas, Pongal — a pantry that arrives before the guests.</p>
+        </a>
+        <a class="occasion" href="customise.html?size=large">
+          <small>02</small><h3>Weddings</h3><p>Return gifts and family thaals that honour both houses without looking identical.</p>
+        </a>
+        <a class="occasion" href="customise.html?size=medium">
+          <small>03</small><h3>Corporate</h3><p>Named boxes for teams and clients. Indian, edible, and actually wanted.</p>
+        </a>
+        <a class="occasion" href="customise.html?size=small">
+          <small>04</small><h3>Just because</h3><p>A potli for a new kitchen. Almonds for a recovery. Spice for a cook you love.</p>
+        </a>
       </div>
     </section>
 
@@ -242,8 +266,8 @@
 
     <section class="wrap">
       <div class="cta-band">
-        <h2 class="display">Tell us who it is for. We will build the rest.</h2>
-        <a class="btn btn-primary" href="compose.html">Compose a gift</a>
+        <h2 class="display">Tell us who it is for. Then fill the box.</h2>
+        <a class="btn btn-primary" href="customise.html">Customise a gift</a>
       </div>
     </section>
 
@@ -265,8 +289,8 @@
         <p>Personalised gifts from the Indian pantry — spices, dry fruits, and the art of giving simply.</p>
       </div>
       <div class="footer-links">
-        <a href="#collections">Collections</a>
-        <a href="compose.html">Compose a gift</a>
+        <a href="#sizes">Sizes</a>
+        <a href="customise.html">Customise a gift</a>
         <a href="about.html">Our craft</a>
       </div>
       <div class="footer-links">
