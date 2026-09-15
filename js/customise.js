@@ -9,17 +9,21 @@ const LABELS = { 1: "Choose your size", 2: "Choose your ingredients", 3: "Choose
 
 const rupees = (n) => `₹${n.toLocaleString("en-IN")}`;
 
-const form = document.getElementById("customiseForm");
-const statusEl = document.getElementById("status");
-const slotNote = document.getElementById("slotNote");
-const fillHint = document.getElementById("fillHint");
-const review = document.getElementById("review");
-const success = document.getElementById("success");
-const wizardBar = document.getElementById("wizardBar");
-const nextBtn = document.getElementById("nextBtn");
-const backBtn = document.getElementById("backBtn");
-const cards = [...document.querySelectorAll(".size-card")];
-const picks = [...document.querySelectorAll(".pick")];
+const $ = (id) => document.getElementById(id);
+
+const form = $("customiseForm");
+const statusEl = $("status");
+const slotNote = $("slotNote");
+const fillHint = $("fillHint");
+const review = $("review");
+const success = $("success");
+const wizardBar = $("wizardBar");
+const nextBtn = $("nextBtn");
+const backBtn = $("backBtn");
+const alertEl = $("wizardAlert");
+const wizard = $("wizard");
+const cards = [...document.querySelectorAll("#wizard .size-card[data-size]")];
+const picks = [...document.querySelectorAll("#wizard .pick[data-item]")];
 const stepButtons = [...document.querySelectorAll(".wizard-steps button")];
 const panels = [...document.querySelectorAll(".wizard-panel")];
 const messageBtns = [...document.querySelectorAll(".message-btn")];
@@ -27,6 +31,14 @@ const messageBtns = [...document.querySelectorAll(".message-btn")];
 let step = 1;
 let size = null;
 const chosen = new Set();
+
+const showAlert = (msg) => {
+  if (!alertEl) return;
+  alertEl.textContent = msg;
+  alertEl.classList.add("is-on");
+};
+
+const hideAlert = () => alertEl?.classList.remove("is-on");
 
 const nudge = (el) => {
   el?.animate(
@@ -37,17 +49,23 @@ const nudge = (el) => {
 
 const go = (n) => {
   step = n;
+  hideAlert();
   panels.forEach((panel) => panel.classList.toggle("is-on", Number(panel.dataset.step) === step));
   stepButtons.forEach((btn, i) => {
     btn.classList.toggle("is-on", i + 1 === step);
     btn.classList.toggle("is-done", i + 1 < step);
   });
-  statusEl.textContent = `Step ${step} of 3 — ${LABELS[step]}`;
-  backBtn.hidden = step === 1;
-  nextBtn.textContent = step === 3 ? "Send this gift" : "Next";
-  wizardBar.hidden = false;
+  if (statusEl) statusEl.textContent = `Step ${step} of 3 — ${LABELS[step]}`;
+  backBtn?.classList.toggle("is-idle", step === 1);
+  if (backBtn) backBtn.hidden = false;
+  if (nextBtn) {
+    nextBtn.disabled = false;
+    nextBtn.textContent = step === 1 ? "Continue" : step === 3 ? "Send this gift" : "Continue";
+  }
+  if (wizardBar) wizardBar.hidden = false;
   if (step === 3) renderReview();
-  document.getElementById("wizard")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  const panel = panels.find((p) => Number(p.dataset.step) === step);
+  panel?.scrollIntoView({ behavior: "smooth", block: "start" });
 };
 
 const paint = () => {
@@ -59,12 +77,10 @@ const paint = () => {
     btn.setAttribute("aria-pressed", String(on));
     btn.disabled = Boolean(size) && !on && items.length >= size.slots;
   });
-  if (size) {
+  if (size && fillHint) {
     fillHint.textContent = `${size.label} · ${rupees(size.price)}. Tap up to ${size.slots} pictures. A tick means it is in your gift.`;
-    slotNote.textContent = `${items.length} of ${size.slots} chosen`;
-  } else {
-    slotNote.textContent = "0 chosen";
   }
+  if (slotNote) slotNote.textContent = size ? `${items.length} of ${size.slots} chosen` : "0 chosen";
 };
 
 const setSize = (id) => {
@@ -74,9 +90,11 @@ const setSize = (id) => {
     [...chosen].slice(size.slots).forEach((item) => chosen.delete(item));
   }
   paint();
+  return Boolean(size);
 };
 
 const renderReview = () => {
+  if (!review) return;
   if (!size) {
     review.innerHTML = "";
     return;
@@ -89,62 +107,84 @@ const renderReview = () => {
   `;
 };
 
-cards.forEach((card) => {
-  card.addEventListener("click", () => {
-    setSize(card.dataset.size);
-    go(2);
-  });
-});
+const chooseSize = (id) => {
+  if (!setSize(id)) return;
+  go(2);
+};
 
-picks.forEach((btn) => {
-  btn.addEventListener("click", () => {
+wizard?.addEventListener("click", (event) => {
+  const card = event.target.closest(".size-card[data-size]");
+  if (card) {
+    event.preventDefault();
+    chooseSize(card.dataset.size);
+    return;
+  }
+
+  const pick = event.target.closest(".pick[data-item]");
+  if (pick) {
+    event.preventDefault();
     if (!size) {
       go(1);
-      nudge(nextBtn);
+      showAlert("Please tap a gift first — LUXE, Celebrations, or Rituals.");
+      nudge(cards[0]);
       return;
     }
-    const item = btn.dataset.item;
+    const item = pick.dataset.item;
     if (chosen.has(item)) chosen.delete(item);
     else if (chosen.size < size.slots) chosen.add(item);
     paint();
-  });
-});
+    return;
+  }
 
-messageBtns.forEach((btn) => {
-  btn.addEventListener("click", () => {
+  const message = event.target.closest(".message-btn[data-message]");
+  if (message && form) {
     messageBtns.forEach((el) => el.classList.remove("is-on"));
-    btn.classList.add("is-on");
-    form.note.value = btn.dataset.message;
-    form.note.focus();
-  });
+    message.classList.add("is-on");
+    form.note.value = message.dataset.message;
+  }
 });
 
 stepButtons.forEach((btn) => {
   btn.addEventListener("click", () => {
     const target = Number(btn.dataset.goto);
     if (target < step || (target === 2 && size) || (target === 3 && size && chosen.size)) go(target);
-    else nudge(nextBtn);
+    else {
+      showAlert(target === 2 ? "Please tap a gift first." : "Please choose at least one ingredient.");
+      nudge(nextBtn);
+    }
   });
 });
 
-backBtn.addEventListener("click", () => {
+backBtn?.addEventListener("click", (event) => {
+  event.preventDefault();
   if (step > 1) go(step - 1);
 });
 
-nextBtn.addEventListener("click", () => {
+nextBtn?.addEventListener("click", (event) => {
+  event.preventDefault();
   if (step === 1) {
-    if (!size) return nudge(cards[0]);
-    return go(2);
+    if (!size) {
+      showAlert("Tap LUXE, Celebrations, or Rituals to continue.");
+      nudge(cards[0]);
+      return;
+    }
+    go(2);
+    return;
   }
   if (step === 2) {
     if (!chosen.size) {
-      slotNote.textContent = "Please tap at least one ingredient.";
-      return nudge(slotNote);
+      showAlert("Please tap at least one ingredient.");
+      if (slotNote) slotNote.textContent = "Please tap at least one ingredient.";
+      nudge(slotNote);
+      return;
     }
-    return go(3);
+    go(3);
+    return;
   }
+  if (!form) return;
   if (!form.note.value.trim() || !form.recipient.value.trim() || !form.name.value.trim() || !form.phone.value.trim()) {
     form.reportValidity();
+    showAlert("Please fill the card message, who it is for, your name, and your phone.");
     nudge(nextBtn);
     return;
   }
@@ -163,12 +203,13 @@ nextBtn.addEventListener("click", () => {
     })
   );
   panels.forEach((panel) => panel.classList.remove("is-on"));
-  wizardBar.hidden = true;
-  success.classList.add("is-on");
-  success.scrollIntoView({ behavior: "smooth", block: "center" });
+  if (wizardBar) wizardBar.hidden = true;
+  hideAlert();
+  success?.classList.add("is-on");
+  success?.scrollIntoView({ behavior: "smooth", block: "center" });
 });
 
 const preset = new URLSearchParams(location.search).get("size");
 if (preset) setSize(preset);
 paint();
-go(preset ? 2 : 1);
+go(preset && size ? 2 : 1);

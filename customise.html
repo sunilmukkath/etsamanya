@@ -3,13 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#42573A" />
   <title>Customise a gift — samanya</title>
   <meta name="description" content="Build a samanya wellness gift in three steps: choose a box or potli, the ingredients and serveware, then a mindful message of nourishment." />
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Outfit:wght@300;400;500;600&family=Tiro+Devanagari+Hindi&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Noto+Sans+Tamil:wght@500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css?v=4" />
 </head>
 <body class="wizard-page">
   <a class="skip" href="#wizard">Skip to customisation</a>
@@ -33,137 +34,140 @@
   </header>
 
   <main>
-    <section class="wrap page-hero">
-      <p class="kicker">A ritual of nourishment</p>
-      <h1 class="display">Build a gift, one step at a time.</h1>
-      <p class="lede">Choose a box or potli, the ingredients and serveware, then a mindful line for the person who will open it.</p>
-    </section>
-
     <section class="wrap wizard" id="wizard">
+      <div class="wizard-intro">
+        <p class="kicker">A ritual of nourishment</p>
+        <h1 class="display">Build a gift, one step at a time.</h1>
+        <p class="lede">Tap a box or potli. Then choose what goes inside, and a line for the person who will open it.</p>
+      </div>
+
       <ol class="wizard-steps" aria-label="Progress">
         <li><button type="button" class="is-on" data-goto="1"><b>1</b> Size</button></li>
         <li><button type="button" data-goto="2"><b>2</b> Ingredients</button></li>
         <li><button type="button" data-goto="3"><b>3</b> Message</button></li>
       </ol>
       <p class="wizard-status" id="status">Step 1 of 3 — Choose your size</p>
+      <p class="wizard-alert" id="wizardAlert" role="status"></p>
 
-      <div class="wizard-panel is-on" data-step="1">
-        <h2 class="display" id="step1Title">Choose your size</h2>
-        <p class="lede">Tap one gift. The ingredient list opens next.</p>
-        <div class="size-grid">
-          <button type="button" class="size-card" data-size="luxe">
-            <span class="size-icon" aria-hidden="true">
-              <svg viewBox="0 0 48 48" fill="none"><rect x="8" y="18" width="32" height="22" rx="3" stroke="currentColor" stroke-width="1.8"/><path d="M8 24h32M24 18v22M16 18c0-6 16-6 16 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-            </span>
-            <small>Box · 10 pieces</small>
-            <h3 class="display">LUXE</h3>
-            <p class="size-price">₹1,899</p>
-            <p>A plentiful box — ingredients, serveware, and a line meant to nourish.</p>
-            <span class="size-cta">Tap to choose</span>
-          </button>
-          <button type="button" class="size-card" data-size="celebrations">
-            <span class="size-icon" aria-hidden="true">
-              <svg viewBox="0 0 48 48" fill="none"><rect x="10" y="16" width="28" height="20" rx="3" stroke="currentColor" stroke-width="1.8"/><path d="M10 22h28M18 12l6 4 6-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="24" cy="30" r="2.2" fill="currentColor"/></svg>
-            </span>
-            <small>Box · 7 pieces</small>
-            <h3 class="display">Celebrations</h3>
-            <p class="size-price">₹1,299</p>
-            <p>For gathering days — food, vessels, and a gentle word.</p>
-            <span class="size-cta">Tap to choose</span>
-          </button>
-          <button type="button" class="size-card" data-size="rituals">
-            <span class="size-icon" aria-hidden="true">
-              <svg viewBox="0 0 48 48" fill="none"><path d="M16 20c0-6 16-6 16 0v4c0 10-4 16-8 18-4-2-8-8-8-18v-4Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M16 24h16M24 14v6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-            </span>
-            <small>Potli · 4 pieces</small>
-            <h3 class="display">Rituals</h3>
-            <p class="size-price">₹799</p>
-            <p>A small potli of care. Intimate nourishment, easily sent.</p>
-            <span class="size-cta">Tap to choose</span>
-          </button>
-        </div>
-      </div>
-
-      <div class="wizard-panel" data-step="2">
-        <h2 class="display">Choose your ingredients</h2>
-        <p class="lede" id="fillHint">Tap the pictures to add. Tap again to remove. A tick means it is in your gift.</p>
-        <p class="count-pill" id="slotNote">0 chosen</p>
-
-        <div class="pantry-group">
-          <h3>Nuts &amp; dry fruits</h3>
-          <div class="pick-grid">
-            <button type="button" class="pick" data-item="Cashew"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M14 28c2-10 18-16 24-8 4 6-2 14-12 14-8 0-12-2-12-6Z" stroke="currentColor" stroke-width="1.8"/></svg><span>Cashew</span></button>
-            <button type="button" class="pick" data-item="Raisins"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><ellipse cx="18" cy="22" rx="5" ry="7" stroke="currentColor" stroke-width="1.8"/><ellipse cx="30" cy="26" rx="5" ry="7" stroke="currentColor" stroke-width="1.8"/><ellipse cx="24" cy="16" rx="4" ry="5" stroke="currentColor" stroke-width="1.8"/></svg><span>Raisins</span></button>
-            <button type="button" class="pick" data-item="Almonds"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M24 8c8 10 12 16 12 24a12 12 0 1 1-24 0c0-8 4-14 12-24Z" stroke="currentColor" stroke-width="1.8"/></svg><span>Almonds</span></button>
-            <button type="button" class="pick" data-item="Walnuts"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M24 10c10 0 14 8 14 16 0 10-6 14-14 14S10 36 10 26c0-8 4-16 14-16Z" stroke="currentColor" stroke-width="1.8"/><path d="M24 12v26M16 22c4 2 8 2 16 0" stroke="currentColor" stroke-width="1.6"/></svg><span>Walnuts</span></button>
-            <button type="button" class="pick" data-item="Saffron"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M16 14c2 10 4 18 8 26M24 12c0 12 2 20 4 28M32 14c-2 10-2 18 0 26" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span>Saffron</span></button>
+      <div class="wizard-stage">
+        <div class="wizard-panel is-on" data-step="1">
+          <h2 class="display">Choose your size</h2>
+          <p class="lede">Tap a gift. The ingredient list opens next.</p>
+          <div class="size-grid">
+            <button type="button" class="size-card" data-size="luxe">
+              <span class="size-icon" aria-hidden="true">
+                <svg viewBox="0 0 48 48" fill="none"><rect x="8" y="18" width="32" height="22" rx="3" stroke="currentColor" stroke-width="1.8"/><path d="M8 24h32M24 18v22M16 18c0-6 16-6 16 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+              </span>
+              <small>Box · 10 pieces</small>
+              <h3 class="display">LUXE</h3>
+              <p class="size-price">₹1,899</p>
+              <p>A plentiful box — ingredients, serveware, and a line meant to nourish.</p>
+              <span class="size-cta">Tap to choose</span>
+            </button>
+            <button type="button" class="size-card" data-size="celebrations">
+              <span class="size-icon" aria-hidden="true">
+                <svg viewBox="0 0 48 48" fill="none"><rect x="10" y="16" width="28" height="20" rx="3" stroke="currentColor" stroke-width="1.8"/><path d="M10 22h28M18 12l6 4 6-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="24" cy="30" r="2.2" fill="currentColor"/></svg>
+              </span>
+              <small>Box · 7 pieces</small>
+              <h3 class="display">Celebrations</h3>
+              <p class="size-price">₹1,299</p>
+              <p>For gathering days — food, vessels, and a gentle word.</p>
+              <span class="size-cta">Tap to choose</span>
+            </button>
+            <button type="button" class="size-card" data-size="rituals">
+              <span class="size-icon" aria-hidden="true">
+                <svg viewBox="0 0 48 48" fill="none"><path d="M16 20c0-6 16-6 16 0v4c0 10-4 16-8 18-4-2-8-8-8-18v-4Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M16 24h16M24 14v6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+              </span>
+              <small>Potli · 4 pieces</small>
+              <h3 class="display">Rituals</h3>
+              <p class="size-price">₹799</p>
+              <p>A small potli of care. Intimate nourishment, easily sent.</p>
+              <span class="size-cta">Tap to choose</span>
+            </button>
           </div>
         </div>
-        <div class="pantry-group">
-          <h3>Whole spices</h3>
-          <div class="pick-grid">
-            <button type="button" class="pick" data-item="Pepper"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><circle cx="18" cy="22" r="5" stroke="currentColor" stroke-width="1.8"/><circle cx="30" cy="20" r="4" stroke="currentColor" stroke-width="1.8"/><circle cx="26" cy="30" r="5" stroke="currentColor" stroke-width="1.8"/></svg><span>Pepper</span></button>
-            <button type="button" class="pick" data-item="Clove"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M24 8v22M18 12h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="24" cy="34" r="6" stroke="currentColor" stroke-width="1.8"/></svg><span>Clove</span></button>
-            <button type="button" class="pick" data-item="Cinnamon"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M16 12c8 4 8 20 0 24M24 10c8 4 8 24 0 28M32 12c8 4 8 20 0 24" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span>Cinnamon</span></button>
-            <button type="button" class="pick" data-item="Cardamom"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M24 8c6 8 8 14 8 22a8 8 0 1 1-16 0c0-8 2-14 8-22Z" stroke="currentColor" stroke-width="1.8"/><path d="M24 18v16" stroke="currentColor" stroke-width="1.6"/></svg><span>Cardamom</span></button>
-            <button type="button" class="pick" data-item="Star anise"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M24 8l3 11 11 1-8 8 3 11-9-6-9 6 3-11-8-8 11-1L24 8Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="24" cy="24" r="3" fill="currentColor"/></svg><span>Star anise</span></button>
-            <button type="button" class="pick" data-item="Nutmeg"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><ellipse cx="24" cy="24" rx="12" ry="14" stroke="currentColor" stroke-width="1.8"/><path d="M16 18c6 4 10 4 16 0M16 30c6-3 10-3 16 0" stroke="currentColor" stroke-width="1.6"/></svg><span>Nutmeg</span></button>
-          </div>
-        </div>
-        <div class="pantry-group">
-          <h3>Podis</h3>
-          <div class="pick-grid">
-            <button type="button" class="pick" data-item="Turmeric"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M12 22h24v12a6 6 0 0 1-6 6H18a6 6 0 0 1-6-6V22Z" stroke="currentColor" stroke-width="1.8"/><path d="M16 22c2-8 14-8 16 0" stroke="currentColor" stroke-width="1.8"/></svg><span>Turmeric</span></button>
-            <button type="button" class="pick" data-item="Roasted jeera"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M12 30c6-12 10-16 18-20M18 34c6-10 12-14 18-16M22 36c6-8 10-10 16-12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span>Roasted jeera</span></button>
-            <button type="button" class="pick" data-item="Chai masala"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M12 18h20v14a8 8 0 0 1-8 8h-4a8 8 0 0 1-8-8V18Z" stroke="currentColor" stroke-width="1.8"/><path d="M32 22h4a4 4 0 0 1 0 8h-4M16 14c2 2 6 2 8 0s6-2 8 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span>Chai masala</span></button>
-          </div>
-        </div>
-        <div class="pantry-group">
-          <h3>Serveware</h3>
-          <div class="pick-grid">
-            <button type="button" class="pick" data-item="Terracotta tumbler"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M16 10h16l-2 28H18L16 10Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M16 18h16" stroke="currentColor" stroke-width="1.8"/></svg><span>Terracotta tumbler</span></button>
-            <button type="button" class="pick" data-item="Wooden spoon"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M20 40l12-22" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><ellipse cx="18" cy="16" rx="8" ry="10" transform="rotate(-28 18 16)" stroke="currentColor" stroke-width="1.8"/></svg><span>Wooden spoon</span></button>
-            <button type="button" class="pick" data-item="Ceramic bowls"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M10 20h20v6c0 8-5 12-10 12s-10-4-10-12v-6Z" stroke="currentColor" stroke-width="1.8"/><path d="M20 18h16v5c0 7-4 10-8 10" stroke="currentColor" stroke-width="1.8"/></svg><span>Ceramic bowls</span></button>
-          </div>
-        </div>
-      </div>
 
-      <div class="wizard-panel" data-step="3">
-        <h2 class="display">Choose your message</h2>
-        <p class="lede">This line is for the person who opens the box — meant to heal as much as the spices. Tap one, or write your own.</p>
+        <div class="wizard-panel" data-step="2">
+          <h2 class="display">Choose your ingredients</h2>
+          <p class="lede" id="fillHint">Tap the pictures to add. Tap again to remove. A tick means it is in your gift.</p>
+          <p class="count-pill" id="slotNote">0 chosen</p>
 
-        <div class="message-grid" id="messageGrid">
-          <button type="button" class="message-btn" data-message="May this nourish you, slowly.">May this nourish you, slowly.</button>
-          <button type="button" class="message-btn" data-message="For the days that ask for gentleness.">For the days that ask for gentleness.</button>
-          <button type="button" class="message-btn" data-message="Eat well. Rest well. Be held.">Eat well. Rest well. Be held.</button>
-          <button type="button" class="message-btn" data-message="A little warmth, packed for you.">A little warmth, packed for you.</button>
-        </div>
-
-        <form id="customiseForm">
-          <div class="fields">
-            <div class="field">
-              <label for="note">Your message on the card</label>
-              <textarea id="note" name="note" rows="3" required placeholder="Tap a message above, or type here."></textarea>
-            </div>
-            <div class="field">
-              <label for="recipient">This gift is for</label>
-              <input id="recipient" name="recipient" required placeholder="Their name" />
-            </div>
-            <div class="field">
-              <label for="name">Your name</label>
-              <input id="name" name="name" required />
-            </div>
-            <div class="field">
-              <label for="phone">Your phone number</label>
-              <input id="phone" name="phone" required inputmode="tel" autocomplete="tel" />
-            </div>
-            <div class="field">
-              <label for="city">City for delivery</label>
-              <input id="city" name="city" placeholder="Chennai, Bengaluru…" />
+          <div class="pantry-group">
+            <h3>Nuts &amp; dry fruits</h3>
+            <div class="pick-grid">
+              <button type="button" class="pick" data-item="Cashew"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M14 28c2-10 18-16 24-8 4 6-2 14-12 14-8 0-12-2-12-6Z" stroke="currentColor" stroke-width="1.8"/></svg><span>Cashew</span></button>
+              <button type="button" class="pick" data-item="Raisins"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><ellipse cx="18" cy="22" rx="5" ry="7" stroke="currentColor" stroke-width="1.8"/><ellipse cx="30" cy="26" rx="5" ry="7" stroke="currentColor" stroke-width="1.8"/><ellipse cx="24" cy="16" rx="4" ry="5" stroke="currentColor" stroke-width="1.8"/></svg><span>Raisins</span></button>
+              <button type="button" class="pick" data-item="Almonds"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M24 8c8 10 12 16 12 24a12 12 0 1 1-24 0c0-8 4-14 12-24Z" stroke="currentColor" stroke-width="1.8"/></svg><span>Almonds</span></button>
+              <button type="button" class="pick" data-item="Walnuts"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M24 10c10 0 14 8 14 16 0 10-6 14-14 14S10 36 10 26c0-8 4-16 14-16Z" stroke="currentColor" stroke-width="1.8"/><path d="M24 12v26M16 22c4 2 8 2 16 0" stroke="currentColor" stroke-width="1.6"/></svg><span>Walnuts</span></button>
+              <button type="button" class="pick" data-item="Saffron"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M16 14c2 10 4 18 8 26M24 12c0 12 2 20 4 28M32 14c-2 10-2 18 0 26" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span>Saffron</span></button>
             </div>
           </div>
-          <aside class="review" id="review"></aside>
-        </form>
+          <div class="pantry-group">
+            <h3>Whole spices</h3>
+            <div class="pick-grid">
+              <button type="button" class="pick" data-item="Pepper"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><circle cx="18" cy="22" r="5" stroke="currentColor" stroke-width="1.8"/><circle cx="30" cy="20" r="4" stroke="currentColor" stroke-width="1.8"/><circle cx="26" cy="30" r="5" stroke="currentColor" stroke-width="1.8"/></svg><span>Pepper</span></button>
+              <button type="button" class="pick" data-item="Clove"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M24 8v22M18 12h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="24" cy="34" r="6" stroke="currentColor" stroke-width="1.8"/></svg><span>Clove</span></button>
+              <button type="button" class="pick" data-item="Cinnamon"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M16 12c8 4 8 20 0 24M24 10c8 4 8 24 0 28M32 12c8 4 8 20 0 24" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span>Cinnamon</span></button>
+              <button type="button" class="pick" data-item="Cardamom"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M24 8c6 8 8 14 8 22a8 8 0 1 1-16 0c0-8 2-14 8-22Z" stroke="currentColor" stroke-width="1.8"/><path d="M24 18v16" stroke="currentColor" stroke-width="1.6"/></svg><span>Cardamom</span></button>
+              <button type="button" class="pick" data-item="Star anise"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M24 8l3 11 11 1-8 8 3 11-9-6-9 6 3-11-8-8 11-1L24 8Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="24" cy="24" r="3" fill="currentColor"/></svg><span>Star anise</span></button>
+              <button type="button" class="pick" data-item="Nutmeg"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><ellipse cx="24" cy="24" rx="12" ry="14" stroke="currentColor" stroke-width="1.8"/><path d="M16 18c6 4 10 4 16 0M16 30c6-3 10-3 16 0" stroke="currentColor" stroke-width="1.6"/></svg><span>Nutmeg</span></button>
+            </div>
+          </div>
+          <div class="pantry-group">
+            <h3>Podis</h3>
+            <div class="pick-grid">
+              <button type="button" class="pick" data-item="Turmeric"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M12 22h24v12a6 6 0 0 1-6 6H18a6 6 0 0 1-6-6V22Z" stroke="currentColor" stroke-width="1.8"/><path d="M16 22c2-8 14-8 16 0" stroke="currentColor" stroke-width="1.8"/></svg><span>Turmeric</span></button>
+              <button type="button" class="pick" data-item="Roasted jeera"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M12 30c6-12 10-16 18-20M18 34c6-10 12-14 18-16M22 36c6-8 10-10 16-12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span>Roasted jeera</span></button>
+              <button type="button" class="pick" data-item="Chai masala"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M12 18h20v14a8 8 0 0 1-8 8h-4a8 8 0 0 1-8-8V18Z" stroke="currentColor" stroke-width="1.8"/><path d="M32 22h4a4 4 0 0 1 0 8h-4M16 14c2 2 6 2 8 0s6-2 8 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span>Chai masala</span></button>
+            </div>
+          </div>
+          <div class="pantry-group">
+            <h3>Serveware</h3>
+            <div class="pick-grid">
+              <button type="button" class="pick" data-item="Terracotta tumbler"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M16 10h16l-2 28H18L16 10Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M16 18h16" stroke="currentColor" stroke-width="1.8"/></svg><span>Terracotta tumbler</span></button>
+              <button type="button" class="pick" data-item="Wooden spoon"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M20 40l12-22" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><ellipse cx="18" cy="16" rx="8" ry="10" transform="rotate(-28 18 16)" stroke="currentColor" stroke-width="1.8"/></svg><span>Wooden spoon</span></button>
+              <button type="button" class="pick" data-item="Ceramic bowls"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M10 20h20v6c0 8-5 12-10 12s-10-4-10-12v-6Z" stroke="currentColor" stroke-width="1.8"/><path d="M20 18h16v5c0 7-4 10-8 10" stroke="currentColor" stroke-width="1.8"/></svg><span>Ceramic bowls</span></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="wizard-panel" data-step="3">
+          <h2 class="display">Choose your message</h2>
+          <p class="lede">This line is for the person who opens the box — meant to heal as much as the spices. Tap one, or write your own.</p>
+
+          <div class="message-grid" id="messageGrid">
+            <button type="button" class="message-btn" data-message="May this nourish you, slowly.">May this nourish you, slowly.</button>
+            <button type="button" class="message-btn" data-message="For the days that ask for gentleness.">For the days that ask for gentleness.</button>
+            <button type="button" class="message-btn" data-message="Eat well. Rest well. Be held.">Eat well. Rest well. Be held.</button>
+            <button type="button" class="message-btn" data-message="A little warmth, packed for you.">A little warmth, packed for you.</button>
+          </div>
+
+          <form id="customiseForm">
+            <div class="fields">
+              <div class="field">
+                <label for="note">Your message on the card</label>
+                <textarea id="note" name="note" rows="3" required placeholder="Tap a message above, or type here."></textarea>
+              </div>
+              <div class="field">
+                <label for="recipient">This gift is for</label>
+                <input id="recipient" name="recipient" required placeholder="Their name" />
+              </div>
+              <div class="field">
+                <label for="name">Your name</label>
+                <input id="name" name="name" required />
+              </div>
+              <div class="field">
+                <label for="phone">Your phone number</label>
+                <input id="phone" name="phone" required inputmode="tel" autocomplete="tel" />
+              </div>
+              <div class="field">
+                <label for="city">City for delivery</label>
+                <input id="city" name="city" placeholder="Chennai, Bengaluru…" />
+              </div>
+            </div>
+            <aside class="review" id="review"></aside>
+          </form>
+        </div>
       </div>
 
       <div class="success" id="success">
@@ -174,8 +178,8 @@
       </div>
 
       <div class="wizard-bar" id="wizardBar">
-        <button type="button" class="btn btn-xl btn-ghost" id="backBtn">Back</button>
-        <button type="button" class="btn btn-xl btn-primary" id="nextBtn">Next</button>
+        <button type="button" class="btn btn-xl btn-ghost is-idle" id="backBtn">Back</button>
+        <button type="button" class="btn btn-xl btn-primary" id="nextBtn">Continue</button>
       </div>
     </section>
   </main>
@@ -186,7 +190,7 @@
       <a href="index.html#location">Thenkulapakkam, Tamil Nadu</a>
     </div>
   </footer>
-  <script src="js/main.js"></script>
-  <script src="js/customise.js"></script>
+  <script src="js/main.js?v=4"></script>
+  <script src="js/customise.js?v=4"></script>
 </body>
 </html>
