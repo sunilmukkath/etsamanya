@@ -348,11 +348,27 @@ ul {
 
 .brand-name {
   font-family: var(--font-display);
-  font-size: 2rem;
+  font-size: 2.75rem;
   font-weight: 500;
   font-style: italic;
   letter-spacing: -0.02em;
-  line-height: 1;
+  line-height: 1.12;
+}
+
+.brand-name .a-macron {
+  position: relative;
+}
+
+.brand-name .a-macron::after {
+  content: "";
+  position: absolute;
+  top: 0.04em;
+  left: 0.14em;
+  width: 0.46em;
+  height: 0.075em;
+  background: currentColor;
+  border-radius: 1px;
+  transform: skewX(-12deg);
 }
 
 .nav {
