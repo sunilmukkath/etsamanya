@@ -171,7 +171,7 @@ ul {
 }
 
 .wrap {
-  width: min(1120px, calc(100% - 48px));
+  width: min(1180px, calc(100% - 48px));
   margin-inline: auto;
 }
 
@@ -191,6 +191,50 @@ ul {
   width: 22px;
   height: 1px;
   background: currentColor;
+}
+
+.ico {
+  width: 1.2em;
+  height: 1.2em;
+  display: block;
+  flex-shrink: 0;
+}
+
+.ico-well {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--ivory) 55%, white);
+  color: var(--leaf-deep);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65);
+}
+
+.ico-well .ico {
+  width: 26px;
+  height: 26px;
+}
+
+.ico-well-sm {
+  width: 40px;
+  height: 40px;
+}
+
+.ico-well-sm .ico {
+  width: 20px;
+  height: 20px;
+}
+
+.ico-well-lg {
+  width: 64px;
+  height: 64px;
+}
+
+.ico-well-lg .ico {
+  width: 32px;
+  height: 32px;
 }
 
 .display {
@@ -289,7 +333,7 @@ ul {
 }
 
 .header-inner {
-  width: min(1120px, calc(100% - 48px));
+  width: min(1180px, calc(100% - 48px));
   margin-inline: auto;
   display: flex;
   align-items: center;
@@ -354,6 +398,13 @@ ul {
   border: 1px solid var(--line);
   border-radius: 50%;
   background: transparent;
+  color: var(--leaf-deep);
+  place-items: center;
+}
+
+.menu-toggle .ico {
+  width: 22px;
+  height: 22px;
 }
 
 .hero {
@@ -386,23 +437,30 @@ ul {
 }
 
 .hero-meta {
-  display: flex;
-  gap: 28px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
   margin-top: 42px;
   padding-top: 28px;
   border-top: 1px solid var(--line);
 }
 
+.hero-meta-item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
 .hero-meta strong {
   display: block;
   font-family: var(--font-display);
-  font-size: 1.7rem;
-  line-height: 1;
+  font-size: 1.45rem;
+  line-height: 1.1;
 }
 
 .hero-meta span {
   color: var(--muted);
-  font-size: 0.86rem;
+  font-size: 0.82rem;
 }
 
 .hero-photo {
@@ -463,7 +521,7 @@ ul {
 }
 
 section {
-  padding: 92px 0;
+  padding: 108px 0;
 }
 
 .section-head {
@@ -490,18 +548,22 @@ section {
 }
 
 .pillar {
-  padding: 28px 22px;
+  padding: 26px 22px 28px;
   background: color-mix(in srgb, var(--ivory) 82%, white);
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  min-height: 220px;
+  min-height: 240px;
+}
+
+.pillar .ico-well {
+  margin-bottom: 22px;
 }
 
 .pillar b {
   display: block;
   font-family: var(--font-display);
   font-size: 1.7rem;
-  margin: 18px 0 10px;
+  margin: 12px 0 10px;
 }
 
 .pillar p {
@@ -581,6 +643,14 @@ section {
   background: linear-gradient(transparent, rgba(66, 87, 58, 0.78));
 }
 
+.card-body .ico-well {
+  margin-bottom: 14px;
+  background: rgba(252, 250, 246, 0.16);
+  border-color: rgba(252, 250, 246, 0.28);
+  color: var(--cream);
+  box-shadow: none;
+}
+
 .card.featured {
   grid-row: span 2;
   min-height: 580px;
@@ -602,72 +672,88 @@ section {
   display: none;
 }
 
+.craft-band {
+  background: var(--paper);
+  border-block: 1px solid var(--line);
+  padding: 112px 0;
+}
+
+.craft-intro {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 48px;
+  align-items: end;
+  margin-bottom: 40px;
+}
+
+.craft-intro h2 {
+  font-size: clamp(2.6rem, 5.4vw, 4.6rem);
+  max-width: 11ch;
+  margin-top: 10px;
+}
+
+.craft-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.craft-step {
+  min-height: 280px;
+  padding: 28px 26px 30px;
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  background: color-mix(in srgb, var(--ivory) 70%, white);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+.craft-step small {
+  display: block;
+  margin: 22px 0 8px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--gold);
+}
+
+.craft-step h3 {
+  font-family: var(--font-display);
+  font-size: 1.85rem;
+  font-weight: 500;
+  color: var(--leaf-deep);
+  margin-bottom: 10px;
+  line-height: 1.15;
+}
+
+.craft-step p {
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+}
+
+.craft-footnote {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-top: 22px;
+  padding: 20px 22px;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: color-mix(in srgb, var(--ivory) 55%, white);
+}
+
+.craft-footnote p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 1rem;
+  max-width: 44rem;
+}
+
 .craft {
   display: grid;
   grid-template-columns: 0.9fr 1.1fr;
   gap: 64px;
   align-items: center;
-}
-
-.craft-visual {
-  position: relative;
-  border-radius: 36px;
-  overflow: hidden;
-  min-height: 520px;
-}
-
-.craft-visual img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  position: absolute;
-  inset: 0;
-}
-
-.note-card {
-  position: absolute;
-  right: 24px;
-  bottom: 24px;
-  width: min(260px, 70%);
-  padding: 20px;
-  background: var(--ivory);
-  color: var(--ink);
-  border-radius: 18px;
-}
-
-.steps {
-  display: grid;
-  gap: 22px;
-  margin-top: 28px;
-}
-
-.step {
-  display: grid;
-  grid-template-columns: 56px 1fr;
-  gap: 16px;
-  padding-bottom: 22px;
-  border-bottom: 1px solid var(--line);
-}
-
-.step strong {
-  display: block;
-  font-size: 1.15rem;
-  margin-bottom: 4px;
-}
-
-.step p {
-  color: var(--muted);
-}
-
-.num {
-  width: 56px;
-  height: 56px;
-  border: 1px solid var(--line);
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  font-family: var(--font-display);
-  font-size: 1.4rem;
 }
 
 .occasions {
@@ -677,27 +763,97 @@ section {
 }
 
 .occasion {
-  display: block;
-  padding: 32px 24px;
-  border-radius: 24px;
-  background: var(--clove);
-  color: var(--ivory);
-  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  padding: 28px 24px;
+  border-radius: 28px;
+  background: color-mix(in srgb, var(--ivory) 70%, white);
+  color: var(--ink);
+  min-height: 248px;
+  border: 1px solid var(--line);
+  transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
 }
 
-.occasion:nth-child(2) { background: var(--saffron); }
-.occasion:nth-child(3) { background: var(--cardamom); }
-.occasion:nth-child(4) { background: var(--terracotta); }
+.occasion:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow);
+}
+
+.occasion small {
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--gold);
+}
 
 .occasion h3 {
   font-family: var(--font-display);
   font-size: 2rem;
-  margin: 48px 0 8px;
+  margin: 18px 0 8px;
+  color: var(--leaf-deep);
+}
+
+.occasion p {
+  color: var(--ink-soft);
+}
+
+.occasion .ico-well {
+  margin-bottom: 28px;
 }
 
 .lots {
   background: var(--paper);
   color: var(--ink);
+}
+
+.pantry-roster .pantry-group {
+  margin-top: 8px;
+}
+
+.pantry-roster .pantry-group + .pantry-group {
+  margin-top: 32px;
+}
+
+.ingredient-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
+  gap: 12px;
+}
+
+.ingredient {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-height: 156px;
+  padding: 20px 18px 18px;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: color-mix(in srgb, var(--ivory) 60%, white);
+  transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease), border-color 0.3s var(--ease);
+}
+
+.ingredient:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--gold) 55%, var(--line));
+  box-shadow: var(--shadow);
+}
+
+.ingredient b {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 500;
+  color: var(--leaf-deep);
+  line-height: 1.15;
+}
+
+.ingredient em {
+  margin-top: auto;
+  font-style: normal;
+  color: var(--leaf);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
 }
 
 .lots-grid {
@@ -741,6 +897,10 @@ section {
   align-items: center;
 }
 
+.quote-block .ico-well {
+  margin-bottom: 22px;
+}
+
 .quote-block blockquote {
   margin: 0;
   font-family: var(--font-display);
@@ -762,18 +922,35 @@ section {
   gap: 24px;
   padding: 48px;
   border-radius: 32px;
-  background: var(--turmeric);
-  color: var(--ink);
+  background: var(--leaf-deep);
+  color: var(--cream);
 }
 
 .cta-band h2 {
   font-size: clamp(2.2rem, 4vw, 3.6rem);
   max-width: 14ch;
-  color: var(--clove);
+  color: var(--cream);
+}
+
+.cta-band .btn-primary {
+  background: var(--sun);
+  color: var(--leaf-deep);
+  box-shadow: none;
+}
+
+.cta-band .btn-primary:hover {
+  background: var(--gold);
+  color: var(--leaf-deep);
 }
 
 .location {
   padding-top: 24px;
+}
+
+.location-row {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
 }
 
 .location h2 {
@@ -1010,7 +1187,7 @@ section {
   color: inherit;
   min-height: 0;
   padding: 28px 24px 22px;
-  border: 1px solid rgba(90, 58, 36, 0.1);
+  border: 1px solid color-mix(in srgb, var(--gold) 32%, var(--line));
   border-radius: 32px;
   background: linear-gradient(180deg, #fcfaf6 0%, #f8f3ed 100%);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
@@ -1037,20 +1214,16 @@ section {
   color: var(--cream);
 }
 
-.size-icon {
-  width: 48px;
-  height: 48px;
-  margin-bottom: 8px;
-  color: var(--saffron);
+.size-card > .ico-well {
+  margin-bottom: 14px;
+  color: var(--leaf-deep);
 }
 
-.size-card.is-picked .size-icon {
+.size-card.is-picked > .ico-well {
+  background: rgba(252, 250, 246, 0.12);
+  border-color: rgba(252, 250, 246, 0.22);
   color: var(--leaf-bright);
-}
-
-.size-icon svg {
-  width: 100%;
-  height: 100%;
+  box-shadow: none;
 }
 
 .size-card small {
@@ -1359,6 +1532,73 @@ section {
   font-size: clamp(1.8rem, 4vw, 2.6rem);
 }
 
+.preset-row {
+  margin: 22px 0 6px;
+}
+
+.preset-label {
+  margin: 0 0 12px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--leaf);
+}
+
+.preset-chips {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(188px, 1fr));
+  gap: 10px;
+}
+
+.preset-chip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 68px;
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--cream);
+  cursor: pointer;
+  text-align: left;
+}
+
+.preset-chip span {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  line-height: 1.2;
+}
+
+.preset-chip b {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.preset-chip small {
+  color: var(--leaf);
+  font-weight: 500;
+  font-size: 0.75rem;
+}
+
+.preset-chip.is-on {
+  background: var(--leaf-deep);
+  color: var(--cream);
+  border-color: var(--leaf-deep);
+}
+
+.preset-chip.is-on small {
+  color: var(--sand);
+}
+
+.preset-chip.is-on .ico-well {
+  background: var(--sun);
+  border-color: transparent;
+  color: var(--leaf-deep);
+  box-shadow: none;
+}
+
 .gift-fill-layout {
   display: grid;
   grid-template-columns: 1.15fr 0.85fr;
@@ -1422,17 +1662,15 @@ section {
   color: var(--sand);
 }
 
-.gift-chip b {
-  display: grid;
-  place-items: center;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
+.gift-chip .ico-well {
+  width: 36px;
+  height: 36px;
   background: var(--paper);
-  color: var(--leaf-deep);
-  font-family: var(--font-display);
-  font-size: 1rem;
-  font-weight: 600;
+}
+
+.gift-chip .ico-well .ico {
+  width: 18px;
+  height: 18px;
 }
 
 .gift-chip.is-on {
@@ -1441,9 +1679,11 @@ section {
   border-color: var(--leaf-deep);
 }
 
-.gift-chip.is-on b {
+.gift-chip.is-on .ico-well {
   background: var(--sun);
+  border-color: transparent;
   color: var(--leaf-deep);
+  box-shadow: none;
 }
 
 .gift-chip:disabled {
@@ -1581,6 +1821,8 @@ a.card {
 @media (max-width: 980px) {
   .hero,
   .craft,
+  .craft-intro,
+  .craft-steps,
   .quote-block,
   .compose,
   .customise-layout,
@@ -1593,6 +1835,7 @@ a.card {
   .lots-grid,
   .choice-grid,
   .size-grid,
+  .hero-meta,
   .wizard-steps {
     grid-template-columns: 1fr;
   }
@@ -1602,9 +1845,14 @@ a.card {
     grid-row: auto;
   }
 
-  .nav,
-  .header-cta .btn {
+  .nav {
     display: none;
+  }
+
+  .header-cta .btn {
+    min-height: 44px;
+    padding: 0 16px;
+    font-size: 0.8rem;
   }
 
   .menu-toggle {

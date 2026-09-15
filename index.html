@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Manrope:wght@400;500;600;700&family=Noto+Sans+Tamil:wght@500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/styles.css?v=12" />
+  <link rel="stylesheet" href="css/styles.css?v=14" />
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -41,11 +41,12 @@
         <a href="#craft">The craft</a>
         <a href="#occasions">Occasions</a>
         <a href="about.html">About</a>
-        <a href="customise.html">Customise</a>
       </nav>
       <div class="header-cta">
         <a class="btn btn-primary" href="customise.html">Customise a gift</a>
-        <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="nav" aria-label="Open menu">☰</button>
+        <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="nav" aria-label="Open menu">
+          <svg class="ico" aria-hidden="true"><use href="assets/icons.svg#menu"></use></svg>
+        </button>
       </div>
     </div>
   </header>
@@ -67,9 +68,18 @@
           <a class="btn btn-ghost" href="#sizes">See the sizes</a>
         </div>
         <div class="hero-meta">
-          <div><strong>सामान्य</strong><span>the ordinary, made sacred</span></div>
-          <div><strong>Fresh lots</strong><span>spices &amp; dry fruits, this week</span></div>
-          <div><strong>A note</strong><span>words that heal as they are read</span></div>
+          <div class="hero-meta-item">
+            <span class="ico-well ico-well-sm" aria-hidden="true"><svg class="ico"><use href="assets/icons.svg#mark"></use></svg></span>
+            <div><strong>सामान्य</strong><span>the ordinary, made sacred</span></div>
+          </div>
+          <div class="hero-meta-item">
+            <span class="ico-well ico-well-sm" aria-hidden="true"><svg class="ico"><use href="assets/icons.svg#branch"></use></svg></span>
+            <div><strong>Fresh lots</strong><span>spices &amp; dry fruits, this week</span></div>
+          </div>
+          <div class="hero-meta-item">
+            <span class="ico-well ico-well-sm" aria-hidden="true"><svg class="ico"><use href="assets/icons.svg#note"></use></svg></span>
+            <div><strong>A note</strong><span>words that heal as they are read</span></div>
+          </div>
         </div>
       </div>
       <figure class="hero-photo">
@@ -93,11 +103,26 @@
         <p class="lede">Samanya means the everyday. We treat the kitchen as a place of healing — spice, nut, fruit of the tree — packed so someone feels tended.</p>
       </div>
       <div class="pillars">
-        <article class="pillar"><span class="pillar-index">01</span><b>Natural</b><p>Whole spices, unpolished nuts, nothing dyed to look louder than the harvest.</p></article>
-        <article class="pillar"><span class="pillar-index">02</span><b>Traditional</b><p>Recipes and pairings a grandmother would recognise: a thaal, a masala dabba, a festival box.</p></article>
-        <article class="pillar"><span class="pillar-index">03</span><b>Indian</b><p>From Kerala vines and Kashmir orchards — gifts that taste of this land, not a warehouse aisle.</p></article>
-        <article class="pillar"><span class="pillar-index">04</span><b>Locally sourced</b><p>We work with growers and small millers, not anonymous bulk lots with a pretty ribbon.</p></article>
-        <article class="pillar"><span class="pillar-index">05</span><b>Freshest</b><p>Spices and dry fruits packed to order from the current lot. A gift should still smell alive.</p></article>
+        <article class="pillar">
+          <span class="ico-well" aria-hidden="true"><svg class="ico"><use href="assets/icons.svg#leaf"></use></svg></span>
+          <span class="pillar-index">01</span><b>Natural</b><p>Whole spices, unpolished nuts, nothing dyed to look louder than the harvest.</p>
+        </article>
+        <article class="pillar">
+          <span class="ico-well" aria-hidden="true"><svg class="ico"><use href="assets/icons.svg#dabba"></use></svg></span>
+          <span class="pillar-index">02</span><b>Traditional</b><p>Recipes and pairings a grandmother would recognise: a thaal, a masala dabba, a festival box.</p>
+        </article>
+        <article class="pillar">
+          <span class="ico-well" aria-hidden="true"><svg class="ico"><use href="assets/icons.svg#lotus"></use></svg></span>
+          <span class="pillar-index">03</span><b>Indian</b><p>From Kerala vines and Kashmir orchards — gifts that taste of this land, not a warehouse aisle.</p>
+        </article>
+        <article class="pillar">
+          <span class="ico-well" aria-hidden="true"><svg class="ico"><use href="assets/icons.svg#hands"></use></svg></span>
+          <span class="pillar-index">04</span><b>Locally sourced</b><p>We work with growers and small millers, not anonymous bulk lots with a pretty ribbon.</p>
+        </article>
+        <article class="pillar">
+          <span class="ico-well" aria-hidden="true"><svg class="ico"><use href="assets/icons.svg#sun"></use></svg></span>
+          <span class="pillar-index">05</span><b>Freshest</b><p>Spices and dry fruits packed to order from the current lot. A gift should still smell alive.</p>
+        </article>
       </div>
     </section>
 
@@ -111,9 +136,7 @@
       </div>
       <div class="size-grid">
         <a class="size-card" href="customise.html?size=luxe">
-          <span class="size-icon" aria-hidden="true">
-            <svg viewBox="0 0 48 48" fill="none"><rect x="8" y="18" width="32" height="22" rx="3" stroke="currentColor" stroke-width="1.8"/><path d="M8 24h32M24 18v22M16 18c0-6 16-6 16 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-          </span>
+          <span class="ico-well" aria-hidden="true"><svg class="ico"><use href="assets/icons.svg#box"></use></svg></span>
           <small>Box · 10 pieces</small>
           <h2 class="display">LUXE</h2>
           <p class="size-price">₹1,899</p>
@@ -121,9 +144,7 @@
           <span class="size-cta">Customise LUXE</span>
         </a>
         <a class="size-card" href="customise.html?size=celebrations">
-          <span class="size-icon" aria-hidden="true">
-            <svg viewBox="0 0 48 48" fill="none"><rect x="10" y="16" width="28" height="20" rx="3" stroke="currentColor" stroke-width="1.8"/><path d="M10 22h28M18 12l6 4 6-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="24" cy="30" r="2.2" fill="currentColor"/></svg>
-          </span>
+          <span class="ico-well" aria-hidden="true"><svg class="ico"><use href="assets/icons.svg#box-bow"></use></svg></span>
           <small>Box · 7 pieces</small>
           <h2 class="display">Celebrations</h2>
           <p class="size-price">₹1,299</p>
@@ -131,9 +152,7 @@
           <span class="size-cta">Customise Celebrations</span>
         </a>
         <a class="size-card" href="customise.html?size=rituals">
-          <span class="size-icon" aria-hidden="true">
-            <svg viewBox="0 0 48 48" fill="none"><path d="M16 20c0-6 16-6 16 0v4c0 10-4 16-8 18-4-2-8-8-8-18v-4Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M16 24h16M24 14v6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-          </span>
+          <span class="ico-well" aria-hidden="true"><svg class="ico"><use href="assets/icons.svg#potli"></use></svg></span>
           <small>Potli · 4 pieces</small>
           <h2 class="display">Rituals</h2>
           <p class="size-price">₹799</p>
@@ -163,6 +182,7 @@
           <a class="card featured" href="customise.html" data-cat="named spice orchard">
             <img src="https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=1400&q=80" alt="A wrapped gift box with natural twine" />
             <div class="card-body">
+              <span class="ico-well" aria-hidden="true"><svg class="ico"><use href="assets/icons.svg#named"></use></svg></span>
               <small>The Named Box</small>
               <h3>Composed for one person</h3>
               <p>Occasion, palate, and a letter. Then you choose what fills the box or potli.</p>
@@ -171,61 +191,76 @@
           <a class="card" href="customise.html" data-cat="spice">
             <img src="https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=900&q=80" alt="Bowls of Indian spices" />
             <div class="card-body">
+              <span class="ico-well" aria-hidden="true"><svg class="ico"><use href="assets/icons.svg#spice"></use></svg></span>
               <small>Spice atelier</small>
               <h3>The masala dabba</h3>
-              <p>Pepper, clove, cinnamon, cardamom, star anise, nutmeg — plus turmeric, jeera, and chai masala.</p>
+              <p>Pepper 130g · clove 75g · cinnamon 150g · cardamom 35g · star anise 90g · nutmeg 100g. Podis: turmeric 80g, roasted jeera 200g, chai masala 150g.</p>
             </div>
           </a>
           <a class="card" href="customise.html" data-cat="orchard">
             <img src="https://images.unsplash.com/photo-1508747703725-719777637510?auto=format&fit=crop&w=900&q=80" alt="Almonds in a bowl" />
             <div class="card-body">
+              <span class="ico-well" aria-hidden="true"><svg class="ico"><use href="assets/icons.svg#orchard"></use></svg></span>
               <small>Orchard &amp; kernel</small>
               <h3>Five from the tree</h3>
-              <p>Cashew, raisins, almonds, figs, pista, saffron, walnuts — packed from the current lot.</p>
+              <p>Cashew 100g · raisins 75g · almonds 110g · figs 75g · pista 55g · saffron 0.2g · walnuts 90g — packed from the current lot.</p>
             </div>
           </a>
-          <a class="card" href="customise.html?size=luxe" data-cat="festival">
+          <a class="card" href="customise.html?size=luxe&amp;preset=festival" data-cat="festival">
             <img src="https://images.unsplash.com/photo-1615485290382-441e4d049eab?auto=format&fit=crop&w=900&q=80" alt="Warm spices in ceramic bowls" />
             <div class="card-body">
+              <span class="ico-well" aria-hidden="true"><svg class="ico"><use href="assets/icons.svg#diya"></use></svg></span>
               <small>Festival trunk</small>
               <h3>A thaal of abundance</h3>
               <p>For Diwali, Eid, weddings — LUXE, filled as you ask.</p>
             </div>
           </a>
-          <a class="card" href="customise.html?size=celebrations" data-cat="spice orchard">
+          <a class="card" href="customise.html?size=celebrations&amp;preset=housewarming" data-cat="spice orchard">
             <img src="https://images.unsplash.com/photo-1536590900883-9d3ddae1380e?auto=format&fit=crop&w=900&q=80" alt="Pistachios" />
             <div class="card-body">
+              <span class="ico-well" aria-hidden="true"><svg class="ico"><use href="assets/icons.svg#kitchen"></use></svg></span>
               <small>Housewarming</small>
               <h3>The first kitchen</h3>
-              <p>Spices to start a home, a terracotta tumbler, a wooden spoon, a ceramic bowl.</p>
+              <p>Spices to start a home, plus a terracotta tumbler, wooden spoon, and ceramic bowl — 1 pc each.</p>
             </div>
           </a>
         </div>
       </div>
     </section>
 
-    <section class="wrap" id="craft">
-      <div class="craft">
-        <div class="craft-visual">
-          <img src="https://images.unsplash.com/photo-1596797038530-2c107229654b?auto=format&fit=crop&w=1200&q=80" alt="Hands working with Indian spices" />
-          <aside class="note-card">
-            <p class="kicker">A note inside</p>
-            <p>The line inside is part of the gift’s quiet medicine — from you, or from us if you would rather stay unseen.</p>
-          </aside>
-        </div>
-        <div>
-          <p class="kicker">How a gift is made</p>
-          <h2 class="display">Personal, not printed.</h2>
-          <p class="lede">We do not slap a logo on a hamper. We ask who needs tending — what they cook, what they cannot eat, what words would rest them.</p>
-          <div class="steps">
-            <article class="step"><span class="num">1</span><div><strong>Tell us the person</strong><p>Name, occasion, palate, and any nuts or heat they should not meet.</p></div></article>
-            <article class="step"><span class="num">2</span><div><strong>We source this week’s lots</strong><p>Pepper, almonds, figs — whatever is brightest now, from growers we know.</p></div></article>
-            <article class="step"><span class="num">3</span><div><strong>Packed by hand, sent as if from home</strong><p>Natural wraps, a named lid, a note. Ready for the doorstep or the office desk.</p></div></article>
+    <section class="craft-band" id="craft">
+      <div class="wrap">
+        <div class="craft-intro">
+          <div>
+            <p class="kicker">How a gift is made</p>
+            <h2 class="display">First the person.<br />Then the pantry.</h2>
           </div>
-          <div class="hero-actions">
-            <a class="btn btn-primary" href="customise.html">Customise a gift</a>
-          </div>
+          <p class="lede">Every gift begins with a name. What they cook, what they cannot eat, and the line that should meet them when they lift the lid.</p>
         </div>
+        <div class="craft-steps">
+          <article class="craft-step">
+            <span class="ico-well" aria-hidden="true"><svg class="ico"><use href="assets/icons.svg#person"></use></svg></span>
+            <small>01</small>
+            <h3>We ask after them</h3>
+            <p>Name, occasion, palate, and anything they should not meet — nuts, heat, or a flavour they have set aside.</p>
+          </article>
+          <article class="craft-step">
+            <span class="ico-well" aria-hidden="true"><svg class="ico"><use href="assets/icons.svg#branch"></use></svg></span>
+            <small>02</small>
+            <h3>We choose this week’s lots</h3>
+            <p>Pepper, almonds, figs — whatever is brightest now, from growers we can name.</p>
+          </article>
+          <article class="craft-step">
+            <span class="ico-well" aria-hidden="true"><svg class="ico"><use href="assets/icons.svg#parcel"></use></svg></span>
+            <small>03</small>
+            <h3>Packed by hand, with a note</h3>
+            <p>Natural wraps, a named lid, and a sentence meant to nourish as much as the spices.</p>
+          </article>
+        </div>
+        <aside class="craft-footnote">
+          <span class="ico-well ico-well-sm" aria-hidden="true"><svg class="ico"><use href="assets/icons.svg#note"></use></svg></span>
+          <p>The line inside is part of the gift’s quiet medicine — written by you, or by us if you would rather stay unseen.</p>
+        </aside>
       </div>
     </section>
 
@@ -237,41 +272,84 @@
         </div>
       </div>
       <div class="occasions">
-        <a class="occasion" href="customise.html">
+        <a class="occasion" href="customise.html?size=luxe&amp;preset=festival">
+          <span class="ico-well" aria-hidden="true"><svg class="ico"><use href="assets/icons.svg#diya"></use></svg></span>
           <small>01</small><h3>Festivals</h3><p>Diwali, Eid, Christmas, Pongal — a pantry that arrives before the guests.</p>
         </a>
-        <a class="occasion" href="customise.html?size=luxe">
+        <a class="occasion" href="customise.html?size=luxe&amp;preset=wedding">
+          <span class="ico-well" aria-hidden="true"><svg class="ico"><use href="assets/icons.svg#garland"></use></svg></span>
           <small>02</small><h3>Weddings</h3><p>Return gifts and family thaals that honour both houses without looking identical.</p>
         </a>
-        <a class="occasion" href="customise.html?size=celebrations">
+        <a class="occasion" href="customise.html?size=celebrations&amp;preset=corporate">
+          <span class="ico-well" aria-hidden="true"><svg class="ico"><use href="assets/icons.svg#seal"></use></svg></span>
           <small>03</small><h3>Corporate</h3><p>Named boxes for teams and clients. Indian, edible, and actually wanted.</p>
         </a>
-        <a class="occasion" href="customise.html?size=rituals">
+        <a class="occasion" href="customise.html?size=rituals&amp;preset=quiet">
+          <span class="ico-well" aria-hidden="true"><svg class="ico"><use href="assets/icons.svg#heart-leaf"></use></svg></span>
           <small>04</small><h3>Just because</h3><p>A potli for a new kitchen. Almonds for a recovery. Spice for a cook you love.</p>
         </a>
       </div>
     </section>
 
-    <section class="lots">
+    <section class="lots" id="ingredients">
       <div class="wrap">
         <div class="section-head">
           <div>
-            <p class="kicker">This week’s lots</p>
-            <h2 class="display">What is bright in the pantry now.</h2>
+            <p class="kicker">Ingredients</p>
+            <h2 class="display">What fills a box or potli.</h2>
           </div>
-          <p class="lede">We list what we would pack today. A gift from samanya should still smell of the mill and the orchard.</p>
+          <p class="lede">Each pantry item is a ₹90 portion. Serveware is one piece. Packed from this week’s lots.</p>
         </div>
-        <div class="lots-grid">
-          <article class="lot"><span>From Idukki</span><b>Malabar pepper</b><p>Bold, floral, still on the vine’s schedule. For the cook who grinds at the table.</p></article>
-          <article class="lot"><span>From Kashmir</span><b>Mamra almonds</b><p>Sweet, small, and oil-rich. Packed the week they reach us — never a tired tin.</p></article>
-          <article class="lot"><span>From Karnataka</span><b>Byadgi chilli</b><p>Colour without cruelty. Warmth for a festival thaal, not a dare.</p></article>
+        <div class="pantry-roster">
+          <div class="pantry-group">
+            <h3>Nuts &amp; dry fruits</h3>
+            <div class="ingredient-grid">
+              <article class="ingredient"><span class="ico-well ico-well-sm" aria-hidden="true"><svg class="ico"><use href="assets/icons.svg#cashew"></use></svg></span><b>Cashew</b><em>100g</em></article>
+              <article class="ingredient"><span class="ico-well ico-well-sm" aria-hidden="true"><svg class="ico"><use href="assets/icons.svg#raisins"></use></svg></span><b>Raisins</b><em>75g</em></article>
+              <article class="ingredient"><span class="ico-well ico-well-sm" aria-hidden="true"><svg class="ico"><use href="assets/icons.svg#almonds"></use></svg></span><b>Almonds</b><em>110g</em></article>
+              <article class="ingredient"><span class="ico-well ico-well-sm" aria-hidden="true"><svg class="ico"><use href="assets/icons.svg#figs"></use></svg></span><b>Figs</b><em>75g</em></article>
+              <article class="ingredient"><span class="ico-well ico-well-sm" aria-hidden="true"><svg class="ico"><use href="assets/icons.svg#pista"></use></svg></span><b>Pista</b><em>55g</em></article>
+              <article class="ingredient"><span class="ico-well ico-well-sm" aria-hidden="true"><svg class="ico"><use href="assets/icons.svg#saffron"></use></svg></span><b>Saffron</b><em>0.2g</em></article>
+              <article class="ingredient"><span class="ico-well ico-well-sm" aria-hidden="true"><svg class="ico"><use href="assets/icons.svg#walnuts"></use></svg></span><b>Walnuts</b><em>90g</em></article>
+            </div>
+          </div>
+          <div class="pantry-group">
+            <h3>Whole spices</h3>
+            <div class="ingredient-grid">
+              <article class="ingredient"><span class="ico-well ico-well-sm" aria-hidden="true"><svg class="ico"><use href="assets/icons.svg#pepper"></use></svg></span><b>Pepper</b><em>130g</em></article>
+              <article class="ingredient"><span class="ico-well ico-well-sm" aria-hidden="true"><svg class="ico"><use href="assets/icons.svg#clove"></use></svg></span><b>Clove</b><em>75g</em></article>
+              <article class="ingredient"><span class="ico-well ico-well-sm" aria-hidden="true"><svg class="ico"><use href="assets/icons.svg#cinnamon"></use></svg></span><b>Cinnamon</b><em>150g</em></article>
+              <article class="ingredient"><span class="ico-well ico-well-sm" aria-hidden="true"><svg class="ico"><use href="assets/icons.svg#cardamom"></use></svg></span><b>Cardamom</b><em>35g</em></article>
+              <article class="ingredient"><span class="ico-well ico-well-sm" aria-hidden="true"><svg class="ico"><use href="assets/icons.svg#star-anise"></use></svg></span><b>Star anise</b><em>90g</em></article>
+              <article class="ingredient"><span class="ico-well ico-well-sm" aria-hidden="true"><svg class="ico"><use href="assets/icons.svg#nutmeg"></use></svg></span><b>Nutmeg</b><em>100g</em></article>
+            </div>
+          </div>
+          <div class="pantry-group">
+            <h3>Podis</h3>
+            <div class="ingredient-grid">
+              <article class="ingredient"><span class="ico-well ico-well-sm" aria-hidden="true"><svg class="ico"><use href="assets/icons.svg#turmeric"></use></svg></span><b>Turmeric</b><em>80g</em></article>
+              <article class="ingredient"><span class="ico-well ico-well-sm" aria-hidden="true"><svg class="ico"><use href="assets/icons.svg#jeera"></use></svg></span><b>Roasted jeera</b><em>200g</em></article>
+              <article class="ingredient"><span class="ico-well ico-well-sm" aria-hidden="true"><svg class="ico"><use href="assets/icons.svg#chai"></use></svg></span><b>Chai masala</b><em>150g</em></article>
+            </div>
+          </div>
+          <div class="pantry-group">
+            <h3>Serveware</h3>
+            <div class="ingredient-grid">
+              <article class="ingredient"><span class="ico-well ico-well-sm" aria-hidden="true"><svg class="ico"><use href="assets/icons.svg#tumbler"></use></svg></span><b>Terracotta tumbler</b><em>1 pc</em></article>
+              <article class="ingredient"><span class="ico-well ico-well-sm" aria-hidden="true"><svg class="ico"><use href="assets/icons.svg#spoon"></use></svg></span><b>Wooden spoon</b><em>1 pc</em></article>
+              <article class="ingredient"><span class="ico-well ico-well-sm" aria-hidden="true"><svg class="ico"><use href="assets/icons.svg#bowls"></use></svg></span><b>Ceramic bowls</b><em>1 pc</em></article>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
     <section class="wrap">
       <div class="quote-block">
-        <blockquote class="display">“They sent my mother a masala box that smelled like her own kitchen in Calicut. That is a rarer gift than ribbon.”</blockquote>
+        <div>
+          <span class="ico-well" aria-hidden="true"><svg class="ico"><use href="assets/icons.svg#quote"></use></svg></span>
+          <blockquote class="display">“They sent my mother a masala box that smelled like her own kitchen in Calicut. That is a rarer gift than ribbon.”</blockquote>
+        </div>
         <div>
           <cite>A daughter, for a sixtieth birthday</cite>
           <p class="lede" style="margin-top: 18px;">If you want a gift that is eaten, cooked with, and read in a quiet hour — start here.</p>
@@ -287,13 +365,18 @@
     </section>
 
     <section class="wrap location" id="location">
-      <p class="kicker">Address &amp; location</p>
-      <h2 class="display">Where to find us</h2>
-      <address>
-        samanya<br />
-        Thenkulapakkam<br />
-        Tamil Nadu, India
-      </address>
+      <div class="location-row">
+        <span class="ico-well" aria-hidden="true"><svg class="ico"><use href="assets/icons.svg#pin"></use></svg></span>
+        <div>
+          <p class="kicker">Address &amp; location</p>
+          <h2 class="display">Where to find us</h2>
+          <address>
+            samanya<br />
+            Thenkulapakkam<br />
+            Tamil Nadu, India
+          </address>
+        </div>
+      </div>
     </section>
   </main>
 

@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Manrope:wght@400;500;600;700&family=Noto+Sans+Tamil:wght@500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/styles.css?v=12" />
+  <link rel="stylesheet" href="css/styles.css?v=14" />
 </head>
 <body class="wizard-page">
   <a class="skip" href="#giftBuilder">Skip to customisation</a>
@@ -24,11 +24,12 @@
         <a href="index.html#craft">The craft</a>
         <a href="index.html#occasions">Occasions</a>
         <a href="about.html">About</a>
-        <a href="customise.html" aria-current="page">Customise</a>
       </nav>
       <div class="header-cta">
         <a class="btn btn-primary" href="#giftBuilder">Customise a gift</a>
-        <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="nav" aria-label="Open menu">☰</button>
+        <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="nav" aria-label="Open menu">
+          <svg class="ico" aria-hidden="true"><use href="assets/icons.svg#menu"></use></svg>
+        </button>
       </div>
     </div>
   </header>
@@ -43,16 +44,14 @@
       <div class="wizard-intro">
         <p class="kicker">A ritual of nourishment</p>
         <h1 class="display">Choose a gift</h1>
-        <p class="lede">Tap LUXE, Celebrations, or Rituals. The ingredients and a message card will open just below.</p>
+        <p class="lede">Tap LUXE, Celebrations, or Rituals. Then start from an occasion, or pick each ingredient yourself.</p>
       </div>
 
       <p class="wizard-alert" id="giftAlert" role="status"></p>
 
       <div class="size-grid" id="sizeGrid">
         <button type="button" class="size-card" data-size="luxe">
-          <span class="size-icon" aria-hidden="true">
-            <svg viewBox="0 0 48 48" fill="none"><rect x="8" y="18" width="32" height="22" rx="3" stroke="currentColor" stroke-width="1.8"/><path d="M8 24h32M24 18v22M16 18c0-6 16-6 16 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-          </span>
+          <span class="ico-well" aria-hidden="true"><svg class="ico"><use href="assets/icons.svg#box"></use></svg></span>
           <small>Box · 10 pieces</small>
           <h3 class="display">LUXE</h3>
           <p class="size-price">₹1,899</p>
@@ -60,9 +59,7 @@
           <span class="size-cta">Tap to open</span>
         </button>
         <button type="button" class="size-card" data-size="celebrations">
-          <span class="size-icon" aria-hidden="true">
-            <svg viewBox="0 0 48 48" fill="none"><rect x="10" y="16" width="28" height="20" rx="3" stroke="currentColor" stroke-width="1.8"/><path d="M10 22h28M18 12l6 4 6-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="24" cy="30" r="2.2" fill="currentColor"/></svg>
-          </span>
+          <span class="ico-well" aria-hidden="true"><svg class="ico"><use href="assets/icons.svg#box-bow"></use></svg></span>
           <small>Box · 7 pieces</small>
           <h3 class="display">Celebrations</h3>
           <p class="size-price">₹1,299</p>
@@ -70,9 +67,7 @@
           <span class="size-cta">Tap to open</span>
         </button>
         <button type="button" class="size-card" data-size="rituals">
-          <span class="size-icon" aria-hidden="true">
-            <svg viewBox="0 0 48 48" fill="none"><path d="M16 20c0-6 16-6 16 0v4c0 10-4 16-8 18-4-2-8-8-8-18v-4Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M16 24h16M24 14v6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-          </span>
+          <span class="ico-well" aria-hidden="true"><svg class="ico"><use href="assets/icons.svg#potli"></use></svg></span>
           <small>Potli · 4 pieces</small>
           <h3 class="display">Rituals</h3>
           <p class="size-price">₹799</p>
@@ -91,6 +86,8 @@
           <p class="count-pill" id="giftCount">0 chosen</p>
         </div>
 
+        <div class="preset-row" id="giftPresets"></div>
+
         <div class="gift-fill-layout">
           <div id="giftItems"></div>
 
@@ -100,9 +97,11 @@
             <p class="lede">This line is for the person who opens the box — meant to heal as much as the spices.</p>
             <div class="message-grid" id="giftMessages">
               <button type="button" class="message-btn" data-message="May this nourish you, slowly.">May this nourish you, slowly.</button>
+              <button type="button" class="message-btn" data-message="May your house be full, and the days gentle.">May your house be full, and the days gentle.</button>
+              <button type="button" class="message-btn" data-message="For both houses, and the kitchen that will be shared.">For both houses, and the kitchen that will be shared.</button>
+              <button type="button" class="message-btn" data-message="A little of India, for the desk and the evening.">A little of India, for the desk and the evening.</button>
+              <button type="button" class="message-btn" data-message="For the first kitchen, and the meals that will follow.">For the first kitchen, and the meals that will follow.</button>
               <button type="button" class="message-btn" data-message="For the days that ask for gentleness.">For the days that ask for gentleness.</button>
-              <button type="button" class="message-btn" data-message="Eat well. Rest well. Be held.">Eat well. Rest well. Be held.</button>
-              <button type="button" class="message-btn" data-message="A little warmth, packed for you.">A little warmth, packed for you.</button>
             </div>
             <form id="giftForm" action="#" method="post">
               <div class="fields">
@@ -157,6 +156,27 @@
         celebrations: { id: "celebrations", label: "Celebrations", price: 1299, slots: 7 },
         rituals: { id: "rituals", label: "Rituals", price: 799, slots: 4 }
       };
+      var ICONS = {
+        "Cashew": "cashew",
+        "Raisins": "raisins",
+        "Almonds": "almonds",
+        "Figs": "figs",
+        "Pista": "pista",
+        "Saffron": "saffron",
+        "Walnuts": "walnuts",
+        "Pepper": "pepper",
+        "Clove": "clove",
+        "Cinnamon": "cinnamon",
+        "Cardamom": "cardamom",
+        "Star anise": "star-anise",
+        "Nutmeg": "nutmeg",
+        "Turmeric": "turmeric",
+        "Roasted jeera": "jeera",
+        "Chai masala": "chai",
+        "Terracotta tumbler": "tumbler",
+        "Wooden spoon": "spoon",
+        "Ceramic bowls": "bowls"
+      };
       var GROUPS = [
         { title: "Nuts & dry fruits", items: [
           { name: "Cashew", qty: "100g" },
@@ -186,6 +206,48 @@
           { name: "Ceramic bowls", qty: "1 pc" }
         ]}
       ];
+      var OCCASIONS = [
+        {
+          id: "festival",
+          label: "Festival thaal",
+          blurb: "Diwali, Eid, Pongal, Christmas",
+          icon: "diya",
+          message: "May your house be full, and the days gentle.",
+          items: ["Cashew", "Almonds", "Pista", "Raisins", "Figs", "Saffron", "Cardamom", "Clove", "Turmeric", "Ceramic bowls"]
+        },
+        {
+          id: "wedding",
+          label: "Wedding",
+          blurb: "Return gifts and family thaals",
+          icon: "garland",
+          message: "For both houses, and the kitchen that will be shared.",
+          items: ["Pista", "Cashew", "Almonds", "Saffron", "Cardamom", "Figs", "Clove", "Cinnamon", "Ceramic bowls", "Wooden spoon"]
+        },
+        {
+          id: "corporate",
+          label: "Corporate",
+          blurb: "Named boxes for teams and clients",
+          icon: "seal",
+          message: "A little of India, for the desk and the evening.",
+          items: ["Almonds", "Cashew", "Walnuts", "Chai masala", "Cardamom", "Pepper", "Cinnamon", "Roasted jeera", "Wooden spoon", "Ceramic bowls"]
+        },
+        {
+          id: "housewarming",
+          label: "Housewarming",
+          blurb: "For the first kitchen",
+          icon: "kitchen",
+          message: "For the first kitchen, and the meals that will follow.",
+          items: ["Turmeric", "Pepper", "Cardamom", "Roasted jeera", "Chai masala", "Cashew", "Almonds", "Terracotta tumbler", "Wooden spoon", "Ceramic bowls"]
+        },
+        {
+          id: "quiet",
+          label: "A quiet visit",
+          blurb: "Recovery, just because",
+          icon: "heart-leaf",
+          message: "For the days that ask for gentleness.",
+          items: ["Almonds", "Figs", "Raisins", "Walnuts", "Saffron", "Chai masala", "Ceramic bowls"]
+        }
+      ];
       var QTY = {};
       GROUPS.forEach(function (group) {
         group.items.forEach(function (item) { QTY[item.name] = item.qty; });
@@ -195,12 +257,40 @@
       var chosen = [];
       var fill = document.getElementById("giftFill");
       var itemsBox = document.getElementById("giftItems");
+      var presetsBox = document.getElementById("giftPresets");
       var alertBox = document.getElementById("giftAlert");
       var form = document.getElementById("giftForm");
       var done = document.getElementById("giftDone");
 
+      function ico(id) {
+        return "<svg class='ico' aria-hidden='true'><use href='assets/icons.svg#" + id + "'></use></svg>";
+      }
+
       function rupees(n) {
         return "₹" + n.toLocaleString("en-IN");
+      }
+
+      function findOccasion(id) {
+        for (var i = 0; i < OCCASIONS.length; i++) {
+          if (OCCASIONS[i].id === id) return OCCASIONS[i];
+        }
+        return null;
+      }
+
+      function sameSet(a, b) {
+        if (a.length !== b.length) return false;
+        for (var i = 0; i < a.length; i++) {
+          if (b.indexOf(a[i]) === -1) return false;
+        }
+        return true;
+      }
+
+      function matchingPreset() {
+        if (!size) return null;
+        for (var i = 0; i < OCCASIONS.length; i++) {
+          if (sameSet(chosen, OCCASIONS[i].items.slice(0, size.slots))) return OCCASIONS[i].id;
+        }
+        return null;
       }
 
       function showAlert(msg) {
@@ -214,16 +304,33 @@
         alertBox.textContent = "";
       }
 
+      function setMessage(text) {
+        form.note.value = text;
+        var buttons = document.querySelectorAll(".message-btn");
+        for (var i = 0; i < buttons.length; i++) {
+          buttons[i].classList.toggle("is-on", buttons[i].getAttribute("data-message") === text);
+        }
+      }
+
       function renderItems() {
         var html = "";
         GROUPS.forEach(function (group) {
           html += "<div class='pantry-group'><h3>" + group.title + "</h3><div class='gift-chips'>";
           group.items.forEach(function (item) {
-            html += "<button type='button' class='gift-chip' data-item=\"" + item.name + "\"><b>" + item.name.charAt(0) + "</b><span>" + item.name + "<small>" + item.qty + "</small></span></button>";
+            html += "<button type='button' class='gift-chip' data-item=\"" + item.name + "\"><span class='ico-well'>" + ico(ICONS[item.name] || "leaf") + "</span><span>" + item.name + "<small>" + item.qty + "</small></span></button>";
           });
           html += "</div></div>";
         });
         itemsBox.innerHTML = html;
+      }
+
+      function renderPresets() {
+        var html = "<p class='preset-label'>Start from an occasion</p><div class='preset-chips'>";
+        OCCASIONS.forEach(function (occ) {
+          html += "<button type='button' class='preset-chip' data-preset='" + occ.id + "'><span class='ico-well ico-well-sm'>" + ico(occ.icon) + "</span><span><b>" + occ.label + "</b><small>" + occ.blurb + "</small></span></button>";
+        });
+        html += "</div>";
+        presetsBox.innerHTML = html;
       }
 
       function chosenLine() {
@@ -244,34 +351,63 @@
           chips[j].classList.toggle("is-on", on);
           chips[j].disabled = !!(size && !on && chosen.length >= size.slots);
         }
+        var current = matchingPreset();
+        var presets = document.querySelectorAll(".preset-chip");
+        for (var p = 0; p < presets.length; p++) {
+          presets[p].classList.toggle("is-on", presets[p].getAttribute("data-preset") === current);
+        }
         if (size) {
           document.getElementById("giftTitle").textContent = size.label;
-          document.getElementById("giftHint").textContent = size.label + " · " + rupees(size.price) + ". Each item is a ₹90 portion. Tap up to " + size.slots + ".";
+          document.getElementById("giftHint").textContent = size.label + " · " + rupees(size.price) + ". Each item is a ₹90 portion. Tap a preset, or pick up to " + size.slots + ".";
           document.getElementById("giftCount").textContent = chosen.length + " of " + size.slots + " chosen";
-          document.getElementById("giftReview").innerHTML = "<p><strong>" + size.label + "</strong> · " + rupees(size.price) + "</p><p>" + (chosen.length ? chosenLine() : "No ingredients yet.") + "</p>";
+          var occ = current ? findOccasion(current) : null;
+          document.getElementById("giftReview").innerHTML = "<p><strong>" + size.label + "</strong> · " + rupees(size.price) + (occ ? " · " + occ.label : "") + "</p><p>" + (chosen.length ? chosenLine() : "No ingredients yet.") + "</p>";
         }
       }
 
-      function openGift(id) {
+      function applyOccasion(id) {
+        var occ = findOccasion(id);
+        if (!occ || !size) return;
+        chosen = occ.items.slice(0, size.slots);
+        setMessage(occ.message);
+        paint();
+      }
+
+      function openGift(id, occasionId) {
         hideAlert();
         size = SIZES[id] || null;
         if (!size) {
           showAlert("Please tap LUXE, Celebrations, or Rituals.");
           return;
         }
-        while (chosen.length > size.slots) chosen.pop();
         fill.classList.add("is-open");
-        paint();
+        if (occasionId && findOccasion(occasionId)) applyOccasion(occasionId);
+        else {
+          while (chosen.length > size.slots) chosen.pop();
+          paint();
+        }
         fill.scrollIntoView({ behavior: "smooth", block: "start" });
       }
 
+      renderPresets();
       renderItems();
 
       document.getElementById("sizeGrid").addEventListener("click", function (event) {
         var card = event.target.closest(".size-card");
         if (!card) return;
         event.preventDefault();
-        openGift(card.getAttribute("data-size"));
+        openGift(card.getAttribute("data-size"), matchingPreset());
+      });
+
+      presetsBox.addEventListener("click", function (event) {
+        var chip = event.target.closest(".preset-chip");
+        if (!chip) return;
+        event.preventDefault();
+        if (!size) {
+          showAlert("Tap a gift above first.");
+          return;
+        }
+        applyOccasion(chip.getAttribute("data-preset"));
       });
 
       itemsBox.addEventListener("click", function (event) {
@@ -293,10 +429,7 @@
         var btn = event.target.closest(".message-btn");
         if (!btn) return;
         event.preventDefault();
-        var buttons = document.querySelectorAll(".message-btn");
-        for (var i = 0; i < buttons.length; i++) buttons[i].classList.remove("is-on");
-        btn.classList.add("is-on");
-        form.note.value = btn.getAttribute("data-message");
+        setMessage(btn.getAttribute("data-message"));
       });
 
       form.addEventListener("submit", function (event) {
@@ -324,6 +457,7 @@
             size: size.id,
             label: size.label,
             price: size.price,
+            occasion: matchingPreset(),
             items: chosen.slice(),
             message: form.note.value,
             recipient: form.recipient.value,
@@ -339,11 +473,14 @@
         done.scrollIntoView({ behavior: "smooth", block: "center" });
       });
 
-      var preset = new URLSearchParams(window.location.search).get("size");
-      if (preset === "large") preset = "luxe";
-      if (preset === "medium") preset = "celebrations";
-      if (preset === "small") preset = "rituals";
-      if (preset && SIZES[preset]) openGift(preset);
+      var params = new URLSearchParams(window.location.search);
+      var sizeParam = params.get("size");
+      var occasionParam = params.get("preset");
+      if (sizeParam === "large") sizeParam = "luxe";
+      if (sizeParam === "medium") sizeParam = "celebrations";
+      if (sizeParam === "small") sizeParam = "rituals";
+      if (sizeParam && SIZES[sizeParam]) openGift(sizeParam, occasionParam);
+      else if (occasionParam && findOccasion(occasionParam)) openGift("celebrations", occasionParam);
     })();
   </script>
 </body>

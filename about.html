@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Manrope:wght@400;500;600;700&family=Noto+Sans+Tamil:wght@500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/styles.css?v=12" />
+  <link rel="stylesheet" href="css/styles.css?v=14" />
 </head>
 <body>
   <a class="skip" href="#main">Skip to story</a>
@@ -24,11 +24,12 @@
         <a href="index.html#craft">The craft</a>
         <a href="index.html#occasions">Occasions</a>
         <a href="about.html" aria-current="page">About</a>
-        <a href="customise.html">Customise</a>
       </nav>
       <div class="header-cta">
         <a class="btn btn-primary" href="customise.html">Customise a gift</a>
-        <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="nav" aria-label="Open menu">☰</button>
+        <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="nav" aria-label="Open menu">
+          <svg class="ico" aria-hidden="true"><use href="assets/icons.svg#menu"></use></svg>
+        </button>
       </div>
     </div>
   </header>
@@ -65,9 +66,18 @@
         </div>
       </div>
       <div class="pillars pillars-3">
-        <article class="pillar"><span class="pillar-index">Spice</span><b>Known origins</b><p>Malabar pepper, Byadgi and Kashmiri chilli, Erode turmeric, green cardamom — named for the land, not a blend number.</p></article>
-        <article class="pillar"><span class="pillar-index">Orchard</span><b>Current lots</b><p>Mamra almonds, cashews, pistachios, anjeer, raisins. We pack what is bright this week, and we say so.</p></article>
-        <article class="pillar"><span class="pillar-index">Craft</span><b>Small hands</b><p>Growers, millers, and packers we can telephone. If we cannot tell you where it came from, it does not enter the box.</p></article>
+        <article class="pillar">
+          <span class="ico-well" aria-hidden="true"><svg class="ico"><use href="assets/icons.svg#spice"></use></svg></span>
+          <span class="pillar-index">Spice</span><b>Known origins</b><p>Malabar pepper, Byadgi and Kashmiri chilli, Erode turmeric, green cardamom — named for the land, not a blend number.</p>
+        </article>
+        <article class="pillar">
+          <span class="ico-well" aria-hidden="true"><svg class="ico"><use href="assets/icons.svg#orchard"></use></svg></span>
+          <span class="pillar-index">Orchard</span><b>Current lots</b><p>Mamra almonds, cashews, pistachios, anjeer, raisins. We pack what is bright this week, and we say so.</p>
+        </article>
+        <article class="pillar">
+          <span class="ico-well" aria-hidden="true"><svg class="ico"><use href="assets/icons.svg#hands"></use></svg></span>
+          <span class="pillar-index">Craft</span><b>Small hands</b><p>Growers, millers, and packers we can telephone. If we cannot tell you where it came from, it does not enter the box.</p>
+        </article>
       </div>
     </section>
 
