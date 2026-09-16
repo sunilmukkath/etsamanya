@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Manrope:wght@400;500;600;700&family=Noto+Sans+Tamil:wght@500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/styles.css?v=19" />
+  <link rel="stylesheet" href="css/styles.css?v=20" />
 </head>
 <body class="wizard-page">
   <a class="skip" href="#giftBuilder">Skip to customisation</a>
@@ -91,40 +91,42 @@
 
         <div class="preset-row" id="giftPresets"></div>
 
-        <div class="gift-fill-layout">
-          <div id="giftItems"></div>
+        <div id="giftItems"></div>
 
-          <aside class="gift-note">
-            <p class="kicker">A note inside</p>
-            <h3>Add a message</h3>
+        <aside class="gift-note gift-note-strip">
+          <div class="gift-note-head">
+            <div>
+              <p class="kicker">A note inside</p>
+              <h3>Add a message</h3>
+            </div>
             <p class="lede" id="messageHint">This letter is for the person who opens the box — a few lines they will keep, not a slogan on the lid.</p>
-            <div class="message-grid" id="giftMessages"></div>
-            <form id="giftForm" action="#" method="post">
-              <div class="fields">
-                <div class="field">
-                  <label for="note">Your message on the card</label>
-                  <textarea id="note" name="note" rows="3" required placeholder="Tap a message above, or type here."></textarea>
-                </div>
-                <div class="field" id="recipientField">
-                  <label for="recipient">This gift is for</label>
-                  <input id="recipient" name="recipient" required placeholder="Their name" />
-                </div>
-                <div class="field">
-                  <label for="name">Your name</label>
-                  <input id="name" name="name" required />
-                </div>
-                <div class="field">
-                  <label for="phone">Your phone number</label>
-                  <input id="phone" name="phone" required inputmode="tel" autocomplete="tel" />
-                </div>
-                <div class="field">
-                  <label for="city">City for delivery</label>
-                  <input id="city" name="city" placeholder="Chennai, Bengaluru…" />
-                </div>
+          </div>
+          <div class="message-grid" id="giftMessages"></div>
+          <form id="giftForm" action="#" method="post">
+            <div class="fields">
+              <div class="field">
+                <label for="note">Your message on the card</label>
+                <textarea id="note" name="note" rows="3" required placeholder="Tap a message above, or type here."></textarea>
               </div>
-            </form>
-          </aside>
-        </div>
+              <div class="field" id="recipientField">
+                <label for="recipient">This gift is for</label>
+                <input id="recipient" name="recipient" required placeholder="Their name" />
+              </div>
+              <div class="field">
+                <label for="name">Your name</label>
+                <input id="name" name="name" required />
+              </div>
+              <div class="field">
+                <label for="phone">Your phone number</label>
+                <input id="phone" name="phone" required inputmode="tel" autocomplete="tel" />
+              </div>
+              <div class="field">
+                <label for="city">City for delivery</label>
+                <input id="city" name="city" placeholder="Chennai, Bengaluru…" />
+              </div>
+            </div>
+          </form>
+        </aside>
 
         <div class="qty-panel">
           <p class="preset-label">How many of this gift?</p>
