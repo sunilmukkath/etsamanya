@@ -9,12 +9,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/styles.css?v=19" />
+  <link rel="stylesheet" href="css/styles.css?v=21" />
 </head>
 <body>
   <header class="site-header" id="header">
     <div class="header-inner">
-      <a class="brand" href="index.html" aria-label="Sāmānya home"><img class="brand-mark" src="assets/samanya-wordmark.png" width="220" height="45" alt="Sāmānya" /></a>
+      <a class="brand" href="index.html" aria-label="Sāmānya home"><img class="brand-mark" src="assets/samanya-wordmark.png?v=2" width="220" height="45" alt="Sāmānya" /></a>
       <nav class="nav" id="nav" aria-label="Primary">
         <a href="index.html#collections">Collections</a>
         <a href="index.html#occasions">Occasions</a>
@@ -35,11 +35,16 @@
 
   <main class="wrap shop-page">
     <p class="kicker">The cart</p>
-    <h1 class="display">Gifts waiting to be packed.</h1>
-    <p class="lede">Ten or more of the same gift receive a small courtesy. Twenty-five or more, we pack with you directly.</p>
+    <h1 class="display">Your gifts</h1>
+    <p class="lede">A box or potli waits here until you pay. Ten of the same gift receive a courtesy; twenty-five or more we pack with you.</p>
     <div id="cartEmpty" class="shop-empty" hidden>
-      <p>The cart is quiet. Compose a box or potli, then add it here.</p>
-      <a class="btn btn-primary" href="customise.html">Customise a gift</a>
+      <span class="ico-well ico-well-lg" aria-hidden="true"><svg class="ico"><use href="assets/icons.svg#bag"></use></svg></span>
+      <h2>Nothing to pack yet</h2>
+      <p>Compose a LUXE box, a Celebrations box, or a Rituals potli from this week’s lots. It will sit here until you go to checkout.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="customise.html">Customise a gift</a>
+        <a class="btn btn-ghost" href="index.html#sizes">See the sizes</a>
+      </div>
     </div>
     <div id="cartBody" class="cart-layout" hidden>
       <div id="cartList" class="cart-list"></div>
@@ -58,7 +63,7 @@
     </div>
   </main>
 
-  <footer class="site-footer">
+  <footer class="site-footer site-footer-slim">
     <div class="wrap legal">
       <span>© 2026 samanya</span>
       <a href="index.html#location">Thenkulapakkam, Tamil Nadu</a>
