@@ -6,7 +6,7 @@ async function sha512(text) {
 }
 
 function cors(origin, env) {
-  const allowed = (env.ALLOWED_ORIGINS || "https://sunilmukkath.github.io,https://etsamanya.com,http://localhost:5500,http://127.0.0.1:5500")
+  const allowed = (env.ALLOWED_ORIGINS || "https://sunilmukkath.github.io,https://etsamanya.com,https://samanyastore.com,http://localhost:5500,http://127.0.0.1:5500")
     .split(",")
     .map((value) => value.trim());
   const use = allowed.includes(origin) ? origin : allowed[0];

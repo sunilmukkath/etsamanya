@@ -9,13 +9,14 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/styles.css?v=21" />
+  <link rel="stylesheet" href="css/styles.css?v=22" />
 </head>
 <body>
   <header class="site-header" id="header">
     <div class="header-inner">
       <a class="brand" href="index.html" aria-label="Sāmānya home"><img class="brand-mark" src="assets/samanya-wordmark.png?v=2" width="220" height="45" alt="Sāmānya" /></a>
       <nav class="nav" id="nav" aria-label="Primary">
+        <a href="index.html#saukhyam">Saukhyam</a>
         <a href="index.html#collections">Collections</a>
         <a href="index.html#occasions">Occasions</a>
         <a href="about.html">About</a>
@@ -43,7 +44,7 @@
       <p>Compose a LUXE box, a Celebrations box, or a Rituals potli from this week’s lots. It will sit here until you go to checkout.</p>
       <div class="hero-actions">
         <a class="btn btn-primary" href="customise.html">Customise a gift</a>
-        <a class="btn btn-ghost" href="index.html#sizes">See the sizes</a>
+        <a class="btn btn-ghost" href="index.html#saukhyam">See the range</a>
       </div>
     </div>
     <div id="cartBody" class="cart-layout" hidden>
@@ -69,7 +70,7 @@
       <a href="index.html#location">Thenkulapakkam, Tamil Nadu</a>
     </div>
   </footer>
-  <script src="js/shop.js?v=1"></script>
+  <script src="js/shop.js?v=2"></script>
   <script src="js/main.js?v=9"></script>
   <script>
     (function () {
@@ -94,6 +95,7 @@
             "<div><small>" + item.label + " · " + shop.rupees(item.price) + "</small>" +
             "<h3>" + (item.recipient || item.label) + "</h3>" +
             "<p>" + (item.items && item.items.length ? item.items.join(", ") : "Pantry to follow") + "</p>" +
+            (item.extras && item.extras.length ? "<p class='cart-note'>" + item.extras.join(" · ") + "</p>" : "") +
             "<p class='cart-note'>" + note + "</p></div>" +
             "<div class='cart-item-tools'>" +
             "<label>Qty <input type='number' min='1' max='500' value='" + item.qty + "' data-qty></label>" +

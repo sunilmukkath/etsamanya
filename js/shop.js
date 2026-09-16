@@ -11,6 +11,99 @@
     rituals: { id: "rituals", label: "Rituals", price: 799, slots: 4 }
   };
 
+  var BOWL = 125;
+  var RANGE = [
+    {
+      id: "sweet-rituals",
+      label: "Sweet Rituals",
+      price: 799,
+      form: "Potli",
+      weight: "185g",
+      photo: "assets/range/sweet-rituals.jpg",
+      blurb: "A warm curation of festive nuts, dry fruits and spices.",
+      groups: [
+        { title: "What's inside", lines: ["Cashew 50g", "Almond 50g", "Cardamom 10g", "Raisin 50g", "Turmeric 25g", "Saffron 0.25g"] }
+      ],
+      extras: ["Bookmark", "Note to the receiver", "Wooden spice spoon"],
+      bowl: false
+    },
+    {
+      id: "celebration",
+      label: "Celebration",
+      price: 1299,
+      form: "Box",
+      weight: "340g",
+      photo: "assets/range/celebration.jpg",
+      blurb: "A richer selection for special moments.",
+      groups: [
+        { title: "What's inside", lines: ["Cashew 75g", "Almond 75g", "Raisins 50g", "Green cardamom 20g", "Turmeric 50g", "Saffron 0.5g", "Pepper 40g", "Clove 20g", "Cinnamon 40g", "Nutmeg 10g"] }
+      ],
+      extras: ["Food-grade terracotta cup", "Bookmark", "Note to the receiver", "Wooden spice spoon"],
+      bowl: true
+    },
+    {
+      id: "wellness",
+      label: "Wellness Box",
+      price: 1499,
+      form: "Box",
+      weight: "405g",
+      photo: "assets/range/wellness.jpg",
+      blurb: "A focused blend for everyday wellbeing.",
+      groups: [
+        { title: "Heal", lines: ["Cardamom 20g", "Pepper 40g", "Cinnamon 40g", "Clove 20g", "Turmeric 50g"] },
+        { title: "Nourish", lines: ["Cashew 75g", "Almond 75g", "Walnut 50g", "Black raisins 50g", "Saffron 0.5g"] }
+      ],
+      extras: ["Food-grade terracotta cup", "Bookmark", "Note to the receiver", "Wooden spice spoon"],
+      bowl: true
+    },
+    {
+      id: "luxe-nourish",
+      label: "Luxe Nourish",
+      price: 1899,
+      form: "Box",
+      weight: "660g",
+      photo: "assets/range/luxe-nourish.jpg",
+      blurb: "A generous celebration of nourishment and wellbeing.",
+      groups: [
+        { title: "Heal", lines: ["Cardamom 25g", "Pepper 50g", "Cinnamon 50g", "Clove 25g", "Turmeric 75g", "Saffron 0.5g", "Nutmeg 10g"] },
+        { title: "Nourish", lines: ["Cashew 100g", "Almond 100g", "Walnuts 75g", "Salted pistachios 75g", "Green raisins 75g", "Black raisins 75g"] }
+      ],
+      extras: ["Food-grade terracotta cup", "Bookmark", "Note to the receiver", "Wooden spice spoon"],
+      bowl: true
+    }
+  ];
+
+  function findRange(id) {
+    for (var i = 0; i < RANGE.length; i++) {
+      if (RANGE[i].id === id) return RANGE[i];
+    }
+    return null;
+  }
+
+  function addRange(id, withBowl) {
+    var sku = findRange(id);
+    if (!sku) return null;
+    var bowlOn = !!(withBowl && sku.bowl);
+    var contents = [];
+    sku.groups.forEach(function (group) {
+      contents = contents.concat(group.lines);
+    });
+    var extras = sku.extras.slice();
+    if (bowlOn) extras.push("Painted ceramic bowl");
+    return addItem({
+      size: sku.id,
+      label: sku.label,
+      price: sku.price + (bowlOn ? BOWL : 0),
+      items: contents,
+      extras: extras,
+      weight: sku.weight,
+      range: true,
+      bowl: bowlOn,
+      qty: 1,
+      message: "Packed as the Saukhyam " + sku.label
+    });
+  }
+
   function rupees(n) {
     return "₹" + Math.round(n).toLocaleString("en-IN");
   }
@@ -111,6 +204,7 @@
       (item.qty || 1) + " × " + item.label + " (" + rupees(item.price) + ")",
       item.occasion ? "Occasion: " + item.occasion : "",
       item.items && item.items.length ? "Pantry: " + item.items.join(", ") : "",
+      item.extras && item.extras.length ? "Also: " + item.extras.join(", ") : "",
       item.message ? "Card: " + item.message : "",
       item.recipient ? "For: " + item.recipient : ""
     ];
@@ -146,6 +240,8 @@
   root.SamanyaShop = {
     ENQUIRE_AT: ENQUIRE_AT,
     SIZES: SIZES,
+    RANGE: RANGE,
+    BOWL: BOWL,
     EMAIL: EMAIL,
     rupees: rupees,
     bulkRate: bulkRate,
@@ -154,6 +250,8 @@
     lineTotal: lineTotal,
     readCart: readCart,
     addItem: addItem,
+    addRange: addRange,
+    findRange: findRange,
     removeItem: removeItem,
     setQty: setQty,
     count: count,
