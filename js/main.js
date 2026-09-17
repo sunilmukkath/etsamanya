@@ -29,3 +29,32 @@ document.querySelectorAll(".filter").forEach((button) => {
     });
   });
 });
+
+window.addEventListener("samanya:config", function (event) {
+  var cfg = event.detail || {};
+  document.querySelectorAll("[data-whatsapp]").forEach(function (el) {
+    if (cfg.whatsapp) {
+      el.hidden = false;
+      if (el.tagName === "A") el.href = "https://wa.me/" + String(cfg.whatsapp).replace(/\D/g, "");
+    } else {
+      el.hidden = true;
+    }
+  });
+  document.querySelectorAll("[data-gstin]").forEach(function (el) {
+    if (cfg.gstin) {
+      el.hidden = false;
+      el.textContent = "GSTIN " + cfg.gstin;
+    } else {
+      el.hidden = true;
+    }
+  });
+});
+
+fetch("/api/account/me", { credentials: "include" }).then(function (res) {
+  return res.ok ? res.json() : null;
+}).then(function (data) {
+  if (!data || !data.signedIn) return;
+  document.querySelectorAll("[data-account-link]").forEach(function (el) {
+    el.textContent = "Orders";
+  });
+}).catch(function () {});

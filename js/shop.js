@@ -2,8 +2,17 @@
   var CART_KEY = "samanya-cart";
   var PENDING_KEY = "samanya-pending-order";
   var ENQUIRE_AT = 25;
-  var WHATSAPP = "910000000000";
+  var WHATSAPP = "";
   var EMAIL = "hello@etsamanya.com";
+  var SITE = {
+    shippingFlat: 99,
+    shippingFreeAbove: 1999,
+    stock: {},
+    whatsapp: "",
+    email: EMAIL,
+    gstin: "",
+    packedNote: ""
+  };
 
   var SIZES = {
     luxe: { id: "luxe", label: "LUXE", price: 1899, slots: 10 },
@@ -80,9 +89,22 @@
     return null;
   }
 
+  function shippingOf(goods) {
+    if (goods <= 0) return 0;
+    if (goods >= Number(SITE.shippingFreeAbove || 1999)) return 0;
+    return Number(SITE.shippingFlat || 99);
+  }
+
+  function stockLeft(id) {
+    if (!SITE.stock || SITE.stock[id] == null) return 99;
+    return Number(SITE.stock[id]);
+  }
+
   function addRange(id, withBowl) {
     var sku = findRange(id);
     if (!sku) return null;
+    if (stockLeft(sku.id) < 1) return null;
+    if (withBowl && sku.bowl && stockLeft("bowl") < 1) withBowl = false;
     var bowlOn = !!(withBowl && sku.bowl);
     var contents = [];
     sku.groups.forEach(function (group) {
@@ -180,11 +202,14 @@
       subtotal += item.price * item.qty;
       if (!needsEnquire(item.qty)) payable += line;
     });
+    var shipping = shippingOf(payable);
     return {
       enquire: enquire,
       count: items.reduce(function (sum, item) { return sum + (item.qty || 1); }, 0),
       subtotal: subtotal,
-      payable: payable,
+      goods: payable,
+      shipping: shipping,
+      payable: payable + shipping,
       savings: Math.max(0, subtotal - items.reduce(function (sum, item) {
         return sum + lineTotal(item.price, item.qty);
       }, 0))
@@ -218,6 +243,7 @@
   }
 
   function whatsappUrl(text) {
+    if (!WHATSAPP) return "";
     return "https://wa.me/" + WHATSAPP + "?text=" + encodeURIComponent(text);
   }
 
@@ -237,17 +263,30 @@
     });
   }
 
+  function applyConfig(cfg) {
+    if (!cfg) return;
+    SITE = Object.assign(SITE, cfg);
+    WHATSAPP = String(cfg.whatsapp || "").replace(/\D/g, "");
+    if (cfg.email) EMAIL = cfg.email;
+    root.dispatchEvent(new CustomEvent("samanya:config", { detail: SITE }));
+  }
+
+  fetch("/api/shop-config").then(function (res) { return res.ok ? res.json() : null; }).then(applyConfig).catch(function () {});
+
   root.SamanyaShop = {
     ENQUIRE_AT: ENQUIRE_AT,
     SIZES: SIZES,
     RANGE: RANGE,
     BOWL: BOWL,
     EMAIL: EMAIL,
+    SITE: SITE,
     rupees: rupees,
     bulkRate: bulkRate,
     bulkLabel: bulkLabel,
     needsEnquire: needsEnquire,
     lineTotal: lineTotal,
+    shippingOf: shippingOf,
+    stockLeft: stockLeft,
     readCart: readCart,
     addItem: addItem,
     addRange: addRange,

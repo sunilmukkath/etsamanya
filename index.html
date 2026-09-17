@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Manrope:wght@400;500;600;700&family=Noto+Sans+Tamil:wght@500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/styles.css?v=24" />
+  <link rel="stylesheet" href="css/styles.css?v=25" />
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -43,6 +43,7 @@
         <a href="about.html">About</a>
       </nav>
       <div class="header-cta">
+        <a class="account-link" href="account.html" data-account-link>Account</a>
         <a class="cart-link" href="cart.html" aria-label="Open cart">
           <svg class="ico" aria-hidden="true"><use href="assets/icons.svg#bag"></use></svg>
           <span class="cart-count" data-cart-count hidden>0</span>
@@ -321,6 +322,7 @@
           <p class="kicker">Contact us</p>
           <h2 class="display">Write, or visit.</h2>
           <p><a href="mailto:hello@etsamanya.com">hello@etsamanya.com</a></p>
+          <p data-gstin hidden></p>
           <address>
             Thenkulapakkam<br />
             Tamil Nadu, India
@@ -344,17 +346,20 @@
       <div class="footer-links">
         <a href="https://samanyastore.com">samanyastore.com</a>
         <a href="mailto:hello@etsamanya.com">hello@etsamanya.com</a>
-        <a href="https://wa.me/910000000000">WhatsApp the atelier</a>
+        <a href="#" data-whatsapp hidden>WhatsApp the atelier</a>
         <a href="#contact">Contact us</a>
       </div>
     </div>
     <div class="wrap legal">
       <span>© 2026 samanya</span>
-      <span>Gifts packed to order in India</span>
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+      <a href="shipping.html">Shipping</a>
+      <a href="refund.html">Refunds</a>
     </div>
   </footer>
-  <script src="js/shop.js?v=2"></script>
-  <script src="js/main.js?v=8"></script>
+  <script src="js/shop.js?v=3"></script>
+  <script src="js/main.js?v=10"></script>
   <script>
     (function () {
       var shop = window.SamanyaShop;
@@ -393,7 +398,10 @@
           return;
         }
         var bowl = card.querySelector("[data-bowl]");
-        shop.addRange(card.getAttribute("data-range"), bowl && bowl.checked);
+        if (!shop.addRange(card.getAttribute("data-range"), bowl && bowl.checked)) {
+          btn.textContent = "Out of stock";
+          return;
+        }
         card.classList.add("is-added");
         btn.textContent = "Added — view cart";
       });

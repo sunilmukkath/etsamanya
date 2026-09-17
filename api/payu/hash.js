@@ -1,4 +1,6 @@
 const crypto = require("crypto");
+const { json, readBody } = require("../../lib/http");
+const { readDb } = require("../../lib/store");
 
 function sha512(text) {
   return crypto.createHash("sha512").update(text).digest("hex");
@@ -23,24 +25,31 @@ module.exports = async function handler(req, res) {
     return;
   }
   if (req.method !== "POST") {
-    res.status(405).json({ error: "Use POST" });
+    json(res, 405, { error: "Use POST" });
     return;
   }
   const key = process.env.PAYU_KEY;
   const salt = process.env.PAYU_SALT;
   if (!key || !salt) {
-    res.status(500).json({ error: "PayU is not configured on the server." });
+    json(res, 500, { error: "PayU is not configured on the server." });
     return;
   }
-  const payload = req.body || {};
+  const payload = await readBody(req);
+  const txnid = String(payload.txnid || "").trim().toUpperCase();
+  const db = await readDb();
+  const order = db.orders[txnid];
+  if (!order || order.status !== "pending") {
+    json(res, 400, { error: "Create the order before paying." });
+    return;
+  }
   const fields = {
     key,
-    txnid: payload.txnid,
-    amount: Number(payload.amount).toFixed(2),
-    productinfo: payload.productinfo || "samanya gift",
-    firstname: payload.firstname || "",
-    email: payload.email || "",
-    udf1: payload.udf1 || "",
+    txnid: order.txnid,
+    amount: Number(order.payable).toFixed(2),
+    productinfo: (order.items.map((item) => item.qty + "x " + item.label).join(", ") || "samanya gift").slice(0, 100),
+    firstname: order.customer.name,
+    email: order.customer.email,
+    udf1: order.txnid,
     udf2: payload.udf2 || "",
     udf3: payload.udf3 || "",
     udf4: payload.udf4 || "",
@@ -49,5 +58,14 @@ module.exports = async function handler(req, res) {
   const hash = sha512(
     [fields.key, fields.txnid, fields.amount, fields.productinfo, fields.firstname, fields.email, fields.udf1, fields.udf2, fields.udf3, fields.udf4, fields.udf5, "", "", "", "", "", salt].join("|")
   );
-  res.status(200).json({ hash, key: fields.key, amount: fields.amount });
+  json(res, 200, {
+    hash,
+    key: fields.key,
+    amount: fields.amount,
+    productinfo: fields.productinfo,
+    firstname: fields.firstname,
+    email: fields.email,
+    phone: order.customer.phone,
+    udf1: fields.udf1
+  });
 };

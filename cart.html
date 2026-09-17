@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/styles.css?v=24" />
+  <link rel="stylesheet" href="css/styles.css?v=25" />
 </head>
 <body>
   <header class="site-header" id="header">
@@ -22,6 +22,7 @@
         <a href="about.html">About</a>
       </nav>
       <div class="header-cta">
+        <a class="account-link" href="account.html" data-account-link>Account</a>
         <a class="cart-link" href="cart.html" aria-current="page" aria-label="Open cart">
           <svg class="ico" aria-hidden="true"><use href="assets/icons.svg#bag"></use></svg>
           <span class="cart-count" data-cart-count hidden>0</span>
@@ -67,11 +68,12 @@
   <footer class="site-footer site-footer-slim">
     <div class="wrap legal">
       <span>© 2026 samanya</span>
+      <a href="privacy.html">Privacy</a>
       <a href="index.html#contact">Contact us</a>
     </div>
   </footer>
-  <script src="js/shop.js?v=2"></script>
-  <script src="js/main.js?v=9"></script>
+  <script src="js/shop.js?v=3"></script>
+  <script src="js/main.js?v=10"></script>
   <script>
     (function () {
       var shop = window.SamanyaShop;
@@ -104,14 +106,19 @@
         }).join("");
         var totals = shop.totals();
         document.getElementById("cartPayable").textContent = shop.rupees(totals.payable);
-        document.getElementById("cartMeta").textContent = totals.savings
-          ? totals.count + " gifts · " + shop.rupees(totals.savings) + " courtesy on ten or more"
-          : totals.count + " gifts";
+        document.getElementById("cartMeta").textContent = [
+          totals.count + " gifts",
+          totals.shipping ? "Shipping " + shop.rupees(totals.shipping) : "Shipping complimentary",
+          totals.savings ? shop.rupees(totals.savings) + " courtesy on ten or more" : ""
+        ].filter(Boolean).join(" · ");
         var big = shop.enquireItems();
         enquire.hidden = big.length === 0;
         if (big.length) {
           var text = shop.enquireText();
-          document.getElementById("cartWhatsApp").href = shop.whatsappUrl(text);
+          var wa = shop.whatsappUrl(text);
+          var waBtn = document.getElementById("cartWhatsApp");
+          waBtn.hidden = !wa;
+          if (wa) waBtn.href = wa;
           document.getElementById("cartEmail").href = shop.mailUrl(text);
         }
         checkout.hidden = totals.payable < 1;

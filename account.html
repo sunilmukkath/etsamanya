@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your orders — samanya</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css?v=25" />
+</head>
+<body>
+  <header class="site-header" id="header">
+    <div class="header-inner">
+      <a class="brand" href="index.html" aria-label="Sāmānya home"><img class="brand-mark" src="assets/samanya-wordmark.png?v=2" width="220" height="45" alt="Sāmānya" /></a>
+      <nav class="nav" id="nav" aria-label="Primary">
+        <a href="index.html#saukhyam">Saukhyam</a>
+        <a href="index.html#collections">The lots</a>
+        <a href="about.html">About</a>
+      </nav>
+      <div class="header-cta">
+        <a class="account-link" href="account.html" data-account-link aria-current="page">Account</a>
+        <a class="cart-link" href="cart.html" aria-label="Open cart">
+          <svg class="ico" aria-hidden="true"><use href="assets/icons.svg#bag"></use></svg>
+          <span class="cart-count" data-cart-count hidden>0</span>
+        </a>
+        <a class="btn btn-primary" href="customise.html">Customise a gift</a>
+        <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="nav" aria-label="Open menu">
+          <svg class="ico" aria-hidden="true"><use href="assets/icons.svg#menu"></use></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+  <main class="wrap shop-page">
+    <p class="kicker">Account</p>
+    <h1 class="display">Your gifts</h1>
+    <p class="lede">Sign in to see paid orders, invoices, and tracking. Or look up a single order with the email used at checkout.</p>
+    <p class="wizard-alert" id="accAlert" role="status"></p>
+    <div class="account-grid">
+      <form id="authForm" class="atelier checkout-form">
+        <div class="fields">
+          <div class="field"><label for="accName">Name</label><input id="accName" name="name" autocomplete="name" /></div>
+          <div class="field"><label for="accEmail">Email</label><input id="accEmail" name="email" type="email" required autocomplete="email" /></div>
+          <div class="field"><label for="accPass">Password</label><input id="accPass" name="password" type="password" required minlength="8" autocomplete="current-password" /></div>
+        </div>
+        <div class="hero-actions">
+          <button class="btn btn-primary" type="submit" data-mode="login">Sign in</button>
+          <button class="btn btn-ghost" type="submit" data-mode="register">Create account</button>
+        </div>
+      </form>
+      <form id="findForm" class="atelier checkout-form">
+        <p class="kicker">Find an order</p>
+        <div class="fields">
+          <div class="field"><label for="findId">Order number</label><input id="findId" required placeholder="SM…" /></div>
+          <div class="field"><label for="findEmail">Email on the till</label><input id="findEmail" type="email" required /></div>
+        </div>
+        <button class="btn btn-ghost" type="submit">Look up</button>
+      </form>
+    </div>
+    <div id="signedBox" hidden>
+      <p><span id="helloName"></span> · <button type="button" class="text-btn" id="signOut">Sign out</button></p>
+      <div id="orderBox"></div>
+    </div>
+  </main>
+  <footer class="site-footer site-footer-slim">
+    <div class="wrap legal">
+      <span>© 2026 samanya</span>
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+      <a href="index.html#contact">Contact us</a>
+    </div>
+  </footer>
+  <script src="js/shop.js?v=3"></script>
+  <script src="js/main.js?v=10"></script>
+  <script>
+    (function () {
+      var alertEl = document.getElementById("accAlert");
+      function note(msg) { alertEl.textContent = msg || ""; alertEl.className = "wizard-alert" + (msg ? " is-on" : ""); }
+      function rupees(n) { return "₹" + Math.round(n || 0).toLocaleString("en-IN"); }
+      function api(url, opts) {
+        opts = opts || {};
+        opts.credentials = "include";
+        if (opts.body && !opts.headers) opts.headers = { "Content-Type": "application/json" };
+        return fetch(url, opts).then(function (res) {
+          return res.json().then(function (data) {
+            if (!res.ok) throw new Error(data.error || "Could not continue.");
+            return data;
+          });
+        });
+      }
+      function paintOrders(orders, tokenMap) {
+        var box = document.getElementById("orderBox");
+        if (!orders || !orders.length) {
+          box.innerHTML = "<p>No orders on this email yet.</p>";
+          return;
+        }
+        box.innerHTML = orders.map(function (order) {
+          var token = order.invoiceToken || (tokenMap && tokenMap[order.txnid]) || "";
+          var invoice = token ? "<a href='/api/invoice?id=" + order.txnid + "&t=" + token + "'>Invoice</a>" : "";
+          var track = order.tracking ? "<p>Tracking: " + order.tracking + "</p>" : "";
+          return "<article class='cart-item'><div><small>" + order.status + "</small><h3>" + order.txnid + "</h3><p>" + (order.items || []).join(" · ") + "</p>" + track + "</div><div><strong>" + rupees(order.payable) + "</strong>" + invoice + "</div></article>";
+        }).join("");
+      }
+      function signedIn(data) {
+        document.getElementById("authForm").hidden = true;
+        document.getElementById("signedBox").hidden = false;
+        document.getElementById("helloName").textContent = "Hello" + (data.name ? ", " + data.name : "");
+        api("/api/account/orders").then(function (res) { paintOrders(res.orders); }).catch(function (err) { note(err.message); });
+      }
+      api("/api/account/me").then(function (data) { if (data.signedIn) signedIn(data); }).catch(function () {});
+      document.getElementById("authForm").addEventListener("submit", function (event) {
+        event.preventDefault();
+        var mode = event.submitter && event.submitter.getAttribute("data-mode") || "login";
+        var body = {
+          name: document.getElementById("accName").value,
+          email: document.getElementById("accEmail").value,
+          password: document.getElementById("accPass").value
+        };
+        api(mode === "register" ? "/api/account/register" : "/api/account/login", { method: "POST", body: JSON.stringify(body) })
+          .then(signedIn)
+          .catch(function (err) { note(err.message); });
+      });
+      document.getElementById("signOut").addEventListener("click", function () {
+        api("/api/account/logout", { method: "POST" }).then(function () { location.reload(); });
+      });
+      document.getElementById("findForm").addEventListener("submit", function (event) {
+        event.preventDefault();
+        api("/api/orders/lookup", { method: "POST", body: JSON.stringify({
+          txnid: document.getElementById("findId").value,
+          email: document.getElementById("findEmail").value
+        }) }).then(function (data) {
+          document.getElementById("signedBox").hidden = false;
+          var map = {};
+          map[data.order.txnid] = data.invoiceToken;
+          paintOrders([{
+            txnid: data.order.txnid,
+            status: data.order.status,
+            payable: data.order.payable,
+            items: (data.order.items || []).map(function (item) { return item.qty + " × " + item.label; }),
+            tracking: data.order.tracking,
+            invoiceToken: data.invoiceToken
+          }], map);
+        }).catch(function (err) { note(err.message); });
+      });
+    })();
+  </script>
+</body>
+</html>

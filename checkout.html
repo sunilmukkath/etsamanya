@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/styles.css?v=24" />
+  <link rel="stylesheet" href="css/styles.css?v=25" />
 </head>
 <body>
   <header class="site-header" id="header">
@@ -22,6 +22,7 @@
         <a href="about.html">About</a>
       </nav>
       <div class="header-cta">
+        <a class="account-link" href="account.html" data-account-link>Account</a>
         <a class="cart-link" href="cart.html" aria-label="Open cart">
           <svg class="ico" aria-hidden="true"><use href="assets/icons.svg#bag"></use></svg>
           <span class="cart-count" data-cart-count hidden>0</span>
@@ -48,8 +49,9 @@
           <div class="field"><label for="gstin">GSTIN, if a company</label><input id="gstin" name="gstin" placeholder="Optional" /></div>
           <div class="field"><label for="address">Delivery address</label><textarea id="address" name="address" rows="3" required></textarea></div>
           <div class="field"><label for="city">City</label><input id="city" name="city" required /></div>
-          <div class="field"><label for="pincode">PIN code</label><input id="pincode" name="pincode" required inputmode="numeric" /></div>
+          <div class="field"><label for="pincode">PIN code</label><input id="pincode" name="pincode" required inputmode="numeric" pattern="[1-9][0-9]{5}" /></div>
           <div class="field"><label for="state">State</label><input id="state" name="state" required /></div>
+          <div class="field"><label for="password">Account password, if you want one</label><input id="password" name="password" type="password" minlength="8" autocomplete="new-password" placeholder="Optional · 8 characters" /></div>
         </div>
         <button type="submit" class="btn btn-xl btn-primary gift-send" id="payBtn">Pay with PayU</button>
       </form>
@@ -60,12 +62,14 @@
   <footer class="site-footer site-footer-slim">
     <div class="wrap legal">
       <span>© 2026 samanya</span>
+      <a href="privacy.html">Privacy</a>
+      <a href="shipping.html">Shipping</a>
       <a href="index.html#contact">Contact us</a>
     </div>
   </footer>
   <script src="js/payu-config.js?v=2"></script>
-  <script src="js/shop.js?v=2"></script>
-  <script src="js/main.js?v=9"></script>
+  <script src="js/shop.js?v=3"></script>
+  <script src="js/main.js?v=10"></script>
   <script>
     (function () {
       var shop = window.SamanyaShop;
@@ -80,12 +84,19 @@
         alertBox.className = "wizard-alert is-on";
       }
 
+      function shipLine() {
+        if (!items.length) return "";
+        return totals.shipping
+          ? "<li><span>Shipping</span><strong>" + shop.rupees(totals.shipping) + "</strong></li>"
+          : "<li><span>Shipping</span><strong>Complimentary</strong></li>";
+      }
+
       document.getElementById("paySummary").innerHTML =
         "<p class='kicker'>This till</p><h2 class='display'>" + shop.rupees(totals.payable) + "</h2>" +
         (items.length
           ? "<ul class='pay-lines'>" + items.map(function (item) {
               return "<li><span>" + item.qty + " × " + item.label + "</span><strong>" + shop.rupees(shop.lineTotal(item.price, item.qty)) + "</strong></li>";
-            }).join("") + "</ul>"
+            }).join("") + shipLine() + "</ul><p class='cart-note'>" + (shop.SITE && shop.SITE.packedNote || "Packed to order, usually 4–7 days.") + "</p>"
           : "<p>Nothing here is ready for PayU. Add a gift under 25, or write to us for a bulk packing.</p><a class='btn btn-ghost' href='cart.html'>Back to cart</a>");
 
       if (!items.length) document.getElementById("payBtn").hidden = true;
@@ -103,38 +114,40 @@
         }
         var hashUrl = payu.hashUrl.indexOf("http") === 0 ? payu.hashUrl : location.origin + payu.hashUrl;
         var returnUrl = hashUrl.replace(/\/hash\/?$/, "/return");
-        var txnid = shop.txnId();
-        var productinfo = items.map(function (item) { return item.qty + "x " + item.label; }).join(", ").slice(0, 100);
-        var payload = {
-          txnid: txnid,
-          amount: totals.payable,
-          productinfo: productinfo,
-          firstname: form.firstname.value.trim(),
-          email: form.email.value.trim(),
-          phone: form.phone.value.trim(),
-          udf1: txnid
-        };
         document.getElementById("payBtn").disabled = true;
         try {
+          var created = await fetch("/api/orders/create", {
+            method: "POST",
+            credentials: "include",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              items: items,
+              firstname: form.firstname.value.trim(),
+              email: form.email.value.trim(),
+              phone: form.phone.value.trim(),
+              address: form.address.value.trim(),
+              city: form.city.value.trim(),
+              pincode: form.pincode.value.trim(),
+              state: form.state.value.trim(),
+              gstin: form.gstin.value.trim(),
+              password: form.password.value
+            })
+          }).then(function (res) {
+            return res.json().then(function (data) {
+              if (!res.ok) throw new Error(data.error || "Could not save the order.");
+              return data;
+            });
+          });
           var response = await fetch(hashUrl, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
+            body: JSON.stringify({ txnid: created.txnid })
           });
           var data = await response.json();
           if (!response.ok || !data.hash) throw new Error(data.error || "Could not start PayU.");
           localStorage.setItem(shop.PENDING_KEY, JSON.stringify({
-            txnid: txnid,
-            items: items,
-            payable: totals.payable,
-            name: payload.firstname,
-            email: payload.email,
-            phone: payload.phone,
-            address: form.address.value.trim(),
-            city: form.city.value.trim(),
-            pincode: form.pincode.value.trim(),
-            state: form.state.value.trim(),
-            gstin: form.gstin.value.trim()
+            txnid: created.txnid,
+            email: form.email.value.trim()
           }));
           var action = payu.mode === "live" ? "https://secure.payu.in/_payment" : "https://test.payu.in/_payment";
           var post = document.createElement("form");
@@ -142,16 +155,16 @@
           post.action = action;
           var fields = {
             key: data.key || payu.key,
-            txnid: txnid,
-            amount: data.amount || Number(totals.payable).toFixed(2),
-            productinfo: productinfo,
-            firstname: payload.firstname,
-            email: payload.email,
-            phone: payload.phone,
+            txnid: created.txnid,
+            amount: data.amount,
+            productinfo: data.productinfo,
+            firstname: data.firstname,
+            email: data.email,
+            phone: data.phone || form.phone.value.trim(),
             surl: returnUrl,
             furl: returnUrl,
             hash: data.hash,
-            udf1: txnid
+            udf1: created.txnid
           };
           Object.keys(fields).forEach(function (name) {
             var input = document.createElement("input");

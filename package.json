@@ -1,0 +1,10 @@
+{
+  "name": "samanya",
+  "private": true,
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@vercel/blob": "^2.8.0"
+  }
+}

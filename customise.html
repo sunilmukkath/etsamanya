@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Manrope:wght@400;500;600;700&family=Noto+Sans+Tamil:wght@500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/styles.css?v=24" />
+  <link rel="stylesheet" href="css/styles.css?v=25" />
 </head>
 <body class="wizard-page">
   <a class="skip" href="#giftBuilder">Skip to customisation</a>
@@ -26,6 +26,7 @@
         <a href="about.html">About</a>
       </nav>
       <div class="header-cta">
+        <a class="account-link" href="account.html" data-account-link>Account</a>
         <a class="cart-link" href="cart.html" aria-label="Open cart">
           <svg class="ico" aria-hidden="true"><use href="assets/icons.svg#bag"></use></svg>
           <span class="cart-count" data-cart-count hidden>0</span>
@@ -172,11 +173,12 @@
   <footer class="site-footer site-footer-slim">
     <div class="wrap legal">
       <span>© 2026 samanya</span>
+      <a href="privacy.html">Privacy</a>
       <a href="index.html#contact">Contact us</a>
     </div>
   </footer>
-  <script src="js/shop.js?v=2"></script>
-  <script src="js/main.js?v=9"></script>
+  <script src="js/shop.js?v=3"></script>
+  <script src="js/main.js?v=10"></script>
   <script>
     (function () {
       var SIZES = {
@@ -467,7 +469,10 @@
         }
         if (enquire) {
           var text = enquireDraft();
-          document.getElementById("qtyWhatsApp").href = shop.whatsappUrl(text);
+          var wa = shop.whatsappUrl(text);
+          var waBtn = document.getElementById("qtyWhatsApp");
+          waBtn.hidden = !wa;
+          if (wa) waBtn.href = wa;
           document.getElementById("qtyEmail").href = shop.mailUrl(text);
         }
       }
