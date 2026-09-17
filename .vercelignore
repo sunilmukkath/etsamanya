@@ -1,0 +1,7 @@
+node_modules
+catalogue
+.git
+.vercel
+data
+.env*
+dist

@@ -1,3 +1,7 @@
 {
-  "cleanUrls": true
+  "cleanUrls": true,
+  "framework": null,
+  "buildCommand": "mkdir -p dist && cp -R *.html css js assets dist/",
+  "outputDirectory": "dist",
+  "installCommand": "npm install"
 }
