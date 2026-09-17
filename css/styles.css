@@ -553,6 +553,21 @@ ul {
   color: var(--saffron);
 }
 
+.full-strip {
+  display: block;
+  width: 100vw;
+  max-width: 100vw;
+  margin: 0 calc(50% - 50vw);
+  background: #f3eee6;
+  line-height: 0;
+}
+
+.full-strip img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
 @keyframes marquee {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
@@ -999,7 +1014,7 @@ section {
   display: grid;
   grid-template-columns: 1.2fr 0.8fr;
   gap: 48px;
-  align-items: center;
+  align-items: end;
 }
 
 .quote-block .ico-well {
@@ -1009,15 +1024,88 @@ section {
 .quote-block blockquote {
   margin: 0;
   font-family: var(--font-display);
-  font-size: clamp(2rem, 4vw, 3.3rem);
+  font-size: clamp(2rem, 4vw, 3.1rem);
   line-height: 1.15;
 }
 
 .quote-block cite {
   display: block;
-  margin-top: 18px;
   font-style: normal;
   color: var(--muted);
+  letter-spacing: 0.04em;
+}
+
+.quotes .kicker {
+  margin-bottom: 18px;
+}
+
+.quote-slider {
+  position: relative;
+}
+
+.quote-viewport {
+  min-height: 280px;
+}
+
+.quote-slide[hidden] {
+  display: none !important;
+}
+
+.quote-slide.is-on {
+  animation: quoteIn 0.55s var(--ease);
+}
+
+@keyframes quoteIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+
+.quote-controls {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 28px;
+}
+
+.quote-arrow {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--ivory) 60%, white);
+  color: var(--leaf-deep);
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.quote-arrow:hover {
+  border-color: var(--leaf);
+}
+
+.quote-dots {
+  display: flex;
+  gap: 8px;
+}
+
+.quote-dots button {
+  width: 9px;
+  height: 9px;
+  padding: 0;
+  border-radius: 50%;
+  border: 0;
+  background: color-mix(in srgb, var(--leaf) 28%, var(--line));
+  cursor: pointer;
+}
+
+.quote-dots button.is-on {
+  background: var(--leaf-deep);
+  transform: scale(1.15);
+}
+
+.quote-close {
+  margin: 22px 0 0;
+  max-width: 36rem;
 }
 
 .cta-band {

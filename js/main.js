@@ -58,3 +58,47 @@ fetch("/api/account/me", { credentials: "include" }).then(function (res) {
     el.textContent = "Orders";
   });
 }).catch(function () {});
+
+(function quoteSlider() {
+  var root = document.querySelector("[data-quote-slider]");
+  if (!root) return;
+  var slides = Array.prototype.slice.call(root.querySelectorAll(".quote-slide"));
+  var dotsBox = root.querySelector("[data-quote-dots]");
+  var i = 0;
+  var timer = null;
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  slides.forEach(function (_, n) {
+    var dot = document.createElement("button");
+    dot.type = "button";
+    dot.setAttribute("aria-label", "Letter " + (n + 1));
+    dot.addEventListener("click", function () { show(n, true); });
+    dotsBox.appendChild(dot);
+  });
+
+  function show(n, user) {
+    i = (n + slides.length) % slides.length;
+    slides.forEach(function (slide, idx) {
+      var on = idx === i;
+      slide.classList.toggle("is-on", on);
+      slide.hidden = !on;
+    });
+    Array.prototype.forEach.call(dotsBox.children, function (dot, idx) {
+      dot.classList.toggle("is-on", idx === i);
+    });
+    if (user) restart();
+  }
+
+  function restart() {
+    if (reduce) return;
+    clearInterval(timer);
+    timer = setInterval(function () { show(i + 1); }, 7000);
+  }
+
+  root.querySelector("[data-quote-prev]").addEventListener("click", function () { show(i - 1, true); });
+  root.querySelector("[data-quote-next]").addEventListener("click", function () { show(i + 1, true); });
+  root.addEventListener("mouseenter", function () { clearInterval(timer); });
+  root.addEventListener("mouseleave", restart);
+  show(0);
+  restart();
+})();

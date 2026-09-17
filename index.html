@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Manrope:wght@400;500;600;700&family=Noto+Sans+Tamil:wght@500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/styles.css?v=25" />
+  <link rel="stylesheet" href="css/styles.css?v=26" />
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -98,6 +98,10 @@
         <span>Malabar pepper</span><span>Mamra almonds</span><span>Byadgi chilli</span><span>Kashmiri saffron</span><span>Kaju from Kollam</span><span>Green cardamom</span><span>Anjeer</span><span>Pistachio of Pampore</span><span>Haldi from Erode</span><span>Raisins of Nashik</span>
       </div>
     </div>
+
+    <a class="full-strip" href="#saukhyam" aria-label="See the Saukhyam gifting range">
+      <img src="assets/saukhyam-strip.jpg" alt="Sāmānya Saukhyam gifting range: Signature Wellness Box and a windowed hamper with spices, a handwritten note, and a diya" />
+    </a>
 
     <section class="wrap" id="philosophy">
       <div class="section-head">
@@ -295,16 +299,52 @@
       </div>
     </section>
 
-    <section class="wrap">
-      <div class="quote-block">
-        <div>
-          <span class="ico-well" aria-hidden="true"><svg class="ico"><use href="assets/icons.svg#quote"></use></svg></span>
-          <blockquote class="display">“They sent my mother a masala box that smelled like her own kitchen in Calicut. That is a rarer gift than ribbon.”</blockquote>
+    <section class="wrap quotes" aria-label="Letters from those who received a gift">
+      <p class="kicker">Letters</p>
+      <div class="quote-slider" data-quote-slider>
+        <div class="quote-viewport">
+          <article class="quote-block quote-slide is-on">
+            <div>
+              <span class="ico-well" aria-hidden="true"><svg class="ico"><use href="assets/icons.svg#quote"></use></svg></span>
+              <blockquote class="display">“They packed my mother pepper from a named lot, not a pretty tin. When she opened it, the kitchen in Calicut came back — steam, jeera, the old steel dabba. That is a rarer gift than ribbon.”</blockquote>
+            </div>
+            <cite>Anjali, for a sixtieth birthday</cite>
+          </article>
+          <article class="quote-block quote-slide" hidden>
+            <div>
+              <span class="ico-well" aria-hidden="true"><svg class="ico"><use href="assets/icons.svg#quote"></use></svg></span>
+              <blockquote class="display">“We needed return gifts that did not look like hotel soap. Two hundred boxes left, each with a note in the family’s voice. Guests wrote afterwards to ask where the turmeric was from.”</blockquote>
+            </div>
+            <cite>Meera &amp; Kabir, a wedding in Coimbatore</cite>
+          </article>
+          <article class="quote-block quote-slide" hidden>
+            <div>
+              <span class="ico-well" aria-hidden="true"><svg class="ico"><use href="assets/icons.svg#quote"></use></svg></span>
+              <blockquote class="display">“I sent the Wellness Box after a long season of deadlines. She cooked with it for a week before she opened the card. That was the point.”</blockquote>
+            </div>
+            <cite>Rahul, for a colleague in Bengaluru</cite>
+          </article>
+          <article class="quote-block quote-slide" hidden>
+            <div>
+              <span class="ico-well" aria-hidden="true"><svg class="ico"><use href="assets/icons.svg#quote"></use></svg></span>
+              <blockquote class="display">“For Diwali I wanted something that would be eaten, not displayed. The Celebration box arrived before the guests. The saffron still smelled alive.”</blockquote>
+            </div>
+            <cite>Priya, a festival table in Chennai</cite>
+          </article>
+          <article class="quote-block quote-slide" hidden>
+            <div>
+              <span class="ico-well" aria-hidden="true"><svg class="ico"><use href="assets/icons.svg#quote"></use></svg></span>
+              <blockquote class="display">“A potli for my sister’s first kitchen — four things, a wooden spoon, a line that did not sound printed. She keeps the note in the masala drawer.”</blockquote>
+            </div>
+            <cite>Dev, a quiet Tuesday</cite>
+          </article>
         </div>
-        <div>
-          <cite>A daughter, for a sixtieth birthday</cite>
-          <p class="lede" style="margin-top: 18px;">If you want a gift that is eaten, cooked with, and read in a quiet hour — start here.</p>
+        <div class="quote-controls">
+          <button type="button" class="quote-arrow" data-quote-prev aria-label="Previous letter">‹</button>
+          <div class="quote-dots" data-quote-dots></div>
+          <button type="button" class="quote-arrow" data-quote-next aria-label="Next letter">›</button>
         </div>
+        <p class="lede quote-close">If you want a gift that is eaten, cooked with, and read in a quiet hour — start here.</p>
       </div>
     </section>
 
@@ -359,7 +399,7 @@
     </div>
   </footer>
   <script src="js/shop.js?v=3"></script>
-  <script src="js/main.js?v=10"></script>
+  <script src="js/main.js?v=11"></script>
   <script>
     (function () {
       var shop = window.SamanyaShop;
