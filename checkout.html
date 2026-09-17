@@ -63,7 +63,7 @@
       <a href="index.html#location">Thenkulapakkam, Tamil Nadu</a>
     </div>
   </footer>
-  <script src="js/payu-config.js?v=1"></script>
+  <script src="js/payu-config.js?v=2"></script>
   <script src="js/shop.js?v=2"></script>
   <script src="js/main.js?v=9"></script>
   <script>
@@ -98,9 +98,11 @@
         }
         if (!form.reportValidity()) return;
         if (!payu.key || !payu.hashUrl) {
-          showAlert("PayU is not live yet. Add your merchant key and hash URL in js/payu-config.js, then deploy workers/payu.js.");
+          showAlert("PayU is not live yet. Add your merchant key and hash URL in js/payu-config.js.");
           return;
         }
+        var hashUrl = payu.hashUrl.indexOf("http") === 0 ? payu.hashUrl : location.origin + payu.hashUrl;
+        var returnUrl = hashUrl.replace(/\/hash\/?$/, "/return");
         var txnid = shop.txnId();
         var productinfo = items.map(function (item) { return item.qty + "x " + item.label; }).join(", ").slice(0, 100);
         var payload = {
@@ -114,7 +116,7 @@
         };
         document.getElementById("payBtn").disabled = true;
         try {
-          var response = await fetch(payu.hashUrl, {
+          var response = await fetch(hashUrl, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload)
@@ -146,8 +148,8 @@
             firstname: payload.firstname,
             email: payload.email,
             phone: payload.phone,
-            surl: payu.hashUrl.replace(/\/hash\/?$/, "/return"),
-            furl: payu.hashUrl.replace(/\/hash\/?$/, "/return"),
+            surl: returnUrl,
+            furl: returnUrl,
             hash: data.hash,
             udf1: txnid
           };

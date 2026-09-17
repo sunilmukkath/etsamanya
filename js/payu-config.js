@@ -1,5 +1,5 @@
 window.SAMANYA_PAYU = {
-  key: "",
-  mode: "test",
-  hashUrl: ""
+  key: "DGvYnE",
+  mode: "live",
+  hashUrl: "/api/payu/hash"
 };
