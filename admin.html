@@ -58,7 +58,6 @@
             <div class="field"><label for="coName">Name</label><input id="coName" name="name" required autocomplete="name" /></div>
             <div class="field"><label for="coEmail">Email</label><input id="coEmail" name="email" type="email" required autocomplete="email" /></div>
             <div class="field"><label for="coPhone">Phone</label><input id="coPhone" name="phone" inputmode="tel" /></div>
-            <div class="field"><label for="coGstin">GSTIN</label><input id="coGstin" name="gstin" placeholder="Optional" /></div>
             <div class="field" style="grid-column:1/-1"><label for="coAddress">Address</label><textarea id="coAddress" name="address" rows="2"></textarea></div>
             <div class="field"><label for="coCity">City</label><input id="coCity" name="city" /></div>
             <div class="field"><label for="coPin">PIN</label><input id="coPin" name="pincode" inputmode="numeric" /></div>
@@ -179,7 +178,7 @@
           }
           wrap.innerHTML = "<table class='ops-table'><thead><tr><th>Order</th><th>Who</th><th>Status</th><th></th></tr></thead><tbody>" +
             data.orders.map(function (order) {
-              return "<tr data-id='" + order.txnid + "'><td><strong>" + order.txnid + "</strong><br /><small>" + rupees(order.payable) + "</small></td><td>" + order.name + "<br /><small>" + order.city + "</small></td><td>" + order.status + "</td><td>" + (order.items || []).join("<br />") + "</td></tr>";
+              return "<tr data-id='" + order.txnid + "'><td><strong>" + order.txnid + "</strong><br /><small>" + rupees(order.payable) + (order.estimateNo ? " · " + order.estimateNo : "") + (order.invoiceNo ? " · " + order.invoiceNo : "") + "</small></td><td>" + order.name + "<br /><small>" + order.city + "</small></td><td>" + order.status + "</td><td>" + (order.items || []).join("<br />") + "</td></tr>";
             }).join("") + "</tbody></table>";
         }).catch(function (err) {
           document.getElementById("orderList").textContent = err.message;
@@ -193,10 +192,14 @@
         api("/api/admin/orders?id=" + encodeURIComponent(selected)).then(function (data) {
           var order = data.order;
           var c = order.customer || {};
+          var token = order.invoiceToken || "";
+          var view = "/api/invoice?id=" + order.txnid + "&t=" + token;
+          var docLabel = order.status === "estimate" ? "Estimate" : (order.status === "pending" ? "Proforma" : "Invoice");
+          var numbers = [order.estimateNo, order.invoiceNo].filter(Boolean).join(" · ") || "No document number yet";
           document.getElementById("orderDetail").innerHTML =
             "<p class='kicker'>" + order.status + "</p><h2 class='display'>" + order.txnid + "</h2>" +
-            "<p><strong>" + rupees(order.payable) + "</strong> · " + (order.invoiceNo || "No invoice yet") + "</p>" +
-            "<p>" + c.name + "<br />" + c.phone + "<br />" + c.email + "<br />" + c.address + "<br />" + c.city + " " + c.pincode + "<br />" + c.state + (c.gstin ? "<br />GSTIN " + c.gstin : "") + "</p>" +
+            "<p><strong>" + rupees(order.payable) + "</strong> · " + numbers + "</p>" +
+            "<p>" + c.name + "<br />" + c.phone + "<br />" + c.email + "<br />" + c.address + "<br />" + c.city + " " + c.pincode + "<br />" + c.state + "</p>" +
             "<pre class='ops-pre'>" + (order.items || []).map(function (item) {
               return item.qty + " × " + item.label + (item.recipient ? " for " + item.recipient : "") + (item.items && item.items.length ? "\n" + item.items.join(", ") : "") + (item.message ? "\nCard: " + item.message : "");
             }).join("\n\n") + "</pre>" +
@@ -209,8 +212,9 @@
             "<label>AWB <input id='ordAwb' value='" + (order.awb || "") + "' /></label>" +
             "<div class='hero-actions'>" +
             "<button class='btn btn-primary' type='button' id='ordSave'>Save</button>" +
-            "<a class='btn btn-ghost' href='/api/invoice?id=" + order.txnid + "&t=" + (order.invoiceToken || "") + "' target='_blank'>" + (order.status === "estimate" ? "Estimate" : "Invoice") + "</a>" +
-            (order.status === "pending" ? "<a class='btn btn-ghost' href='/pay.html?id=" + order.txnid + "&t=" + (order.invoiceToken || "") + "' target='_blank'>PayU link</a>" : "") +
+            "<a class='btn btn-ghost' href='" + view + "' target='_blank'>" + docLabel + "</a>" +
+            "<a class='btn btn-ghost' href='" + view + "&download=1'>Download PDF</a>" +
+            (order.status === "pending" ? "<a class='btn btn-ghost' href='/pay.html?id=" + order.txnid + "&t=" + token + "' target='_blank'>PayU link</a>" : "") +
             (order.status === "estimate" ? "<button class='btn btn-ghost' type='button' id='ordLink'>Turn into PayU link</button>" : "") +
             "<button class='btn btn-ghost' type='button' id='ordMail'>Email customer</button>" +
             "<button class='btn btn-ghost' type='button' id='ordShip'>Send to Shiprocket</button>" +
@@ -269,7 +273,6 @@
           document.getElementById("salesKpis").innerHTML =
             "<div><small>Paid orders</small><strong>" + data.orders + "</strong></div>" +
             "<div><small>Gross</small><strong>" + rupees(data.gross) + "</strong></div>" +
-            "<div><small>Of which GST</small><strong>" + rupees(data.gst) + "</strong></div>" +
             "<div><small>Shipping collected</small><strong>" + rupees(data.shipping) + "</strong></div>" +
             "<div><small>Pending PayU</small><strong>" + data.pending + "</strong></div>";
           document.getElementById("salesSku").innerHTML = "<table class='ops-table'><thead><tr><th>Gift</th><th>Qty</th><th>Amount</th></tr></thead><tbody>" +
@@ -293,9 +296,9 @@
         api("/api/admin/settings").then(function (data) {
           var s = data.settings;
           var fields = [
-            ["legalName", "Legal name"], ["gstin", "GSTIN"], ["address", "Address"],
+            ["legalName", "Legal name"], ["address", "Address"],
             ["email", "Public email"], ["notifyEmail", "Alert email"], ["phone", "Phone"], ["whatsapp", "WhatsApp (digits)"],
-            ["gstRate", "GST % (inclusive)"], ["shippingFlat", "Shipping ₹"], ["shippingFreeAbove", "Free shipping above ₹"],
+            ["shippingFlat", "Shipping ₹"], ["shippingFreeAbove", "Free shipping above ₹"],
             ["packedNote", "Shipping note"]
           ];
           document.getElementById("settingsForm").innerHTML = "<div class='fields'>" + fields.map(function (row) {
@@ -358,7 +361,6 @@
           name: document.getElementById("coName").value,
           email: document.getElementById("coEmail").value,
           phone: document.getElementById("coPhone").value,
-          gstin: document.getElementById("coGstin").value,
           address: document.getElementById("coAddress").value,
           city: document.getElementById("coCity").value,
           pincode: document.getElementById("coPin").value,
@@ -374,9 +376,9 @@
             var box = document.getElementById("composeResult");
             box.hidden = false;
             box.innerHTML = "<p class='kicker'>" + data.order.status + "</p><h2 class='display'>" + data.order.txnid + "</h2>" +
-              "<p><strong>" + rupees(data.order.payable) + "</strong></p>" +
+              "<p><strong>" + rupees(data.order.payable) + "</strong>" + (data.order.estimateNo ? " · " + data.order.estimateNo : "") + (data.order.invoiceNo ? " · " + data.order.invoiceNo : "") + "</p>" +
               (data.payUrl ? "<p><a href='" + data.payUrl + "' target='_blank'>PayU link</a></p><p><input value='" + data.payUrl + "' readonly onclick='this.select()' /></p>" : "") +
-              "<p><a href='" + data.invoiceUrl + "' target='_blank'>" + (data.payUrl ? "Proforma" : "Estimate") + "</a></p>" +
+              "<p><a href='" + data.invoiceUrl + "' target='_blank'>" + (data.payUrl ? "View proforma" : "View estimate") + "</a> · <a href='" + data.invoiceUrl + "&download=1'>Download PDF</a></p>" +
               (data.mail && data.mail.customer && data.mail.customer.skipped ? "<p>Email skipped — add RESEND_API_KEY on Vercel to send it.</p>" : "<p>If send was ticked, the customer email was attempted.</p>");
             loadOrders();
           })

@@ -31,7 +31,7 @@ module.exports = async function handler(req, res) {
         city: String(body.city || "").trim().slice(0, 80),
         pincode: String(body.pincode || "").trim().slice(0, 10),
         state: String(body.state || "").trim().slice(0, 80),
-        gstin: String(body.gstin || "").trim().toUpperCase().slice(0, 15)
+        gstin: ""
       };
       if (!customer.name || !customer.email || !customer.phone || !customer.address || !customer.city || !customer.state) {
         return json(res, 400, { error: "Name, email, phone, and address are needed to pack." });
@@ -41,7 +41,7 @@ module.exports = async function handler(req, res) {
         const goods = goodsTotal(items);
         const shipping = shippingOf(goods, db.settings);
         const payable = goods + shipping;
-        const tax = taxBreakup(payable, db.settings.gstRate, customer.state, db.settings.sellerState);
+        const tax = taxBreakup(payable, 0, customer.state, db.settings.sellerState);
         const stockLines = [];
         items.forEach((item) => {
           stockNeeds(item).forEach((need) => {
@@ -103,6 +103,7 @@ module.exports = async function handler(req, res) {
         shipping: order.shipping,
         goods: order.goods,
         invoiceNo: order.invoiceNo || "",
+        estimateNo: order.estimateNo || "",
         tracking: order.tracking || "",
         awb: order.awb || "",
         createdAt: order.createdAt,
@@ -122,7 +123,7 @@ module.exports = async function handler(req, res) {
           state: order.customer.state
         }
       },
-      invoiceToken: order.status === "paid" ? order.invoiceToken : ""
+      invoiceToken: ["paid", "packed", "shipped", "pending", "estimate"].includes(order.status) ? order.invoiceToken : ""
     });
   }
   if (op === "receipt") {
@@ -137,7 +138,7 @@ module.exports = async function handler(req, res) {
       status: order.status,
       payable: order.payable,
       invoiceNo: order.invoiceNo || "",
-      invoiceToken: order.status === "paid" ? order.invoiceToken : "",
+      invoiceToken: ["paid", "packed", "shipped"].includes(order.status) ? order.invoiceToken : "",
       tracking: order.tracking || "",
       packedNote: db.settings.packedNote
     });

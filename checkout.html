@@ -17,7 +17,7 @@
       <a class="brand" href="index.html" aria-label="Sāmānya home"><img class="brand-mark" src="assets/samanya-wordmark.png?v=2" width="220" height="45" alt="Sāmānya" /></a>
       <nav class="nav" id="nav" aria-label="Primary">
         <a href="index.html#saukhyam">Saukhyam</a>
-        <a href="index.html#collections">The lots</a>
+        <a href="index.html#collections">Collections</a>
         <a href="index.html#occasions">Occasions</a>
         <a href="about.html">About</a>
         <a class="nav-more" href="account.html">Account</a>
@@ -48,7 +48,6 @@
           <div class="field"><label for="firstname">Your name</label><input id="firstname" name="firstname" required autocomplete="name" /></div>
           <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" required autocomplete="email" /></div>
           <div class="field"><label for="phone">Phone</label><input id="phone" name="phone" required inputmode="tel" autocomplete="tel" /></div>
-          <div class="field"><label for="gstin">GSTIN, if a company</label><input id="gstin" name="gstin" placeholder="Optional" /></div>
           <div class="field"><label for="address">Delivery address</label><textarea id="address" name="address" rows="3" required></textarea></div>
           <div class="field"><label for="city">City</label><input id="city" name="city" required /></div>
           <div class="field"><label for="pincode">PIN code</label><input id="pincode" name="pincode" required inputmode="numeric" pattern="[1-9][0-9]{5}" /></div>
@@ -131,7 +130,6 @@
               city: form.city.value.trim(),
               pincode: form.pincode.value.trim(),
               state: form.state.value.trim(),
-              gstin: form.gstin.value.trim(),
               password: form.password.value
             })
           }).then(function (res) {

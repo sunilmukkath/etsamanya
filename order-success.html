@@ -26,11 +26,16 @@
         copy.textContent = "Order " + (data.txnid || txn) + (data.invoiceNo ? " · " + data.invoiceNo : "") + ". We will pack from this week’s lots and write when it leaves.";
         if (data.invoiceToken) {
           var links = document.getElementById("okLinks");
-          var a = document.createElement("a");
-          a.className = "btn btn-ghost";
-          a.href = "/api/invoice?id=" + encodeURIComponent(data.txnid) + "&t=" + encodeURIComponent(data.invoiceToken);
-          a.textContent = "Invoice";
-          links.appendChild(a);
+          var view = document.createElement("a");
+          view.className = "btn btn-ghost";
+          view.href = "/api/invoice?id=" + encodeURIComponent(data.txnid) + "&t=" + encodeURIComponent(data.invoiceToken);
+          view.textContent = "Invoice";
+          links.appendChild(view);
+          var pdf = document.createElement("a");
+          pdf.className = "btn btn-ghost";
+          pdf.href = view.href + "&download=1";
+          pdf.textContent = "Download PDF";
+          links.appendChild(pdf);
         }
       }).catch(function () {
         document.getElementById("okCopy").textContent = "Reference " + txn + ". We will pack from this week’s lots and write when it leaves.";

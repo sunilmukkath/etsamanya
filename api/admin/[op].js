@@ -4,6 +4,7 @@ const { readDb, withDb, restock, available, storeReady, publicSettings } = requi
 const { notifyPaid, notifyCompose } = require("../../lib/notify");
 const { pushOrder } = require("../../lib/shiprocket");
 const { assemble, convertEstimate, payUrl, invoiceUrl } = require("../../lib/compose");
+const { ensureDocNumbers } = require("../../lib/invoice");
 const { catalogList } = require("../../lib/catalog");
 
 function opOf(req) {
@@ -126,6 +127,7 @@ module.exports = async function handler(req, res) {
           phone: order.customer.phone,
           city: order.customer.city,
           invoiceNo: order.invoiceNo || "",
+          estimateNo: order.estimateNo || "",
           tracking: order.tracking || "",
           stockWarning: order.stockWarning || "",
           items: (order.items || []).map((item) => item.qty + " × " + item.label)
@@ -150,6 +152,7 @@ module.exports = async function handler(req, res) {
             restock(db, current);
           }
           current.status = next;
+          ensureDocNumbers(db, current);
         }
         if (body.tracking != null) current.tracking = String(body.tracking).slice(0, 200);
         if (body.awb != null) current.awb = String(body.awb).slice(0, 80);
@@ -218,11 +221,9 @@ module.exports = async function handler(req, res) {
     });
     const bySku = {};
     let gross = 0;
-    let gst = 0;
     let shipping = 0;
     paid.forEach((order) => {
       gross += Number(order.payable || 0);
-      gst += Number(order.tax && order.tax.gst || 0);
       shipping += Number(order.shipping || 0);
       (order.items || []).forEach((item) => {
         const key = item.label;
@@ -237,9 +238,7 @@ module.exports = async function handler(req, res) {
       orders: paid.length,
       pending,
       gross,
-      gst,
       shipping,
-      net: Math.round((gross - gst) * 100) / 100,
       bySku: Object.values(bySku).sort((a, b) => b.amount - a.amount)
     });
   }

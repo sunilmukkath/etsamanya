@@ -16,7 +16,7 @@
       <a class="brand" href="index.html" aria-label="Sāmānya home"><img class="brand-mark" src="assets/samanya-wordmark.png?v=2" width="220" height="45" alt="Sāmānya" /></a>
       <nav class="nav" id="nav" aria-label="Primary">
         <a href="index.html#saukhyam">Saukhyam</a>
-        <a href="index.html#collections">The lots</a>
+        <a href="index.html#collections">Collections</a>
         <a href="about.html">About</a>
         <a class="nav-more" href="account.html" aria-current="page">Account</a>
         <a class="nav-more" href="customise.html">Customise a gift</a>
@@ -99,9 +99,14 @@
         }
         box.innerHTML = orders.map(function (order) {
           var token = order.invoiceToken || (tokenMap && tokenMap[order.txnid]) || "";
-          var invoice = token ? "<a href='/api/invoice?id=" + order.txnid + "&t=" + token + "'>Invoice</a>" : "";
+          var view = token ? "/api/invoice?id=" + order.txnid + "&t=" + token : "";
+          var label = order.status === "estimate" ? "Estimate" : (order.status === "pending" ? "Proforma" : "Invoice");
+          var docs = view
+            ? "<p><a href='" + view + "'>" + label + "</a> · <a href='" + view + "&download=1'>PDF</a></p>"
+            : "";
+          var number = order.invoiceNo || order.estimateNo || "";
           var track = order.tracking ? "<p>Tracking: " + order.tracking + "</p>" : "";
-          return "<article class='cart-item'><div><small>" + order.status + "</small><h3>" + order.txnid + "</h3><p>" + (order.items || []).join(" · ") + "</p>" + track + "</div><div><strong>" + rupees(order.payable) + "</strong>" + invoice + "</div></article>";
+          return "<article class='cart-item'><div><small>" + order.status + (number ? " · " + number : "") + "</small><h3>" + order.txnid + "</h3><p>" + (order.items || []).join(" · ") + "</p>" + track + docs + "</div><div><strong>" + rupees(order.payable) + "</strong></div></article>";
         }).join("");
       }
       function signedIn(data) {
@@ -141,6 +146,8 @@
             payable: data.order.payable,
             items: (data.order.items || []).map(function (item) { return item.qty + " × " + item.label; }),
             tracking: data.order.tracking,
+            invoiceNo: data.order.invoiceNo,
+            estimateNo: data.order.estimateNo,
             invoiceToken: data.invoiceToken
           }], map);
         }).catch(function (err) { note(err.message); });

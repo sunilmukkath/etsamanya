@@ -73,7 +73,8 @@ module.exports = async function handler(req, res) {
         createdAt: order.createdAt,
         paidAt: order.paidAt || null,
         invoiceNo: order.invoiceNo || "",
-        invoiceToken: order.status === "paid" || order.status === "packed" || order.status === "shipped" ? order.invoiceToken : "",
+        estimateNo: order.estimateNo || "",
+        invoiceToken: ["paid", "packed", "shipped", "pending", "estimate"].includes(order.status) ? order.invoiceToken : "",
         tracking: order.tracking || "",
         items: (order.items || []).map((item) => item.qty + " × " + item.label)
       }));
