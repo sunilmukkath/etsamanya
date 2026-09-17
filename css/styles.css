@@ -2939,10 +2939,32 @@ a.card {
   color: var(--leaf-deep);
 }
 
+.compose-line {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) 72px auto minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+  margin: 8px 0;
+}
+
+.compose-line select,
+.compose-line input[type="number"],
+.compose-line input[type="text"],
+.compose-line .co-msg,
+#composeResult input {
+  width: 100%;
+  min-height: 42px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--cream);
+}
+
 @media (max-width: 980px) {
   .account-grid,
   .ops-split,
-  .ops-kpis {
+  .ops-kpis,
+  .compose-line {
     grid-template-columns: 1fr;
   }
 }

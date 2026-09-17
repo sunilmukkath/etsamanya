@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex" />
+  <title>Pay — samanya</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css?v=35" />
+</head>
+<body>
+  <header class="site-header" id="header">
+    <div class="header-inner">
+      <a class="brand" href="index.html" aria-label="Sāmānya home"><img class="brand-mark" src="assets/samanya-wordmark.png?v=2" width="220" height="45" alt="Sāmānya" /></a>
+    </div>
+  </header>
+  <main class="wrap shop-page">
+    <p class="kicker">PayU</p>
+    <h1 class="display">Pay for this gift</h1>
+    <p class="lede" id="payCopy">A link from the atelier. PayU holds the till.</p>
+    <p class="wizard-alert" id="payAlert" role="status"></p>
+    <div class="cart-layout">
+      <div class="atelier" id="payBody">
+        <p>Opening the till…</p>
+      </div>
+      <aside class="cart-summary" id="paySummary"></aside>
+    </div>
+  </main>
+  <footer class="site-footer site-footer-slim">
+    <div class="wrap legal">
+      <span>© 2026 samanya</span>
+      <a href="index.html#contact">Contact us</a>
+    </div>
+  </footer>
+  <script src="js/payu-config.js?v=2"></script>
+  <script>
+    (function () {
+      var params = new URLSearchParams(location.search);
+      var id = (params.get("id") || "").toUpperCase();
+      var token = params.get("t") || "";
+      var alertBox = document.getElementById("payAlert");
+      var payu = window.SAMANYA_PAYU || {};
+      function rupees(n) { return "₹" + Math.round(n || 0).toLocaleString("en-IN"); }
+      function note(msg) {
+        alertBox.textContent = msg || "";
+        alertBox.className = "wizard-alert" + (msg ? " is-on" : "");
+      }
+      if (!id || !token) {
+        note("This payment link is incomplete.");
+        document.getElementById("payBody").innerHTML = "<p>Ask the atelier to send the link again.</p>";
+        return;
+      }
+      fetch("/api/orders/pay?id=" + encodeURIComponent(id) + "&t=" + encodeURIComponent(token))
+        .then(function (res) {
+          return res.json().then(function (data) {
+            if (!res.ok) throw new Error(data.error || "Could not open this link.");
+            return data;
+          });
+        })
+        .then(function (data) {
+          if (data.paid) {
+            location.href = "order-success.html?txnid=" + encodeURIComponent(data.txnid);
+            return;
+          }
+          document.getElementById("payCopy").textContent = "For " + data.customer.name + ". Order " + data.txnid + ".";
+          document.getElementById("payBody").innerHTML =
+            "<p>" + data.customer.email + (data.customer.phone ? " · " + data.customer.phone : "") + "</p>" +
+            "<p>" + (data.customer.city || "") + (data.customer.state ? ", " + data.customer.state : "") + "</p>" +
+            "<button class='btn btn-xl btn-primary' type='button' id='payBtn'>Pay " + rupees(data.payable) + " with PayU</button>";
+          document.getElementById("paySummary").innerHTML =
+            "<p class='kicker'>This till</p><h2 class='display'>" + rupees(data.payable) + "</h2>" +
+            "<ul class='pay-lines'>" + (data.items || []).map(function (item) {
+              return "<li><span>" + item.qty + " × " + item.label + "</span><strong>" + rupees(item.price * item.qty) + "</strong></li>";
+            }).join("") +
+            "<li><span>Shipping</span><strong>" + (data.shipping ? rupees(data.shipping) : "Complimentary") + "</strong></li></ul>" +
+            "<p class='cart-note'>" + (data.packedNote || "") + "</p>";
+          document.getElementById("payBtn").addEventListener("click", function () {
+            var btn = document.getElementById("payBtn");
+            btn.disabled = true;
+            var hashUrl = payu.hashUrl.indexOf("http") === 0 ? payu.hashUrl : location.origin + payu.hashUrl;
+            var returnUrl = hashUrl.replace(/\/hash\/?$/, "/return");
+            fetch(hashUrl, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ txnid: data.txnid })
+            }).then(function (res) {
+              return res.json().then(function (hash) {
+                if (!res.ok || !hash.hash) throw new Error(hash.error || "Could not start PayU.");
+                var action = payu.mode === "live" ? "https://secure.payu.in/_payment" : "https://test.payu.in/_payment";
+                var post = document.createElement("form");
+                post.method = "POST";
+                post.action = action;
+                var fields = {
+                  key: hash.key || payu.key,
+                  txnid: data.txnid,
+                  amount: hash.amount,
+                  productinfo: hash.productinfo,
+                  firstname: hash.firstname,
+                  email: hash.email,
+                  phone: hash.phone || data.customer.phone,
+                  surl: returnUrl,
+                  furl: returnUrl,
+                  hash: hash.hash,
+                  udf1: data.txnid
+                };
+                Object.keys(fields).forEach(function (name) {
+                  var input = document.createElement("input");
+                  input.type = "hidden";
+                  input.name = name;
+                  input.value = fields[name] || "";
+                  post.appendChild(input);
+                });
+                document.body.appendChild(post);
+                post.submit();
+              });
+            }).catch(function (err) {
+              btn.disabled = false;
+              note(err.message || "PayU could not be reached.");
+            });
+          });
+        })
+        .catch(function (err) {
+          note(err.message);
+          document.getElementById("payBody").innerHTML = "<p>Write to hello@etsamanya.com if you still need to pay.</p>";
+        });
+    })();
+  </script>
+</body>
+</html>

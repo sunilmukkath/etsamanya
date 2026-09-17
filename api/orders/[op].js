@@ -142,5 +142,41 @@ module.exports = async function handler(req, res) {
       packedNote: db.settings.packedNote
     });
   }
+  if (op === "pay") {
+    const url = new URL(req.url, "https://samanyastore.com");
+    const txnid = String(url.searchParams.get("id") || url.searchParams.get("txnid") || "").trim().toUpperCase();
+    const token = String(url.searchParams.get("t") || "").trim();
+    if (!txnid || !token) return json(res, 400, { error: "Missing payment link." });
+    const db = await readDb();
+    const order = db.orders[txnid];
+    if (!order || order.invoiceToken !== token) return json(res, 404, { error: "This payment link is not valid." });
+    if (order.status === "paid" || order.status === "packed" || order.status === "shipped") {
+      return json(res, 200, { paid: true, txnid: order.txnid, invoiceNo: order.invoiceNo || "" });
+    }
+    if (order.status !== "pending") {
+      return json(res, 400, { error: order.status === "expired" ? "This payment link has expired." : "This link is not open for PayU yet." });
+    }
+    const c = order.customer || {};
+    return json(res, 200, {
+      txnid: order.txnid,
+      payable: order.payable,
+      shipping: order.shipping,
+      goods: order.goods,
+      packedNote: db.settings.packedNote,
+      expiresAt: order.expiresAt || null,
+      items: (order.items || []).map((item) => ({
+        label: item.label,
+        qty: item.qty,
+        price: item.price
+      })),
+      customer: {
+        name: c.name,
+        email: c.email,
+        phone: c.phone,
+        city: c.city,
+        state: c.state
+      }
+    });
+  }
   json(res, 404, { error: "Unknown order route." });
 };

@@ -23,7 +23,8 @@ module.exports = async function handler(req, res) {
   const allowed = admin
     || (token && token === order.invoiceToken)
     || (user && user.email === order.customer.email);
-  if (!allowed || (order.status !== "paid" && order.status !== "packed" && order.status !== "shipped" && !admin)) {
+  const visible = ["paid", "packed", "shipped", "pending", "estimate"].includes(order.status);
+  if (!allowed || (!visible && !admin)) {
     html(res, 403, "<p>This invoice is not ready yet.</p>");
     return;
   }

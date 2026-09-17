@@ -1,8 +1,10 @@
 const { json, readBody, originOf } = require("../../lib/http");
 const { requireAdmin, adminConfigured, checkAdminPassword, sessionCookie, readSession, clearCookie } = require("../../lib/auth");
 const { readDb, withDb, restock, available, storeReady, publicSettings } = require("../../lib/store");
-const { notifyPaid } = require("../../lib/notify");
+const { notifyPaid, notifyCompose } = require("../../lib/notify");
 const { pushOrder } = require("../../lib/shiprocket");
+const { assemble, convertEstimate, payUrl, invoiceUrl } = require("../../lib/compose");
+const { catalogList } = require("../../lib/catalog");
 
 function opOf(req) {
   return String((req.query && req.query.op) || "").replace(/\/$/, "");
@@ -34,6 +36,72 @@ module.exports = async function handler(req, res) {
     });
   }
   if (!requireAdmin(req, res)) return;
+  if (op === "catalog") {
+    return json(res, 200, catalogList());
+  }
+  if (op === "compose") {
+    if (req.method !== "POST") return json(res, 405, { error: "Use POST" });
+    if (!storeReady()) return json(res, 503, { error: "The order book is not connected yet." });
+    try {
+      const body = await readBody(req);
+      const origin = originOf(req);
+      const saved = await withDb(async (db) => {
+        const created = assemble(db, body);
+        db.orders[created.txnid] = created;
+        db.orderIds.unshift(created.txnid);
+        return created;
+      });
+      let mail = null;
+      if (body.send) {
+        const db = await readDb();
+        mail = await notifyCompose(saved, db.settings, origin);
+        await withDb(async (inner) => {
+          if (inner.orders[saved.txnid]) inner.orders[saved.txnid].composeMail = mail;
+        });
+      }
+      return json(res, 200, {
+        ok: true,
+        order: saved,
+        payUrl: saved.status === "pending" ? payUrl(origin, saved) : "",
+        invoiceUrl: invoiceUrl(origin, saved),
+        mail
+      });
+    } catch (err) {
+      return json(res, err.status || 500, { error: err.message || "Could not compose." });
+    }
+  }
+  if (op === "convert") {
+    if (req.method !== "POST") return json(res, 405, { error: "Use POST" });
+    const body = await readBody(req);
+    const id = String(body.txnid || body.id || "").trim().toUpperCase();
+    const origin = originOf(req);
+    try {
+      const order = await withDb(async (db) => {
+        const current = db.orders[id];
+        if (!current) {
+          const err = new Error("Order not found.");
+          err.status = 404;
+          throw err;
+        }
+        convertEstimate(db, current, body.days);
+        return current;
+      });
+      let mail = null;
+      if (body.send) {
+        const db = await readDb();
+        mail = await notifyCompose(order, db.settings, origin);
+      }
+      return json(res, 200, {
+        ok: true,
+        order,
+        payUrl: payUrl(origin, order),
+        invoiceUrl: invoiceUrl(origin, order),
+        mail
+      });
+    } catch (err) {
+      return json(res, err.status || 500, { error: err.message || "Could not make a payment link." });
+    }
+  }
   if (op === "orders") {
     if (req.method === "GET") {
       const url = new URL(req.url, "https://samanyastore.com");
@@ -85,13 +153,22 @@ module.exports = async function handler(req, res) {
         }
         if (body.tracking != null) current.tracking = String(body.tracking).slice(0, 200);
         if (body.awb != null) current.awb = String(body.awb).slice(0, 80);
-        if (body.note != null) current.adminNote = String(body.note).slice(0, 500);
+        if (body.note != null) current.adminNote = String(body.note).slice(0, 800);
+        if (body.email != null) {
+          const email = String(body.email).trim().toLowerCase().slice(0, 120);
+          if (email.includes("@")) {
+            current.customer.email = email;
+            current.userEmail = email;
+          }
+        }
         if (body.resend) current.notifiedAt = 0;
         return current;
       });
-      if (body.resend && order.status === "paid") {
+      if (body.resend && (order.status === "paid" || order.status === "pending" || order.status === "estimate")) {
         const db = await readDb();
-        const results = await notifyPaid(order, db.settings, originOf(req));
+        const results = order.status === "paid"
+          ? await notifyPaid(order, db.settings, originOf(req))
+          : await notifyCompose(order, db.settings, originOf(req));
         await withDb(async (inner) => {
           if (inner.orders[id]) {
             inner.orders[id].notifiedAt = Date.now();
