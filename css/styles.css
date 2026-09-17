@@ -474,7 +474,7 @@ ul {
 .hero {
   position: relative;
   display: grid;
-  grid-template-columns: 1.08fr 0.92fr;
+  grid-template-columns: 1fr;
   gap: var(--space-xl);
   align-items: center;
   padding: var(--space-xl) 0 var(--space-lg);
@@ -483,7 +483,7 @@ ul {
 
 .hero-copy h1 {
   font-size: clamp(2.8rem, 5.6vw, 5rem);
-  max-width: none;
+  max-width: 16ch;
   line-height: 1.05;
   margin: var(--space-sm) 0 var(--space-md);
 }
@@ -507,6 +507,7 @@ ul {
   margin-top: var(--space-xl);
   padding-top: var(--space-lg);
   border-top: 1px solid var(--line);
+  max-width: 46rem;
 }
 
 .hero-meta-item {
