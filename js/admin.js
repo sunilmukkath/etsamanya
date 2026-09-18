@@ -22,7 +22,8 @@
     orderQuery: "",
     peopleQuery: "",
     selected: "",
-    order: null
+    order: null,
+    personEmail: ""
   };
 
   function $(id) { return document.getElementById(id); }
@@ -47,6 +48,27 @@
   function invoiceUrl(order, download) {
     if (!order || !order.invoiceToken) return "";
     return "/api/invoice?id=" + encodeURIComponent(order.txnid) + "&t=" + encodeURIComponent(order.invoiceToken) + (download ? "&download=1" : "");
+  }
+  function customerFieldsHtml(c, lockedEmail) {
+    c = c || {};
+    return "<div class='ops-field'><label for='ordName'>Name</label><input id='ordName' value='" + esc(c.name || "") + "' required autocomplete='name' /></div>" +
+      "<div class='ops-field'><label for='ordEmail'>Email</label><input id='ordEmail' type='email' value='" + esc(c.email || "") + "'" + (lockedEmail ? " readonly" : "") + " required autocomplete='email' /></div>" +
+      "<div class='ops-field'><label for='ordPhone'>Phone</label><input id='ordPhone' value='" + esc(c.phone || "") + "' inputmode='tel' autocomplete='tel' /></div>" +
+      "<div class='ops-field'><label for='ordAddress'>Address</label><textarea id='ordAddress' rows='2'>" + esc(c.address || "") + "</textarea></div>" +
+      "<div class='ops-pair'><div class='ops-field'><label for='ordCity'>City</label><input id='ordCity' value='" + esc(c.city || "") + "' /></div>" +
+      "<div class='ops-field'><label for='ordPin'>PIN</label><input id='ordPin' value='" + esc(c.pincode || "") + "' inputmode='numeric' /></div></div>" +
+      "<div class='ops-field'><label for='ordState'>State</label><input id='ordState' value='" + esc(c.state || "") + "' /></div>";
+  }
+  function readCustomerFields() {
+    return {
+      name: $("ordName").value,
+      email: $("ordEmail").value,
+      phone: $("ordPhone").value,
+      address: $("ordAddress").value,
+      city: $("ordCity").value,
+      pincode: $("ordPin").value,
+      state: $("ordState").value
+    };
   }
   function badgeClass(status) {
     if (CLOSED[status]) return "badge-closed";
@@ -131,6 +153,7 @@
     $("opsMask").hidden = true;
     state.selected = "";
     state.order = null;
+    state.personEmail = "";
     if (clearHash && state.tab === "orders" && /#orders\//.test(location.hash)) {
       history.replaceState(null, "", "#orders");
     }
@@ -209,6 +232,7 @@
 
   function openOrder(id) {
     state.selected = id;
+    state.personEmail = "";
     $("opsMask").hidden = false;
     $("orderDrawer").hidden = false;
     $("drawTitle").textContent = id;
@@ -257,20 +281,18 @@
     }
     $("orderDetail").innerHTML =
       "<div class='ops-block'><p class='ops-amount' style='margin:0'>" + rupees(order.payable) + "</p><small>" + esc(numbers) + "</small></div>" +
-      "<div class='ops-block'><h3>Customer</h3><p style='margin:0'><b>" + esc(c.name) + "</b><br />" +
-      (c.phone ? "<button class='ops-copy' type='button' data-copy='" + esc(c.phone) + "'>" + esc(c.phone) + "</button><br />" : "") +
-      (c.email ? "<button class='ops-copy' type='button' data-copy='" + esc(c.email) + "'>" + esc(c.email) + "</button><br />" : "") +
-      esc([c.address, c.city, c.pincode, c.state].filter(Boolean).join(", ")) + "</p></div>" +
       "<div class='ops-block'><h3>Gifts</h3>" + (gifts || "<p class='ops-empty'>No lines.</p>") + "</div>" +
       (order.stockWarning ? "<p class='ops-warn'>" + esc(order.stockWarning) + "</p>" : "") +
       (order.adminNote ? "<div class='ops-block'><h3>Atelier note</h3><p>" + esc(order.adminNote) + "</p></div>" : "") +
       "<div class='ops-block'><div class='btn-row'>" + actions.join("") + "</div></div>" +
       "<form id='drawForm' class='ops-fields'>" +
+      "<h3>Customer</h3>" +
+      "<p class='ops-lede-tight'>Saved onto this document. A PayU link needs phone, address, and a 6-digit PIN.</p>" +
+      customerFieldsHtml(c, false) +
       "<div class='ops-field'><label>Status</label><select id='ordStatus'>" +
       ["estimate", "pending", "paid", "packed", "shipped", "cancelled", "refunded", "expired"].map(function (s) {
         return "<option" + (s === order.status ? " selected" : "") + ">" + s + "</option>";
       }).join("") + "</select></div>" +
-      "<div class='ops-field'><label>Email</label><input id='ordEmail' type='email' value='" + esc(c.email || "") + "' /></div>" +
       "<div class='ops-field'><label>Tracking</label><input id='ordTrack' value='" + esc(order.tracking || "") + "' /></div>" +
       "<div class='ops-field'><label>AWB</label><input id='ordAwb' value='" + esc(order.awb || "") + "' /></div>" +
       "<div class='ops-field'><label>Atelier note</label><textarea id='ordNote' rows='2'>" + esc(order.adminNote || "") + "</textarea></div>" +
@@ -291,11 +313,17 @@
         tracking: $("ordTrack").value,
         awb: $("ordAwb").value,
         note: $("ordNote").value,
-        email: $("ordEmail").value
+        customer: readCustomerFields()
       })
     }).then(function () {
       toast("Saved.");
-      return refreshOrders(state.selected);
+      return Promise.all([
+        refreshOrders(state.selected),
+        api("/api/admin/customers").then(function (data) {
+          state.customers = data.customers || [];
+          renderPeople();
+        })
+      ]);
     }).catch(function (err) { toast(err.message, true); });
   }
 
@@ -343,10 +371,53 @@
       if (!q) return true;
       return [row.name, row.email, row.phone].join(" ").toLowerCase().indexOf(q) !== -1;
     });
-    $("customerList").innerHTML = "<table class='ops-table'><thead><tr><th>Name</th><th>Email</th><th>Orders</th><th>Paid</th></tr></thead><tbody>" +
+    $("customerList").innerHTML = "<table class='ops-table'><thead><tr><th>Name</th><th>Email</th><th>Orders</th><th>Paid</th><th></th></tr></thead><tbody>" +
       (rows.map(function (row) {
-        return "<tr data-person='" + esc(row.email) + "'><td><b>" + esc(row.name) + "</b>" + (row.registered ? "<small>account</small>" : "") + "</td><td>" + esc(row.email) + "<small>" + esc(row.phone || "") + "</small></td><td>" + row.orders + "</td><td class='ops-amount'>" + rupees(row.spent) + "</td></tr>";
-      }).join("") || "<tr><td colspan='4'>No buyers yet.</td></tr>") + "</tbody></table>";
+        return "<tr data-person='" + esc(row.email) + "'><td><b>" + esc(row.name) + "</b>" + (row.registered ? "<small>account</small>" : "") + "</td><td>" + esc(row.email) + "<small>" + esc(row.phone || "") + "</small></td><td>" + row.orders + "</td><td class='ops-amount'>" + rupees(row.spent) + "</td><td><button class='ops-copy' type='button' data-edit-person='" + esc(row.email) + "'>Edit</button></td></tr>";
+      }).join("") || "<tr><td colspan='5'>No buyers yet.</td></tr>") + "</tbody></table>";
+  }
+
+  function openPerson(email) {
+    var row = state.customers.find(function (item) { return item.email === email; });
+    if (!row) {
+      toast("No customer matches.", true);
+      return;
+    }
+    state.personEmail = email;
+    state.selected = "";
+    state.order = null;
+    $("opsMask").hidden = false;
+    $("orderDrawer").hidden = false;
+    paintPerson(row);
+  }
+
+  function paintPerson(row) {
+    $("drawStatus").className = "badge " + (row.registered ? "badge-paid" : "badge-estimate");
+    $("drawStatus").textContent = row.registered ? "account" : "guest";
+    $("drawTitle").textContent = row.name || row.email;
+    $("orderDetail").innerHTML =
+      "<p class='ops-lede-tight'>Saves onto their account and any open estimate or PayU link. Paid invoices stay as they were unless you open that order.</p>" +
+      "<form id='drawForm' class='ops-fields'>" +
+      customerFieldsHtml(row, true) +
+      "<div class='btn-row'><button class='btn btn-primary' type='submit'>Save customer</button>" +
+      "<button class='btn btn-ghost' type='button' data-person='" + esc(row.email) + "'>Their orders</button></div></form>";
+    $("drawForm").addEventListener("submit", savePerson);
+  }
+
+  function savePerson(event) {
+    event.preventDefault();
+    var body = readCustomerFields();
+    api("/api/admin/customers", { method: "PATCH", body: JSON.stringify(body) })
+      .then(function (data) {
+        state.customers = data.customers || state.customers;
+        var n = (data.updated || []).length;
+        toast(n ? "Saved on " + n + " open order" + (n === 1 ? "" : "s") + "." : "Customer saved.");
+        renderPeople();
+        var next = state.customers.find(function (row) { return row.email === body.email; });
+        if (next) paintPerson(next);
+        return refreshOrders();
+      })
+      .catch(function (err) { toast(err.message, true); });
   }
 
   function fillSettings() {
@@ -513,6 +584,11 @@
     var open = event.target.closest("[data-open]");
     if (open) {
       setTab("orders", open.getAttribute("data-open"));
+      return;
+    }
+    var editPerson = event.target.closest("[data-edit-person]");
+    if (editPerson) {
+      openPerson(editPerson.getAttribute("data-edit-person"));
       return;
     }
     var person = event.target.closest("[data-person]");

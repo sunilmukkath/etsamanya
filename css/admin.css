@@ -539,7 +539,8 @@ a { color: var(--leaf-deep); }
 
 .ops-block:last-child { border-bottom: 0; }
 
-.ops-block h3 {
+.ops-block h3,
+.ops-fields > h3 {
   margin: 0 0 8px;
   font-size: 0.68rem;
   letter-spacing: 0.12em;
@@ -561,6 +562,18 @@ a { color: var(--leaf-deep); }
   font-weight: 700;
   text-decoration: underline;
   text-underline-offset: 2px;
+}
+
+.ops-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.ops-lede-tight {
+  margin: 0 0 10px;
+  color: var(--muted);
+  font-size: 0.82rem;
 }
 
 .ops-fields {

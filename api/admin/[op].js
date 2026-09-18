@@ -3,7 +3,7 @@ const { requireAdmin, adminConfigured, checkAdminPassword, sessionCookie, readSe
 const { readDb, withDb, restock, available, storeReady, publicSettings } = require("../../lib/store");
 const { notifyPaid, notifyCompose } = require("../../lib/notify");
 const { pushOrder } = require("../../lib/shiprocket");
-const { assemble, convertEstimate, payUrl, invoiceUrl } = require("../../lib/compose");
+const { assemble, convertEstimate, applyCustomer, payUrl, invoiceUrl } = require("../../lib/compose");
 const { ensureDocNumbers } = require("../../lib/invoice");
 const { catalogList } = require("../../lib/catalog");
 
@@ -16,6 +16,53 @@ const SETTING_KEYS = [
   "email", "phone", "whatsapp", "gstin", "gstRate", "hsn",
   "shippingFlat", "shippingFreeAbove", "notifyEmail", "packedNote"
 ];
+
+function customersOf(db) {
+  const map = {};
+  Object.values(db.users || {}).forEach((user) => {
+    map[user.email] = {
+      email: user.email,
+      name: user.name,
+      phone: user.phone || "",
+      address: "",
+      city: "",
+      pincode: "",
+      state: "",
+      registered: true,
+      orders: 0,
+      spent: 0
+    };
+  });
+  (db.orderIds || []).forEach((id) => {
+    const order = db.orders[id];
+    if (!order || !order.customer) return;
+    const c = order.customer;
+    const email = c.email;
+    if (!map[email]) {
+      map[email] = {
+        email,
+        name: c.name,
+        phone: c.phone || "",
+        address: "",
+        city: "",
+        pincode: "",
+        state: "",
+        registered: false,
+        orders: 0,
+        spent: 0
+      };
+    }
+    map[email].orders += 1;
+    if (["paid", "packed", "shipped"].includes(order.status)) map[email].spent += Number(order.payable || 0);
+    if (!map[email].address && c.address) map[email].address = c.address;
+    if (!map[email].city && c.city) map[email].city = c.city;
+    if (!map[email].pincode && c.pincode) map[email].pincode = c.pincode;
+    if (!map[email].state && c.state) map[email].state = c.state;
+    if (!map[email].phone && c.phone) map[email].phone = c.phone;
+    if (!map[email].name && c.name) map[email].name = c.name;
+  });
+  return Object.values(map).sort((a, b) => b.spent - a.spent);
+}
 
 module.exports = async function handler(req, res) {
   const op = opOf(req);
@@ -159,12 +206,12 @@ module.exports = async function handler(req, res) {
         if (body.tracking != null) current.tracking = String(body.tracking).slice(0, 200);
         if (body.awb != null) current.awb = String(body.awb).slice(0, 80);
         if (body.note != null) current.adminNote = String(body.note).slice(0, 800);
-        if (body.email != null) {
-          const email = String(body.email).trim().toLowerCase().slice(0, 120);
-          if (email.includes("@")) {
-            current.customer.email = email;
-            current.userEmail = email;
-          }
+        const customerPatch = body.customer && typeof body.customer === "object" ? { ...body.customer } : {};
+        ["name", "email", "phone", "address", "city", "pincode", "state", "gstin"].forEach((key) => {
+          if (body[key] != null && customerPatch[key] == null) customerPatch[key] = body[key];
+        });
+        if (Object.keys(customerPatch).length) {
+          applyCustomer(current, customerPatch, db.settings);
         }
         if (body.resend) current.notifiedAt = 0;
         return current;
@@ -245,22 +292,46 @@ module.exports = async function handler(req, res) {
     });
   }
   if (op === "customers") {
-    const db = await readDb();
-    const map = {};
-    Object.values(db.users).forEach((user) => {
-      map[user.email] = { email: user.email, name: user.name, phone: user.phone || "", registered: true, orders: 0, spent: 0 };
-    });
-    db.orderIds.forEach((id) => {
-      const order = db.orders[id];
-      if (!order || !order.customer) return;
-      const email = order.customer.email;
-      if (!map[email]) {
-        map[email] = { email, name: order.customer.name, phone: order.customer.phone, registered: false, orders: 0, spent: 0 };
+    if (req.method === "PATCH") {
+      const body = await readBody(req);
+      const email = String(body.email || "").trim().toLowerCase();
+      if (!email || !email.includes("@")) return json(res, 400, { error: "A real email is needed." });
+      try {
+        const saved = await withDb(async (db) => {
+          const patch = {
+            name: body.name,
+            phone: body.phone,
+            address: body.address,
+            city: body.city,
+            pincode: body.pincode,
+            state: body.state,
+            gstin: body.gstin
+          };
+          const user = db.users[email];
+          if (user) {
+            if (body.name != null) user.name = String(body.name).trim().slice(0, 80) || user.name;
+            if (body.phone != null) user.phone = String(body.phone).trim().slice(0, 20);
+          }
+          const matches = db.orderIds.map((id) => db.orders[id]).filter((order) => {
+            return order && order.customer && order.customer.email === email;
+          });
+          const open = matches.filter((order) => order.status === "estimate" || order.status === "pending");
+          if (!user && !open.length) {
+            const err = new Error("No open estimate or PayU link. Open the order to change a paid invoice.");
+            err.status = 400;
+            throw err;
+          }
+          open.forEach((order) => applyCustomer(order, patch, db.settings));
+          return { updated: open.map((order) => order.txnid) };
+        });
+        const db = await readDb();
+        return json(res, 200, { ok: true, updated: saved.updated, customers: customersOf(db) });
+      } catch (err) {
+        return json(res, err.status || 500, { error: err.message || "Could not update the customer." });
       }
-      map[email].orders += 1;
-      if (["paid", "packed", "shipped"].includes(order.status)) map[email].spent += Number(order.payable || 0);
-    });
-    return json(res, 200, { customers: Object.values(map).sort((a, b) => b.spent - a.spent) });
+    }
+    const db = await readDb();
+    return json(res, 200, { customers: customersOf(db) });
   }
   if (op === "settings") {
     if (req.method === "GET") {
