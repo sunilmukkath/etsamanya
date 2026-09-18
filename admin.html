@@ -9,382 +9,246 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/styles.css?v=35" />
+  <link rel="stylesheet" href="css/admin.css?v=1" />
 </head>
-<body class="ops-page">
-  <main class="wrap shop-page" id="loginGate">
-    <p class="kicker">Atelier</p>
-    <h1 class="display">The order book</h1>
-    <p class="lede" id="loginCopy">Sign in to see paid gifts, stock, invoices, and the day’s till.</p>
-    <form id="loginForm" class="atelier checkout-form" style="max-width:420px">
-      <div class="fields" style="grid-template-columns:1fr">
-        <div class="field"><label for="adminPass">Admin password</label><input id="adminPass" type="password" required autocomplete="current-password" /></div>
-      </div>
-      <p class="wizard-alert" id="loginAlert" role="status"></p>
-      <button class="btn btn-xl btn-primary" type="submit">Enter</button>
-    </form>
+<body>
+  <main class="ops-login" id="loginGate">
+    <div class="ops-login-card">
+      <img src="assets/samanya-wordmark.png?v=2" width="220" height="45" alt="Sāmānya" />
+      <h1>The order book</h1>
+      <p id="loginCopy">Sign in to pack, invoice, and watch the till.</p>
+      <form id="loginForm">
+        <label for="adminPass">Admin password</label>
+        <input id="adminPass" type="password" required autocomplete="current-password" />
+        <p class="ops-alert" id="loginAlert" role="status"></p>
+        <button class="btn btn-primary" type="submit">Enter</button>
+      </form>
+    </div>
   </main>
 
-  <div id="opsApp" hidden>
-    <header class="site-header is-scrolled">
-      <div class="header-inner">
-        <a class="brand" href="index.html"><img class="brand-mark" src="assets/samanya-wordmark.png?v=2" width="220" height="45" alt="Sāmānya" /></a>
-        <nav class="ops-tabs" id="opsTabs">
-          <button type="button" data-tab="compose" class="is-on">Compose</button>
-          <button type="button" data-tab="orders">Orders</button>
-          <button type="button" data-tab="stock">Stock</button>
-          <button type="button" data-tab="sales">Sales</button>
-          <button type="button" data-tab="customers">Accounts</button>
-          <button type="button" data-tab="settings">Settings</button>
-        </nav>
-        <button class="btn btn-ghost" type="button" id="adminOut">Sign out</button>
+  <div class="ops-app" id="opsApp" hidden>
+    <aside class="ops-nav" id="opsNav">
+      <a class="ops-nav-brand" href="#today">
+        <span>
+          <img src="assets/samanya-wordmark.png?v=2" width="140" height="28" alt="Sāmānya" />
+          <small>Atelier</small>
+        </span>
+      </a>
+      <nav class="ops-nav-list" id="opsTabs" aria-label="Atelier">
+        <button type="button" data-tab="today" class="is-on">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>
+          <span>Today</span>
+        </button>
+        <button type="button" data-tab="orders">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 4h10M3 8h10M3 12h6"/></svg>
+          <span>Orders</span>
+        </button>
+        <button type="button" data-tab="compose">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 3v10M3 8h10"/></svg>
+          <span>Compose</span>
+        </button>
+        <button type="button" data-tab="stock">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2.5 5.5 8 3l5.5 2.5v7L8 15l-5.5-2.5v-7Z"/><path d="M8 8v7M2.5 5.5 8 8l5.5-2.5"/></svg>
+          <span>Stock</span>
+        </button>
+        <button type="button" data-tab="sales">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 12V7M7 12V4M11 12V9M14 13H2"/></svg>
+          <span>Sales</span>
+        </button>
+        <button type="button" data-tab="people">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="5.5" r="2.2"/><path d="M3.5 13c.6-2.4 2.3-3.6 4.5-3.6s3.9 1.2 4.5 3.6"/></svg>
+          <span>People</span>
+        </button>
+        <button type="button" data-tab="settings">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="2.2"/><path d="M8 2.5v1.6M8 11.9v1.6M2.5 8h1.6M11.9 8h1.6M4.1 4.1l1.1 1.1M10.8 10.8l1.1 1.1M11.9 4.1l-1.1 1.1M5.2 10.8l-1.1 1.1"/></svg>
+          <span>Settings</span>
+        </button>
+      </nav>
+      <div class="ops-nav-foot">
+        <a class="ops-nav-link" href="index.html">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 8h10M3 8l3-3M3 8l3 3"/></svg>
+          <span>Store</span>
+        </a>
+        <button type="button" id="adminOut">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 3H3.5v10H6M9 11l3-3-3-3M6 8h6"/></svg>
+          <span>Sign out</span>
+        </button>
       </div>
-    </header>
-    <main class="wrap ops-main">
-      <section data-panel="compose">
-        <p class="kicker">Compose</p>
-        <h1 class="display">Estimate or PayU link</h1>
-        <p class="lede">An estimate is a document. A payment link holds stock and takes the customer to PayU on this site.</p>
-        <p class="wizard-alert" id="composeAlert" role="status"></p>
-        <form id="composeForm" class="atelier checkout-form">
-          <div class="fields">
-            <div class="field"><label for="coKind">Kind</label>
-              <select id="coKind" name="kind">
-                <option value="estimate">Estimate</option>
-                <option value="link">PayU payment link</option>
-              </select>
+    </aside>
+
+    <div class="ops-shell">
+      <header class="ops-top">
+        <button class="ops-menu" id="opsMenu" type="button" aria-label="Open menu">☰</button>
+        <h1 id="opsTitle">Today</h1>
+        <input class="ops-search" id="opsSearch" type="search" placeholder="Search orders, name, email, txnid…" />
+        <a class="ops-top-link" href="index.html">Store</a>
+      </header>
+
+      <main class="ops-main">
+        <section class="ops-panel" data-panel="today">
+          <div class="ops-toolbar">
+            <p class="ops-lede" style="margin:0;flex:1">What to pack, what is waiting on PayU, and what is low on the shelf.</p>
+            <button class="btn btn-primary" type="button" data-go="compose">New estimate / payment link</button>
+          </div>
+          <div class="ops-kpis" id="todayKpis"></div>
+          <div class="ops-grid-2">
+            <article class="ops-card">
+              <h3>Pack next</h3>
+              <div id="todayPack"></div>
+            </article>
+            <div>
+              <article class="ops-card" style="margin-bottom:12px">
+                <h3>Waiting on PayU</h3>
+                <div id="todayPending"></div>
+              </article>
+              <article class="ops-card">
+                <h3>Shelf warnings</h3>
+                <div id="todayStock"></div>
+              </article>
             </div>
-            <div class="field"><label for="coDays">Link days</label><input id="coDays" name="days" type="number" min="1" max="60" value="14" /></div>
-            <div class="field"><label for="coName">Name</label><input id="coName" name="name" required autocomplete="name" /></div>
-            <div class="field"><label for="coEmail">Email</label><input id="coEmail" name="email" type="email" required autocomplete="email" /></div>
-            <div class="field"><label for="coPhone">Phone</label><input id="coPhone" name="phone" inputmode="tel" /></div>
-            <div class="field" style="grid-column:1/-1"><label for="coAddress">Address</label><textarea id="coAddress" name="address" rows="2"></textarea></div>
-            <div class="field"><label for="coCity">City</label><input id="coCity" name="city" /></div>
-            <div class="field"><label for="coPin">PIN</label><input id="coPin" name="pincode" inputmode="numeric" /></div>
-            <div class="field"><label for="coState">State</label><input id="coState" name="state" value="Tamil Nadu" /></div>
-            <div class="field"><label for="coShip">Shipping ₹</label><input id="coShip" name="shipping" placeholder="Leave blank for the usual rule" /></div>
-            <div class="field" style="grid-column:1/-1"><label for="coNote">Atelier note</label><textarea id="coNote" name="note" rows="2"></textarea></div>
           </div>
-          <p class="kicker" style="margin-top:20px">Gifts</p>
-          <div id="composeLines"></div>
-          <div class="hero-actions">
-            <button class="btn btn-ghost" type="button" id="addLine">Add a gift</button>
-            <label class="account-link"><input type="checkbox" id="coSend" checked /> Email the customer</label>
+        </section>
+
+        <section class="ops-panel" data-panel="orders" hidden>
+          <div class="ops-toolbar">
+            <div class="ops-chips" id="orderChips">
+              <button type="button" class="ops-chip is-on" data-status="all">All</button>
+              <button type="button" class="ops-chip" data-status="estimate">Estimate</button>
+              <button type="button" class="ops-chip" data-status="pending">Pending</button>
+              <button type="button" class="ops-chip" data-status="paid">Paid</button>
+              <button type="button" class="ops-chip" data-status="packed">Packed</button>
+              <button type="button" class="ops-chip" data-status="shipped">Shipped</button>
+              <button type="button" class="ops-chip" data-status="closed">Closed</button>
+            </div>
           </div>
-          <button class="btn btn-xl btn-primary" type="submit">Create</button>
-        </form>
-        <article class="ops-detail" id="composeResult" hidden></article>
-      </section>
-      <section data-panel="orders" hidden>
-        <p class="kicker">Orders</p>
-        <h1 class="display">What to pack</h1>
-        <div class="ops-split">
           <div class="ops-table-wrap" id="orderList"></div>
-          <article class="ops-detail" id="orderDetail"><p>Select an order.</p></article>
+        </section>
+
+        <section class="ops-panel" data-panel="compose" hidden>
+          <article class="ops-result" id="composeResult" hidden></article>
+          <p class="ops-lede">An estimate is a document. A PayU link holds stock and takes them to pay on this site.</p>
+          <p class="ops-alert" id="composeAlert" role="status"></p>
+          <form id="composeForm">
+            <div class="ops-compose">
+              <div class="ops-card">
+                <h3>Customer</h3>
+                <div class="ops-kind" id="coKind">
+                  <button type="button" class="is-on" data-kind="estimate"><b>Estimate</b><small>A quotation. No stock held.</small></button>
+                  <button type="button" data-kind="link"><b>PayU link</b><small>Holds stock. They pay here.</small></button>
+                </div>
+                <input type="hidden" id="coKindValue" value="estimate" />
+                <div class="ops-fields">
+                  <div class="ops-field" id="coDaysField" hidden>
+                    <label for="coDays">Link days</label>
+                    <input id="coDays" name="days" type="number" min="1" max="60" value="14" />
+                  </div>
+                  <div class="ops-field"><label for="coName">Name</label><input id="coName" name="name" required autocomplete="name" /></div>
+                  <div class="ops-field"><label for="coEmail">Email</label><input id="coEmail" name="email" type="email" required autocomplete="email" /></div>
+                  <div class="ops-field"><label for="coPhone">Phone</label><input id="coPhone" name="phone" inputmode="tel" /></div>
+                  <div class="ops-field"><label for="coAddress">Address</label><textarea id="coAddress" name="address" rows="2"></textarea></div>
+                  <div class="ops-gift-card-row">
+                    <div class="ops-field"><label for="coCity">City</label><input id="coCity" name="city" /></div>
+                    <div class="ops-field"><label for="coPin">PIN</label><input id="coPin" name="pincode" inputmode="numeric" /></div>
+                  </div>
+                  <div class="ops-gift-card-row">
+                    <div class="ops-field"><label for="coState">State</label><input id="coState" name="state" value="Tamil Nadu" /></div>
+                    <div class="ops-field"><label for="coShip">Shipping ₹</label><input id="coShip" name="shipping" placeholder="Usual rule" /></div>
+                  </div>
+                  <div class="ops-field"><label for="coNote">Atelier note</label><textarea id="coNote" name="note" rows="2"></textarea></div>
+                </div>
+              </div>
+              <div class="ops-card">
+                <h3>Gifts</h3>
+                <div id="composeLines"></div>
+                <button class="btn btn-ghost" type="button" id="addLine">Add a gift</button>
+                <p class="ops-total" id="composeTotal">₹0</p>
+                <p class="ops-lede" id="composeTillHint" style="margin:0">Till updates as you add lines.</p>
+                <div class="ops-compose-foot">
+                  <label class="check"><input type="checkbox" id="coSend" checked /> Email the customer</label>
+                  <button class="btn btn-primary" type="submit">Create</button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </section>
+
+        <section class="ops-panel" data-panel="stock" hidden>
+          <p class="ops-lede">On-hand counts. Reserved is already promised to a pending or paid order.</p>
+          <form id="stockForm"></form>
+        </section>
+
+        <section class="ops-panel" data-panel="sales" hidden>
+          <div class="ops-toolbar">
+            <p class="ops-lede" style="margin:0;flex:1">Paid gifts in this window. Estimates and unpaid links stay off the till.</p>
+            <div class="ops-chips" id="salesChips">
+              <button type="button" class="ops-chip" data-days="7">7 days</button>
+              <button type="button" class="ops-chip is-on" data-days="30">30</button>
+              <button type="button" class="ops-chip" data-days="90">90</button>
+              <button type="button" class="ops-chip" data-days="365">365</button>
+            </div>
+          </div>
+          <div class="ops-kpis" id="salesKpis"></div>
+          <div class="ops-table-wrap" id="salesSku"></div>
+        </section>
+
+        <section class="ops-panel" data-panel="people" hidden>
+          <div class="ops-toolbar">
+            <input class="ops-search" id="peopleSearch" type="search" placeholder="Filter by name, email, phone…" style="max-width:280px" />
+          </div>
+          <div class="ops-table-wrap" id="customerList"></div>
+        </section>
+
+        <section class="ops-panel" data-panel="settings" hidden>
+          <p class="ops-lede">House copy, who we write to, and how shipping is charged.</p>
+          <form id="settingsForm">
+            <div class="ops-settings">
+              <article class="ops-card">
+                <h3>House</h3>
+                <div class="ops-fields">
+                  <div class="ops-field"><label>Legal name</label><input name="legalName" /></div>
+                  <div class="ops-field"><label>Address</label><textarea name="address" rows="3"></textarea></div>
+                </div>
+              </article>
+              <article class="ops-card">
+                <h3>Contact</h3>
+                <div class="ops-fields">
+                  <div class="ops-field"><label>Public email</label><input name="email" type="email" /></div>
+                  <div class="ops-field"><label>Alert email</label><input name="notifyEmail" type="email" /></div>
+                  <div class="ops-field"><label>Phone</label><input name="phone" /></div>
+                  <div class="ops-field"><label>WhatsApp (digits)</label><input name="whatsapp" /></div>
+                </div>
+              </article>
+              <article class="ops-card">
+                <h3>Shipping</h3>
+                <div class="ops-fields">
+                  <div class="ops-field"><label>Shipping ₹</label><input name="shippingFlat" type="number" min="0" /></div>
+                  <div class="ops-field"><label>Free shipping above ₹</label><input name="shippingFreeAbove" type="number" min="0" /></div>
+                  <div class="ops-field"><label>Packed note</label><textarea name="packedNote" rows="3"></textarea></div>
+                </div>
+              </article>
+            </div>
+            <div class="ops-compose-foot">
+              <button class="btn btn-primary" type="submit">Save settings</button>
+            </div>
+          </form>
+        </section>
+      </main>
+    </div>
+
+    <div class="ops-mask" id="opsMask" hidden></div>
+    <aside class="ops-drawer" id="orderDrawer" hidden>
+      <div class="ops-drawer-head">
+        <div>
+          <span class="badge" id="drawStatus"></span>
+          <h2 id="drawTitle">Order</h2>
         </div>
-      </section>
-      <section data-panel="stock" hidden>
-        <p class="kicker">Stock</p>
-        <h1 class="display">What is on the shelf</h1>
-        <form id="stockForm"></form>
-      </section>
-      <section data-panel="sales" hidden>
-        <p class="kicker">Accounts</p>
-        <h1 class="display">The till</h1>
-        <p>
-          <label>Days <select id="salesDays"><option value="7">7</option><option value="30" selected>30</option><option value="90">90</option><option value="365">365</option></select></label>
-        </p>
-        <div class="ops-kpis" id="salesKpis"></div>
-        <div id="salesSku"></div>
-      </section>
-      <section data-panel="customers" hidden>
-        <p class="kicker">People</p>
-        <h1 class="display">Accounts and buyers</h1>
-        <div id="customerList"></div>
-      </section>
-      <section data-panel="settings" hidden>
-        <p class="kicker">House</p>
-        <h1 class="display">Legal, shipping, alerts</h1>
-        <form id="settingsForm" class="atelier checkout-form"></form>
-      </section>
-    </main>
+        <button class="ops-close" type="button" id="drawClose" aria-label="Close">×</button>
+      </div>
+      <div class="ops-drawer-body" id="orderDetail"></div>
+    </aside>
   </div>
-  <script>
-    (function () {
-      var rupees = function (n) { return "₹" + Math.round(Number(n) || 0).toLocaleString("en-IN"); };
-      var selected = "";
 
-      function alertBox(id, msg) {
-        var el = document.getElementById(id);
-        if (!el) return;
-        el.textContent = msg || "";
-        el.className = "wizard-alert" + (msg ? " is-on" : "");
-      }
-
-      function api(url, opts) {
-        opts = opts || {};
-        opts.credentials = "include";
-        opts.headers = Object.assign({ "Content-Type": "application/json" }, opts.headers || {});
-        return fetch(url, opts).then(function (res) {
-          return res.json().then(function (data) {
-            if (!res.ok) throw new Error(data.error || "Request failed");
-            return data;
-          });
-        });
-      }
-
-      function showApp() {
-        document.getElementById("loginGate").hidden = true;
-        document.getElementById("opsApp").hidden = false;
-        loadOrders();
-        loadStock();
-        loadSales();
-        loadCustomers();
-        loadSettings();
-        loadCatalog();
-      }
-
-      api("/api/admin/session").then(function (data) {
-        if (!data.adminConfigured) {
-          document.getElementById("loginCopy").textContent = "Set ADMIN_PASSWORD on Vercel, then return here.";
-        }
-        if (data.signedIn) showApp();
-      }).catch(function () {});
-
-      document.getElementById("loginForm").addEventListener("submit", function (event) {
-        event.preventDefault();
-        api("/api/admin/login", { method: "POST", body: JSON.stringify({ password: document.getElementById("adminPass").value }) })
-          .then(showApp)
-          .catch(function (err) { alertBox("loginAlert", err.message); });
-      });
-
-      document.getElementById("adminOut").addEventListener("click", function () {
-        api("/api/admin/logout", { method: "POST" }).then(function () { location.reload(); });
-      });
-
-      document.getElementById("opsTabs").addEventListener("click", function (event) {
-        var btn = event.target.closest("[data-tab]");
-        if (!btn) return;
-        document.querySelectorAll("[data-tab]").forEach(function (el) { el.classList.toggle("is-on", el === btn); });
-        document.querySelectorAll("[data-panel]").forEach(function (el) { el.hidden = el.getAttribute("data-panel") !== btn.getAttribute("data-tab"); });
-      });
-
-      function loadOrders() {
-        api("/api/admin/orders").then(function (data) {
-          var wrap = document.getElementById("orderList");
-          if (!data.orders.length) {
-            wrap.innerHTML = "<p>No orders yet. Compose an estimate or a PayU link, or wait for a checkout.</p>";
-            return;
-          }
-          wrap.innerHTML = "<table class='ops-table'><thead><tr><th>Order</th><th>Who</th><th>Status</th><th></th></tr></thead><tbody>" +
-            data.orders.map(function (order) {
-              return "<tr data-id='" + order.txnid + "'><td><strong>" + order.txnid + "</strong><br /><small>" + rupees(order.payable) + (order.estimateNo ? " · " + order.estimateNo : "") + (order.invoiceNo ? " · " + order.invoiceNo : "") + "</small></td><td>" + order.name + "<br /><small>" + order.city + "</small></td><td>" + order.status + "</td><td>" + (order.items || []).join("<br />") + "</td></tr>";
-            }).join("") + "</tbody></table>";
-        }).catch(function (err) {
-          document.getElementById("orderList").textContent = err.message;
-        });
-      }
-
-      document.getElementById("orderList").addEventListener("click", function (event) {
-        var row = event.target.closest("tr[data-id]");
-        if (!row) return;
-        selected = row.getAttribute("data-id");
-        api("/api/admin/orders?id=" + encodeURIComponent(selected)).then(function (data) {
-          var order = data.order;
-          var c = order.customer || {};
-          var token = order.invoiceToken || "";
-          var view = "/api/invoice?id=" + order.txnid + "&t=" + token;
-          var docLabel = order.status === "estimate" ? "Estimate" : (order.status === "pending" ? "Proforma" : "Invoice");
-          var numbers = [order.estimateNo, order.invoiceNo].filter(Boolean).join(" · ") || "No document number yet";
-          document.getElementById("orderDetail").innerHTML =
-            "<p class='kicker'>" + order.status + "</p><h2 class='display'>" + order.txnid + "</h2>" +
-            "<p><strong>" + rupees(order.payable) + "</strong> · " + numbers + "</p>" +
-            "<p>" + c.name + "<br />" + c.phone + "<br />" + c.email + "<br />" + c.address + "<br />" + c.city + " " + c.pincode + "<br />" + c.state + "</p>" +
-            "<pre class='ops-pre'>" + (order.items || []).map(function (item) {
-              return item.qty + " × " + item.label + (item.recipient ? " for " + item.recipient : "") + (item.items && item.items.length ? "\n" + item.items.join(", ") : "") + (item.message ? "\nCard: " + item.message : "");
-            }).join("\n\n") + "</pre>" +
-            (order.stockWarning ? "<p class='wizard-alert is-on'>" + order.stockWarning + "</p>" : "") +
-            "<label>Status <select id='ordStatus'>" + ["estimate","pending","paid","packed","shipped","cancelled","refunded","expired"].map(function (s) {
-              return "<option" + (s === order.status ? " selected" : "") + ">" + s + "</option>";
-            }).join("") + "</select></label>" +
-            "<label>Email <input id='ordEmail' type='email' value='" + (c.email || "") + "' /></label>" +
-            "<label>Tracking <input id='ordTrack' value='" + (order.tracking || "") + "' /></label>" +
-            "<label>AWB <input id='ordAwb' value='" + (order.awb || "") + "' /></label>" +
-            "<div class='hero-actions'>" +
-            "<button class='btn btn-primary' type='button' id='ordSave'>Save</button>" +
-            "<a class='btn btn-ghost' href='" + view + "' target='_blank'>" + docLabel + "</a>" +
-            "<a class='btn btn-ghost' href='" + view + "&download=1'>Download PDF</a>" +
-            (order.status === "pending" ? "<a class='btn btn-ghost' href='/pay.html?id=" + order.txnid + "&t=" + token + "' target='_blank'>PayU link</a>" : "") +
-            (order.status === "estimate" ? "<button class='btn btn-ghost' type='button' id='ordLink'>Turn into PayU link</button>" : "") +
-            "<button class='btn btn-ghost' type='button' id='ordMail'>Email customer</button>" +
-            "<button class='btn btn-ghost' type='button' id='ordShip'>Send to Shiprocket</button>" +
-            "</div>";
-        });
-      });
-
-      document.getElementById("orderDetail").addEventListener("click", function (event) {
-        if (!selected) return;
-        if (event.target.id === "ordSave") {
-          api("/api/admin/orders", { method: "PATCH", body: JSON.stringify({
-            txnid: selected,
-            status: document.getElementById("ordStatus").value,
-            tracking: document.getElementById("ordTrack").value,
-            awb: document.getElementById("ordAwb").value,
-            email: document.getElementById("ordEmail").value
-          }) }).then(loadOrders);
-        }
-        if (event.target.id === "ordMail") {
-          api("/api/admin/orders", { method: "PATCH", body: JSON.stringify({ txnid: selected, resend: true }) }).then(function () { alert("Email sent if Resend is configured."); });
-        }
-        if (event.target.id === "ordLink") {
-          api("/api/admin/convert", { method: "POST", body: JSON.stringify({ txnid: selected, days: 14, send: true }) })
-            .then(function (data) {
-              loadOrders();
-              prompt("PayU link", data.payUrl);
-            })
-            .catch(function (err) { alert(err.message); });
-        }
-        if (event.target.id === "ordShip") {
-          api("/api/admin/shiprocket", { method: "POST", body: JSON.stringify({ txnid: selected }) })
-            .then(function () { loadOrders(); alert("Sent to Shiprocket."); })
-            .catch(function (err) { alert(err.message); });
-        }
-      });
-
-      function loadStock() {
-        api("/api/admin/stock").then(function (data) {
-          document.getElementById("stockForm").innerHTML = data.stock.map(function (row) {
-            return "<div class='ops-stock-row'><span>" + row.label + "<small>Reserved " + row.reserved + " · Available " + row.available + "</small></span><input type='number' min='0' data-sku='" + row.id + "' value='" + row.qty + "' /></div>";
-          }).join("") + "<button class='btn btn-primary' type='submit'>Save stock</button>";
-        });
-      }
-
-      document.getElementById("stockForm").addEventListener("submit", function (event) {
-        event.preventDefault();
-        var stock = [].map.call(document.querySelectorAll("#stockForm [data-sku]"), function (input) {
-          return { id: input.getAttribute("data-sku"), qty: input.value };
-        });
-        api("/api/admin/stock", { method: "PUT", body: JSON.stringify({ stock: stock }) }).then(loadStock);
-      });
-
-      function loadSales() {
-        var days = document.getElementById("salesDays").value;
-        api("/api/admin/sales?days=" + days).then(function (data) {
-          document.getElementById("salesKpis").innerHTML =
-            "<div><small>Paid orders</small><strong>" + data.orders + "</strong></div>" +
-            "<div><small>Gross</small><strong>" + rupees(data.gross) + "</strong></div>" +
-            "<div><small>Shipping collected</small><strong>" + rupees(data.shipping) + "</strong></div>" +
-            "<div><small>Pending PayU</small><strong>" + data.pending + "</strong></div>";
-          document.getElementById("salesSku").innerHTML = "<table class='ops-table'><thead><tr><th>Gift</th><th>Qty</th><th>Amount</th></tr></thead><tbody>" +
-            (data.bySku.map(function (row) {
-              return "<tr><td>" + row.label + "</td><td>" + row.qty + "</td><td>" + rupees(row.amount) + "</td></tr>";
-            }).join("") || "<tr><td colspan='3'>No paid gifts in this window.</td></tr>") + "</tbody></table>";
-        });
-      }
-      document.getElementById("salesDays").addEventListener("change", loadSales);
-
-      function loadCustomers() {
-        api("/api/admin/customers").then(function (data) {
-          document.getElementById("customerList").innerHTML = "<table class='ops-table'><thead><tr><th>Name</th><th>Email</th><th>Orders</th><th>Paid</th></tr></thead><tbody>" +
-            data.customers.map(function (row) {
-              return "<tr><td>" + row.name + (row.registered ? " <small>account</small>" : "") + "</td><td>" + row.email + "<br /><small>" + (row.phone || "") + "</small></td><td>" + row.orders + "</td><td>" + rupees(row.spent) + "</td></tr>";
-            }).join("") + "</tbody></table>";
-        });
-      }
-
-      function loadSettings() {
-        api("/api/admin/settings").then(function (data) {
-          var s = data.settings;
-          var fields = [
-            ["legalName", "Legal name"], ["address", "Address"],
-            ["email", "Public email"], ["notifyEmail", "Alert email"], ["phone", "Phone"], ["whatsapp", "WhatsApp (digits)"],
-            ["shippingFlat", "Shipping ₹"], ["shippingFreeAbove", "Free shipping above ₹"],
-            ["packedNote", "Shipping note"]
-          ];
-          document.getElementById("settingsForm").innerHTML = "<div class='fields'>" + fields.map(function (row) {
-            return "<div class='field'><label>" + row[1] + "</label><input name='" + row[0] + "' value='" + String(s[row[0]] || "").replace(/'/g, "&#39;") + "' /></div>";
-          }).join("") + "</div><button class='btn btn-xl btn-primary' type='submit'>Save settings</button>";
-        });
-      }
-
-      document.getElementById("settingsForm").addEventListener("submit", function (event) {
-        event.preventDefault();
-        var body = {};
-        [].forEach.call(event.target.elements, function (el) {
-          if (el.name) body[el.name] = el.value;
-        });
-        api("/api/admin/settings", { method: "PUT", body: JSON.stringify(body) }).then(function () { alert("Saved."); });
-      });
-
-      var catalog = { range: [], custom: [] };
-      function skuOptions() {
-        return catalog.range.concat(catalog.custom).map(function (row) {
-          return "<option value='" + row.id + "' data-kind='" + row.kind + "' data-bowl='" + (row.bowl ? "1" : "0") + "'>" + row.label + " · ₹" + row.price + "</option>";
-        }).join("");
-      }
-      function addComposeLine() {
-        var wrap = document.getElementById("composeLines");
-        var row = document.createElement("div");
-        row.className = "compose-line";
-        row.innerHTML = "<select class='co-sku'>" + skuOptions() + "</select>" +
-          "<input class='co-qty' type='number' min='1' max='500' value='1' aria-label='Quantity' />" +
-          "<label class='account-link'><input class='co-bowl' type='checkbox' /> Bowl</label>" +
-          "<input class='co-msg' placeholder='Card line (optional)' />" +
-          "<button class='text-btn' type='button' data-remove>Remove</button>";
-        wrap.appendChild(row);
-      }
-      function loadCatalog() {
-        api("/api/admin/catalog").then(function (data) {
-          catalog = data;
-          if (!document.getElementById("composeLines").children.length) addComposeLine();
-        }).catch(function () {});
-      }
-      document.getElementById("addLine").addEventListener("click", addComposeLine);
-      document.getElementById("composeLines").addEventListener("click", function (event) {
-        if (event.target.getAttribute("data-remove") != null) event.target.closest(".compose-line").remove();
-      });
-      document.getElementById("composeForm").addEventListener("submit", function (event) {
-        event.preventDefault();
-        var items = [].map.call(document.querySelectorAll(".compose-line"), function (row) {
-          var sel = row.querySelector(".co-sku");
-          var opt = sel.options[sel.selectedIndex];
-          return {
-            size: sel.value,
-            qty: row.querySelector(".co-qty").value,
-            bowl: row.querySelector(".co-bowl").checked && opt.getAttribute("data-bowl") === "1",
-            message: row.querySelector(".co-msg").value
-          };
-        });
-        var body = {
-          kind: document.getElementById("coKind").value,
-          days: document.getElementById("coDays").value,
-          name: document.getElementById("coName").value,
-          email: document.getElementById("coEmail").value,
-          phone: document.getElementById("coPhone").value,
-          address: document.getElementById("coAddress").value,
-          city: document.getElementById("coCity").value,
-          pincode: document.getElementById("coPin").value,
-          state: document.getElementById("coState").value,
-          shipping: document.getElementById("coShip").value,
-          note: document.getElementById("coNote").value,
-          send: document.getElementById("coSend").checked,
-          items: items
-        };
-        api("/api/admin/compose", { method: "POST", body: JSON.stringify(body) })
-          .then(function (data) {
-            alertBox("composeAlert", "");
-            var box = document.getElementById("composeResult");
-            box.hidden = false;
-            box.innerHTML = "<p class='kicker'>" + data.order.status + "</p><h2 class='display'>" + data.order.txnid + "</h2>" +
-              "<p><strong>" + rupees(data.order.payable) + "</strong>" + (data.order.estimateNo ? " · " + data.order.estimateNo : "") + (data.order.invoiceNo ? " · " + data.order.invoiceNo : "") + "</p>" +
-              (data.payUrl ? "<p><a href='" + data.payUrl + "' target='_blank'>PayU link</a></p><p><input value='" + data.payUrl + "' readonly onclick='this.select()' /></p>" : "") +
-              "<p><a href='" + data.invoiceUrl + "' target='_blank'>" + (data.payUrl ? "View proforma" : "View estimate") + "</a> · <a href='" + data.invoiceUrl + "&download=1'>Download PDF</a></p>" +
-              (data.mail && data.mail.customer && data.mail.customer.skipped ? "<p>Email skipped — add RESEND_API_KEY on Vercel to send it.</p>" : "<p>If send was ticked, the customer email was attempted.</p>");
-            loadOrders();
-          })
-          .catch(function (err) { alertBox("composeAlert", err.message); });
-      });
-    })();
-  </script>
+  <div class="ops-toasts" id="opsToasts"></div>
+  <script src="js/admin.js?v=1"></script>
 </body>
 </html>

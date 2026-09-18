@@ -129,6 +129,8 @@ module.exports = async function handler(req, res) {
           invoiceNo: order.invoiceNo || "",
           estimateNo: order.estimateNo || "",
           tracking: order.tracking || "",
+          awb: order.awb || "",
+          invoiceToken: order.invoiceToken || "",
           stockWarning: order.stockWarning || "",
           items: (order.items || []).map((item) => item.qty + " × " + item.label)
         };
