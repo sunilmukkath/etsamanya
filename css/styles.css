@@ -585,12 +585,22 @@ ul {
   margin: 0 calc(50% - 50vw);
   background: #f3eee6;
   line-height: 0;
+  overflow: hidden;
 }
 
 .full-strip img {
   width: 100%;
   height: auto;
   display: block;
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .full-strip img {
+    transform: none;
+    will-change: auto;
+  }
 }
 
 @keyframes marquee {

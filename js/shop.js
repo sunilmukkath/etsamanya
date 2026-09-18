@@ -3,7 +3,7 @@
   var PENDING_KEY = "samanya-pending-order";
   var ENQUIRE_AT = 25;
   var WHATSAPP = "";
-  var EMAIL = "hello@etsamanya.com";
+  var EMAIL = "etsamanyafoods@gmail.com";
   var SITE = {
     shippingFlat: 99,
     shippingFreeAbove: 1999,

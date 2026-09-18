@@ -4,7 +4,38 @@ const menuToggle = document.getElementById("menuToggle");
 
 window.addEventListener("scroll", () => {
   header?.classList.toggle("is-scrolled", window.scrollY > 8);
-});
+}, { passive: true });
+
+(function parallaxHero() {
+  var strip = document.querySelector("[data-parallax]");
+  if (!strip) return;
+  var img = strip.querySelector("img");
+  if (!img) return;
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+  var ticking = false;
+  function update() {
+    ticking = false;
+    var rect = strip.getBoundingClientRect();
+    var view = window.innerHeight || 1;
+    if (rect.bottom < 0 || rect.top > view) return;
+    var factor = window.innerWidth < 720 ? 0.06 : 0.1;
+    var shift = Math.round(-rect.top * factor);
+    var max = Math.round(rect.height * 0.03);
+    if (shift > max) shift = max;
+    if (shift < -max) shift = -max;
+    img.style.transform = "translate3d(0, " + shift + "px, 0)";
+  }
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(update);
+  }
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", onScroll, { passive: true });
+  if (img.complete) update();
+  else img.addEventListener("load", update);
+})();
 
 menuToggle?.addEventListener("click", () => {
   const open = nav.classList.toggle("is-open");
