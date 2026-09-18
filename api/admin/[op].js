@@ -3,7 +3,7 @@ const { requireAdmin, adminConfigured, checkAdminPassword, sessionCookie, readSe
 const { readDb, withDb, restock, available, storeReady, publicSettings } = require("../../lib/store");
 const { notifyPaid, notifyCompose } = require("../../lib/notify");
 const { pushOrder } = require("../../lib/shiprocket");
-const { assemble, convertEstimate, applyCustomer, payUrl, invoiceUrl } = require("../../lib/compose");
+const { assemble, convertEstimate, applyCustomer, applyTill, rememberPerson, payUrl, invoiceUrl } = require("../../lib/compose");
 const { ensureDocNumbers } = require("../../lib/invoice");
 const { catalogList } = require("../../lib/catalog");
 
@@ -17,51 +17,52 @@ const SETTING_KEYS = [
   "shippingFlat", "shippingFreeAbove", "notifyEmail", "packedNote"
 ];
 
+function personRow(email, extras) {
+  return Object.assign({
+    email,
+    name: "",
+    phone: "",
+    address: "",
+    city: "",
+    pincode: "",
+    state: "",
+    registered: false,
+    orders: 0,
+    spent: 0
+  }, extras || {});
+}
+
+function fillIfEmpty(row, src) {
+  ["name", "phone", "address", "city", "pincode", "state"].forEach((key) => {
+    if (!row[key] && src[key]) row[key] = src[key];
+  });
+}
+
 function customersOf(db) {
   const map = {};
   Object.values(db.users || {}).forEach((user) => {
-    map[user.email] = {
-      email: user.email,
-      name: user.name,
-      phone: user.phone || "",
-      address: "",
-      city: "",
-      pincode: "",
-      state: "",
-      registered: true,
-      orders: 0,
-      spent: 0
-    };
+    if (!map[user.email]) map[user.email] = personRow(user.email, { name: user.name, phone: user.phone || "" });
+    map[user.email].registered = true;
+    fillIfEmpty(map[user.email], user);
   });
   (db.orderIds || []).forEach((id) => {
     const order = db.orders[id];
     if (!order || !order.customer) return;
     const c = order.customer;
     const email = c.email;
-    if (!map[email]) {
-      map[email] = {
-        email,
-        name: c.name,
-        phone: c.phone || "",
-        address: "",
-        city: "",
-        pincode: "",
-        state: "",
-        registered: false,
-        orders: 0,
-        spent: 0
-      };
-    }
+    if (!map[email]) map[email] = personRow(email, { name: c.name, phone: c.phone || "" });
     map[email].orders += 1;
     if (["paid", "packed", "shipped"].includes(order.status)) map[email].spent += Number(order.payable || 0);
-    if (!map[email].address && c.address) map[email].address = c.address;
-    if (!map[email].city && c.city) map[email].city = c.city;
-    if (!map[email].pincode && c.pincode) map[email].pincode = c.pincode;
-    if (!map[email].state && c.state) map[email].state = c.state;
-    if (!map[email].phone && c.phone) map[email].phone = c.phone;
-    if (!map[email].name && c.name) map[email].name = c.name;
+    fillIfEmpty(map[email], c);
   });
-  return Object.values(map).sort((a, b) => b.spent - a.spent);
+  Object.values(db.people || {}).forEach((person) => {
+    if (!person || !person.email) return;
+    if (!map[person.email]) map[person.email] = personRow(person.email);
+    ["name", "phone", "address", "city", "pincode", "state"].forEach((key) => {
+      if (person[key] != null && String(person[key]).trim()) map[person.email][key] = person[key];
+    });
+  });
+  return Object.values(map).sort((a, b) => String(a.name || a.email).localeCompare(String(b.name || b.email)));
 }
 
 module.exports = async function handler(req, res) {
@@ -195,6 +196,9 @@ module.exports = async function handler(req, res) {
           err.status = 404;
           throw err;
         }
+        if (body.shipping != null || body.discount != null) {
+          applyTill(current, { shipping: body.shipping, discount: body.discount }, db.settings);
+        }
         if (body.status) {
           const next = String(body.status);
           if (["cancelled", "refunded"].includes(next) && !["cancelled", "refunded"].includes(current.status)) {
@@ -212,6 +216,7 @@ module.exports = async function handler(req, res) {
         });
         if (Object.keys(customerPatch).length) {
           applyCustomer(current, customerPatch, db.settings);
+          rememberPerson(db, current.customer);
         }
         if (body.resend) current.notifiedAt = 0;
         return current;
@@ -312,15 +317,11 @@ module.exports = async function handler(req, res) {
             if (body.name != null) user.name = String(body.name).trim().slice(0, 80) || user.name;
             if (body.phone != null) user.phone = String(body.phone).trim().slice(0, 20);
           }
+          rememberPerson(db, Object.assign({ email }, patch));
           const matches = db.orderIds.map((id) => db.orders[id]).filter((order) => {
             return order && order.customer && order.customer.email === email;
           });
           const open = matches.filter((order) => order.status === "estimate" || order.status === "pending");
-          if (!user && !open.length) {
-            const err = new Error("No open estimate or PayU link. Open the order to change a paid invoice.");
-            err.status = 400;
-            throw err;
-          }
           open.forEach((order) => applyCustomer(order, patch, db.settings));
           return { updated: open.map((order) => order.txnid) };
         });

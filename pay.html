@@ -75,7 +75,9 @@
             "<ul class='pay-lines'>" + (data.items || []).map(function (item) {
               return "<li><span>" + item.qty + " × " + item.label + "</span><strong>" + rupees(item.price * item.qty) + "</strong></li>";
             }).join("") +
-            "<li><span>Shipping</span><strong>" + (data.shipping ? rupees(data.shipping) : "Complimentary") + "</strong></li></ul>" +
+            "<li><span>Delivery</span><strong>" + (data.shipping ? rupees(data.shipping) : "Complimentary") + "</strong></li>" +
+            (data.discount ? "<li><span>Discount</span><strong>−" + rupees(data.discount) + "</strong></li>" : "") +
+            "</ul>" +
             "<p class='cart-note'>" + (data.packedNote || "") + "</p>";
           document.getElementById("payBtn").addEventListener("click", function () {
             var btn = document.getElementById("payBtn");

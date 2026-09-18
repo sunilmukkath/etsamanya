@@ -132,6 +132,10 @@
             <div class="ops-compose">
               <div class="ops-card">
                 <h3>Customer</h3>
+                <div class="ops-field" style="margin-bottom:12px">
+                  <label for="coPerson">Fill from a saved person</label>
+                  <select id="coPerson"><option value="">New customer</option></select>
+                </div>
                 <div class="ops-kind" id="coKind">
                   <button type="button" class="is-on" data-kind="estimate"><b>Estimate</b><small>A quotation. No stock held.</small></button>
                   <button type="button" data-kind="link"><b>PayU link</b><small>Holds stock. They pay here.</small></button>
@@ -150,10 +154,7 @@
                     <div class="ops-field"><label for="coCity">City</label><input id="coCity" name="city" /></div>
                     <div class="ops-field"><label for="coPin">PIN</label><input id="coPin" name="pincode" inputmode="numeric" /></div>
                   </div>
-                  <div class="ops-gift-card-row">
-                    <div class="ops-field"><label for="coState">State</label><input id="coState" name="state" value="Tamil Nadu" /></div>
-                    <div class="ops-field"><label for="coShip">Shipping ₹</label><input id="coShip" name="shipping" placeholder="Usual rule" /></div>
-                  </div>
+                  <div class="ops-field"><label for="coState">State</label><input id="coState" name="state" value="Tamil Nadu" /></div>
                   <div class="ops-field"><label for="coNote">Atelier note</label><textarea id="coNote" name="note" rows="2"></textarea></div>
                 </div>
               </div>
@@ -161,6 +162,10 @@
                 <h3>Gifts</h3>
                 <div id="composeLines"></div>
                 <button class="btn btn-ghost" type="button" id="addLine">Add a gift</button>
+                <div class="ops-gift-card-row" style="margin-top:14px">
+                  <div class="ops-field"><label for="coShip">Delivery ₹</label><input id="coShip" name="shipping" type="number" min="0" placeholder="Usual rule" /></div>
+                  <div class="ops-field"><label for="coDiscount">Discount ₹</label><input id="coDiscount" name="discount" type="number" min="0" value="0" /></div>
+                </div>
                 <p class="ops-total" id="composeTotal">₹0</p>
                 <p class="ops-lede" id="composeTillHint" style="margin:0">Till updates as you add lines.</p>
                 <div class="ops-compose-foot">
@@ -193,14 +198,14 @@
 
         <section class="ops-panel" data-panel="people" hidden>
           <div class="ops-toolbar">
-            <p class="ops-lede" style="margin:0;flex:1">Edit open quotes from here. To correct a paid invoice, open that order.</p>
+            <p class="ops-lede" style="margin:0;flex:1">Edit name, phone, and address. Open estimates and PayU links update; paid invoices stay unless you open that order. Use a saved person on Compose to fill a new quote.</p>
             <input class="ops-search" id="peopleSearch" type="search" placeholder="Filter by name, email, phone…" style="max-width:280px" />
           </div>
           <div class="ops-table-wrap" id="customerList"></div>
         </section>
 
         <section class="ops-panel" data-panel="settings" hidden>
-          <p class="ops-lede">House copy, who we write to, and how shipping is charged.</p>
+          <p class="ops-lede">These are the atelier’s own details. They print on estimates and invoices, send mail, and set the usual delivery charge. They do not fill a customer’s name or address — pick a saved person on Compose for that.</p>
           <form id="settingsForm">
             <div class="ops-settings">
               <article class="ops-card">
@@ -222,8 +227,8 @@
               <article class="ops-card">
                 <h3>Shipping</h3>
                 <div class="ops-fields">
-                  <div class="ops-field"><label>Shipping ₹</label><input name="shippingFlat" type="number" min="0" /></div>
-                  <div class="ops-field"><label>Free shipping above ₹</label><input name="shippingFreeAbove" type="number" min="0" /></div>
+                  <div class="ops-field"><label>Usual delivery ₹</label><input name="shippingFlat" type="number" min="0" /></div>
+                  <div class="ops-field"><label>Free delivery above ₹</label><input name="shippingFreeAbove" type="number" min="0" /></div>
                   <div class="ops-field"><label>Packed note</label><textarea name="packedNote" rows="3"></textarea></div>
                 </div>
               </article>
@@ -250,6 +255,6 @@
   </div>
 
   <div class="ops-toasts" id="opsToasts"></div>
-  <script src="js/admin.js?v=2"></script>
+  <script src="js/admin.js?v=3"></script>
 </body>
 </html>

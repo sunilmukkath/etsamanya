@@ -3,6 +3,7 @@ const { json, readBody } = require("../../lib/http");
 const { withDb, holdStock, storeReady, readDb } = require("../../lib/store");
 const { priceItem, needsEnquire, goodsTotal, shippingOf, stockNeeds, pinOk, taxBreakup } = require("../../lib/catalog");
 const { hashPassword, readSession } = require("../../lib/auth");
+const { rememberPerson } = require("../../lib/compose");
 
 function opOf(req) {
   return String((req.query && req.query.op) || "").replace(/\/$/, "");
@@ -62,6 +63,7 @@ module.exports = async function handler(req, res) {
           customer,
           goods,
           shipping,
+          discount: 0,
           payable,
           tax,
           invoiceToken: crypto.randomBytes(12).toString("hex"),
@@ -69,6 +71,7 @@ module.exports = async function handler(req, res) {
         };
         db.orders[id] = created;
         db.orderIds.unshift(id);
+        rememberPerson(db, customer);
         const password = String(body.password || "");
         if (password.length >= 8 && !db.users[customer.email]) {
           db.users[customer.email] = {
@@ -162,6 +165,7 @@ module.exports = async function handler(req, res) {
       txnid: order.txnid,
       payable: order.payable,
       shipping: order.shipping,
+      discount: order.discount || 0,
       goods: order.goods,
       packedNote: db.settings.packedNote,
       expiresAt: order.expiresAt || null,

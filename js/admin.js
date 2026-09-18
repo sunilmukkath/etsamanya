@@ -279,8 +279,15 @@
       actions.push("<a class='btn btn-ghost' href='" + view + "' target='_blank'>" + docLabel + "</a>");
       actions.push("<a class='btn btn-ghost' href='" + pdf + "'>PDF</a>");
     }
+    var openTill = order.status === "estimate" || order.status === "pending";
+    var tillHtml = openTill
+      ? "<div class='ops-pair'><div class='ops-field'><label>Delivery ₹</label><input id='ordShip' type='number' min='0' value='" + Number(order.shipping || 0) + "' /></div>" +
+        "<div class='ops-field'><label>Discount ₹</label><input id='ordDiscount' type='number' min='0' value='" + Number(order.discount || 0) + "' /></div></div>"
+      : "<p style='margin:0 0 8px'><small>Delivery " + (order.shipping ? rupees(order.shipping) : "complimentary") +
+        (Number(order.discount) > 0 ? " · Discount −" + rupees(order.discount) : "") + "</small></p>";
     $("orderDetail").innerHTML =
-      "<div class='ops-block'><p class='ops-amount' style='margin:0'>" + rupees(order.payable) + "</p><small>" + esc(numbers) + "</small></div>" +
+      "<div class='ops-block'><p class='ops-amount' style='margin:0'>" + rupees(order.payable) + "</p><small>" + esc(numbers) +
+      (order.goods != null ? " · gifts " + rupees(order.goods) : "") + "</small></div>" +
       "<div class='ops-block'><h3>Gifts</h3>" + (gifts || "<p class='ops-empty'>No lines.</p>") + "</div>" +
       (order.stockWarning ? "<p class='ops-warn'>" + esc(order.stockWarning) + "</p>" : "") +
       (order.adminNote ? "<div class='ops-block'><h3>Atelier note</h3><p>" + esc(order.adminNote) + "</p></div>" : "") +
@@ -289,6 +296,8 @@
       "<h3>Customer</h3>" +
       "<p class='ops-lede-tight'>Saved onto this document. A PayU link needs phone, address, and a 6-digit PIN.</p>" +
       customerFieldsHtml(c, false) +
+      "<h3>Till</h3>" +
+      tillHtml +
       "<div class='ops-field'><label>Status</label><select id='ordStatus'>" +
       ["estimate", "pending", "paid", "packed", "shipped", "cancelled", "refunded", "expired"].map(function (s) {
         return "<option" + (s === order.status ? " selected" : "") + ">" + s + "</option>";
@@ -305,16 +314,19 @@
   function saveDrawer(event) {
     event.preventDefault();
     if (!state.selected) return;
-    api("/api/admin/orders", {
-      method: "PATCH",
-      body: JSON.stringify({
+    var body = {
         txnid: state.selected,
         status: $("ordStatus").value,
         tracking: $("ordTrack").value,
         awb: $("ordAwb").value,
         note: $("ordNote").value,
         customer: readCustomerFields()
-      })
+      };
+    if ($("ordShip")) body.shipping = $("ordShip").value;
+    if ($("ordDiscount")) body.discount = $("ordDiscount").value;
+    api("/api/admin/orders", {
+      method: "PATCH",
+      body: JSON.stringify(body)
     }).then(function () {
       toast("Saved.");
       return Promise.all([
@@ -322,6 +334,7 @@
         api("/api/admin/customers").then(function (data) {
           state.customers = data.customers || [];
           renderPeople();
+          fillPersonSelect();
         })
       ]);
     }).catch(function (err) { toast(err.message, true); });
@@ -400,6 +413,7 @@
       "<form id='drawForm' class='ops-fields'>" +
       customerFieldsHtml(row, true) +
       "<div class='btn-row'><button class='btn btn-primary' type='submit'>Save customer</button>" +
+      "<button class='btn btn-ghost' type='button' data-compose-person='" + esc(row.email) + "'>Use on Compose</button>" +
       "<button class='btn btn-ghost' type='button' data-person='" + esc(row.email) + "'>Their orders</button></div></form>";
     $("drawForm").addEventListener("submit", savePerson);
   }
@@ -413,6 +427,7 @@
         var n = (data.updated || []).length;
         toast(n ? "Saved on " + n + " open order" + (n === 1 ? "" : "s") + "." : "Customer saved.");
         renderPeople();
+        fillPersonSelect();
         var next = state.customers.find(function (row) { return row.email === body.email; });
         if (next) paintPerson(next);
         return refreshOrders();
@@ -426,6 +441,35 @@
     [].forEach.call(form.elements, function (el) {
       if (el.name && s[el.name] != null) el.value = s[el.name];
     });
+  }
+
+  function fillPersonSelect() {
+    var sel = $("coPerson");
+    if (!sel) return;
+    var current = sel.value;
+    var rows = state.customers.slice().sort(function (a, b) {
+      return String(a.name || a.email).localeCompare(String(b.name || b.email));
+    });
+    sel.innerHTML = "<option value=''>New customer</option>" + rows.map(function (row) {
+      return "<option value='" + esc(row.email) + "'>" + esc((row.name || row.email) + (row.phone ? " · " + row.phone : "")) + "</option>";
+    }).join("");
+    if (current && rows.some(function (row) { return row.email === current; })) sel.value = current;
+  }
+
+  function fillComposeFromPerson(email) {
+    var row = state.customers.find(function (item) { return item.email === email; });
+    if (!row) {
+      toast("No customer matches.", true);
+      return;
+    }
+    $("coName").value = row.name || "";
+    $("coEmail").value = row.email || "";
+    $("coPhone").value = row.phone || "";
+    $("coAddress").value = row.address || "";
+    $("coCity").value = row.city || "";
+    $("coPin").value = row.pincode || "";
+    $("coState").value = row.state || $("coState").value;
+    if ($("coPerson")) $("coPerson").value = row.email;
   }
 
   function optionsHtml() {
@@ -481,9 +525,13 @@
     });
     var shipRaw = $("coShip").value;
     var ship = shipRaw === "" ? shippingOf(goods) : Math.max(0, Number(shipRaw) || 0);
-    $("composeTotal").textContent = rupees(goods + ship);
+    var discount = Math.max(0, Number($("coDiscount") && $("coDiscount").value || 0) || 0);
+    var payable = Math.max(0, goods + ship - discount);
+    $("composeTotal").textContent = rupees(payable);
     $("composeTillHint").textContent = items.length
-      ? (goods ? rupees(goods) + " gifts" : "No priced lines") + (ship ? " · shipping " + rupees(ship) : " · shipping complimentary")
+      ? (goods ? rupees(goods) + " gifts" : "No priced lines") +
+        (ship ? " · delivery " + rupees(ship) : " · delivery complimentary") +
+        (discount ? " · discount −" + rupees(discount) : "")
       : "Till updates as you add lines.";
   }
 
@@ -522,6 +570,7 @@
       renderOrders();
       renderStock();
       renderPeople();
+      fillPersonSelect();
       fillSettings();
       renderSales(pack[5]);
       if (!$("composeLines").children.length) addComposeLine();
@@ -589,6 +638,14 @@
     var editPerson = event.target.closest("[data-edit-person]");
     if (editPerson) {
       openPerson(editPerson.getAttribute("data-edit-person"));
+      return;
+    }
+    var composePerson = event.target.closest("[data-compose-person]");
+    if (composePerson) {
+      fillComposeFromPerson(composePerson.getAttribute("data-compose-person"));
+      closeDrawer(true);
+      setTab("compose");
+      toast("Customer filled on Compose.");
       return;
     }
     var person = event.target.closest("[data-person]");
@@ -745,6 +802,9 @@
     paintComposeTill();
   });
   $("composeForm").addEventListener("input", paintComposeTill);
+  $("coPerson").addEventListener("change", function () {
+    if (this.value) fillComposeFromPerson(this.value);
+  });
   $("composeForm").addEventListener("submit", function (event) {
     event.preventDefault();
     $("composeAlert").textContent = "";
@@ -764,6 +824,7 @@
       pincode: $("coPin").value,
       state: $("coState").value,
       shipping: $("coShip").value,
+      discount: $("coDiscount").value,
       note: $("coNote").value,
       send: $("coSend").checked,
       items: items
@@ -787,6 +848,11 @@
         }
         toast("Created " + data.order.txnid + ".");
         refreshOrders();
+        api("/api/admin/customers").then(function (pack) {
+          state.customers = pack.customers || [];
+          renderPeople();
+          fillPersonSelect();
+        });
       })
       .catch(function (err) { $("composeAlert").textContent = err.message; });
   });
