@@ -2,13 +2,13 @@
   var CART_KEY = "samanya-cart";
   var PENDING_KEY = "samanya-pending-order";
   var ENQUIRE_AT = 25;
-  var WHATSAPP = "";
+  var WHATSAPP = "919940184841";
   var EMAIL = "etsamanyafoods@gmail.com";
   var SITE = {
     shippingFlat: 99,
     shippingFreeAbove: 1999,
     stock: {},
-    whatsapp: "",
+    whatsapp: "919940184841",
     email: EMAIL,
     gstin: "",
     packedNote: ""
@@ -242,9 +242,18 @@
     return "Hello samanya,\n\nI would like help packing a bulk gift.\n\n" + blocks.join("\n\n") + "\n";
   }
 
+  function waDigits(raw) {
+    var n = String(raw || "").replace(/\D/g, "");
+    if (!n) return "";
+    if (n.length === 10) return "91" + n;
+    if (n.length === 11 && n.charAt(0) === "0") return "91" + n.slice(1);
+    return n;
+  }
+
   function whatsappUrl(text) {
-    if (!WHATSAPP) return "";
-    return "https://wa.me/" + WHATSAPP + "?text=" + encodeURIComponent(text);
+    var n = waDigits(WHATSAPP);
+    if (!n) return "";
+    return "https://wa.me/" + n + "?text=" + encodeURIComponent(text);
   }
 
   function mailUrl(text) {
@@ -266,7 +275,7 @@
   function applyConfig(cfg) {
     if (!cfg) return;
     SITE = Object.assign(SITE, cfg);
-    WHATSAPP = String(cfg.whatsapp || "").replace(/\D/g, "");
+    WHATSAPP = waDigits(cfg.whatsapp || cfg.phone || WHATSAPP);
     if (cfg.email) EMAIL = cfg.email;
     root.dispatchEvent(new CustomEvent("samanya:config", { detail: SITE }));
   }
@@ -299,6 +308,7 @@
     enquireItems: enquireItems,
     formatGift: formatGift,
     enquireText: enquireText,
+    waDigits: waDigits,
     whatsappUrl: whatsappUrl,
     mailUrl: mailUrl,
     txnId: txnId,

@@ -1,9 +1,10 @@
 const crypto = require("crypto");
-const { json, readBody } = require("../../lib/http");
+const { json, readBody, originOf } = require("../../lib/http");
 const { withDb, holdStock, storeReady, readDb } = require("../../lib/store");
 const { priceItem, needsEnquire, goodsTotal, shippingOf, stockNeeds, pinOk, taxBreakup } = require("../../lib/catalog");
 const { hashPassword, readSession } = require("../../lib/auth");
 const { rememberPerson } = require("../../lib/compose");
+const { notifyCheckout } = require("../../lib/notify");
 
 function opOf(req) {
   return String((req.query && req.query.op) || "").replace(/\/$/, "");
@@ -84,6 +85,7 @@ module.exports = async function handler(req, res) {
         }
         return created;
       });
+      notifyCheckout(order, (await readDb()).settings, originOf(req)).catch(() => {});
       return json(res, 200, { txnid: order.txnid, payable: order.payable, shipping: order.shipping, goods: order.goods });
     } catch (err) {
       return json(res, err.status || 500, { error: err.message || "Could not create the order." });

@@ -23,7 +23,8 @@
     peopleQuery: "",
     selected: "",
     order: null,
-    personEmail: ""
+    personEmail: "",
+    whatsappApi: false
   };
 
   function $(id) { return document.getElementById(id); }
@@ -85,6 +86,19 @@
     var days = Math.round(h / 24);
     if (days < 14) return days + "d ago";
     return new Date(ms).toLocaleDateString("en-IN", { day: "numeric", month: "short" });
+  }
+
+  function openWhatsApp(data) {
+    if (data && data.sent) {
+      toast("Sent on WhatsApp.");
+      return;
+    }
+    if (data && data.link) {
+      window.open(data.link, "_blank", "noopener");
+      toast(data.api ? (data.error || "The draft opened in WhatsApp.") : "Opens WhatsApp with the invoice drafted.");
+      return;
+    }
+    toast((data && (data.error || data.reason)) || "Add a customer phone first.", true);
   }
 
   function toast(msg, err) {
@@ -272,6 +286,9 @@
     if (order.status === "pending" && pay) actions.push("<button class='btn btn-primary' type='button' data-act='copy-pay'>Copy PayU link</button>");
     if (order.status === "pending" || order.status === "estimate" || order.status === "paid") {
       actions.push("<button class='btn btn-ghost' type='button' data-act='mail'>Email customer</button>");
+    }
+    if (c.phone && (order.status === "pending" || order.status === "estimate" || order.status === "paid" || order.status === "packed" || order.status === "shipped")) {
+      actions.push("<button class='btn btn-ghost' type='button' data-act='whatsapp'>WhatsApp customer</button>");
     }
     if (order.status === "paid") actions.push("<button class='btn btn-primary' type='button' data-act='pack'>Mark packed</button>");
     if (order.status === "paid" || order.status === "packed") actions.push("<button class='btn btn-ghost' type='button' data-act='ship'>Send to Shiprocket</button>");
@@ -582,6 +599,7 @@
   }
 
   api("/api/admin/session").then(function (data) {
+    state.whatsappApi = Boolean(data.whatsappApi);
     if (!data.adminConfigured) $("loginCopy").textContent = "Set ADMIN_PASSWORD on Vercel, then return here.";
     if (data.signedIn) showApp();
   }).catch(function () {});
@@ -715,6 +733,12 @@
         .catch(function (err) { toast(err.message, true); });
       return;
     }
+    if (kind === "whatsapp") {
+      api("/api/admin/whatsapp", { method: "POST", body: JSON.stringify({ txnid: state.selected }) })
+        .then(openWhatsApp)
+        .catch(function (err) { toast(err.message, true); });
+      return;
+    }
     if (kind === "link") {
       api("/api/admin/convert", { method: "POST", body: JSON.stringify({ txnid: state.selected, days: 14, send: true }) })
         .then(function (data) {
@@ -788,6 +812,16 @@
       .catch(function (err) { toast(err.message, true); });
   });
 
+  $("waTest").addEventListener("click", function () {
+    api("/api/admin/whatsapp", { method: "POST", body: JSON.stringify({ test: true }) })
+      .then(function (data) {
+        if (data.sent) toast("Test alert landed on WhatsApp.");
+        else if (!data.api) toast("Save the site number, then add WHATSAPP_TOKEN and WHATSAPP_PHONE_ID on Vercel to send alerts automatically.");
+        else toast(data.error || "WhatsApp did not send.", true);
+      })
+      .catch(function (err) { toast(err.message, true); });
+  });
+
   $("coKind").addEventListener("click", function (event) {
     var btn = event.target.closest("[data-kind]");
     if (!btn) return;
@@ -827,6 +861,7 @@
       discount: $("coDiscount").value,
       note: $("coNote").value,
       send: $("coSend").checked,
+      sendWhatsapp: $("coWhatsApp").checked,
       items: items
     };
     api("/api/admin/compose", { method: "POST", body: JSON.stringify(body) })
@@ -841,10 +876,19 @@
           (pay ? "<input value='" + esc(pay) + "' readonly /><div class='btn-row'><button class='btn btn-primary' type='button' data-copy-pay>Copy PayU link</button></div>" : "") +
           "<div class='btn-row' style='margin-top:10px'>" +
           (data.invoiceUrl ? "<a class='btn btn-ghost' href='" + esc(data.invoiceUrl) + "' target='_blank'>View document</a><a class='btn btn-ghost' href='" + esc(data.invoiceUrl) + "&download=1'>PDF</a>" : "") +
+          (data.waLink ? "<a class='btn btn-ghost' href='" + esc(data.waLink) + "' target='_blank' rel='noopener'>WhatsApp customer</a>" : "") +
           "<button class='btn btn-ghost' type='button' data-open='" + esc(data.order.txnid) + "'>Open this order</button></div>" +
-          "<p class='ops-lede' style='margin:10px 0 0'>" + (data.mail && data.mail.customer && data.mail.customer.skipped ? "Email skipped — add RESEND_API_KEY on Vercel." : "If send was ticked, the customer email was attempted.") + "</p>";
+          "<p class='ops-lede' style='margin:10px 0 0'>" +
+          (data.mail && data.mail.customer && data.mail.customer.skipped ? "Email skipped — add RESEND_API_KEY on Vercel. " : (body.send ? "Customer email was attempted. " : "")) +
+          (data.mail && data.mail.customerWhatsapp && data.mail.customerWhatsapp.ok ? "WhatsApp sent." : (body.sendWhatsapp && data.waLink ? "WhatsApp draft is ready if Cloud API is not set." : (data.mail && data.mail.whatsapp && data.mail.whatsapp.ok ? "Atelier alert sent on WhatsApp." : ""))) +
+          "</p>";
         if (pay) {
           box.querySelector("[data-copy-pay]").addEventListener("click", function () { copyText(pay); });
+        }
+        if (body.sendWhatsapp && data.mail && data.mail.customerWhatsapp && data.mail.customerWhatsapp.ok) {
+          toast("WhatsApp sent.");
+        } else if (body.sendWhatsapp && data.waLink && !(data.mail && data.mail.customerWhatsapp && data.mail.customerWhatsapp.ok)) {
+          window.open(data.waLink, "_blank", "noopener");
         }
         toast("Created " + data.order.txnid + ".");
         refreshOrders();

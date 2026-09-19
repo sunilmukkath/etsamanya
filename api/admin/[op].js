@@ -6,6 +6,7 @@ const { pushOrder } = require("../../lib/shiprocket");
 const { assemble, convertEstimate, applyCustomer, applyTill, rememberPerson, payUrl, invoiceUrl } = require("../../lib/compose");
 const { ensureDocNumbers } = require("../../lib/invoice");
 const { catalogList } = require("../../lib/catalog");
+const { apiReady, pingAtelier, messageCustomer, waLink, customerCopy } = require("../../lib/whatsapp");
 
 function opOf(req) {
   return String((req.query && req.query.op) || "").replace(/\/$/, "");
@@ -13,7 +14,7 @@ function opOf(req) {
 
 const SETTING_KEYS = [
   "legalName", "tradeName", "address", "sellerState", "sellerStateCode",
-  "email", "phone", "whatsapp", "gstin", "gstRate", "hsn",
+  "email", "phone", "whatsapp", "whatsappAlert", "gstin", "gstRate", "hsn",
   "shippingFlat", "shippingFreeAbove", "notifyEmail", "packedNote"
 ];
 
@@ -81,7 +82,8 @@ module.exports = async function handler(req, res) {
     return json(res, 200, {
       signedIn: Boolean(readSession(req, "admin")),
       adminConfigured: adminConfigured(),
-      storeReady: storeReady()
+      storeReady: storeReady(),
+      whatsappApi: apiReady()
     });
   }
   if (!requireAdmin(req, res)) return;
@@ -101,18 +103,20 @@ module.exports = async function handler(req, res) {
         return created;
       });
       let mail = null;
-      if (body.send) {
-        const db = await readDb();
-        mail = await notifyCompose(saved, db.settings, origin);
-        await withDb(async (inner) => {
-          if (inner.orders[saved.txnid]) inner.orders[saved.txnid].composeMail = mail;
-        });
-      }
+      const db = await readDb();
+      mail = await notifyCompose(saved, db.settings, origin, {
+        email: Boolean(body.send),
+        whatsapp: Boolean(body.sendWhatsapp)
+      });
+      await withDb(async (inner) => {
+        if (inner.orders[saved.txnid]) inner.orders[saved.txnid].composeMail = mail;
+      });
       return json(res, 200, {
         ok: true,
         order: saved,
         payUrl: saved.status === "pending" ? payUrl(origin, saved) : "",
         invoiceUrl: invoiceUrl(origin, saved),
+        waLink: waLink(saved.customer && saved.customer.phone, customerCopy(saved, origin)),
         mail
       });
     } catch (err) {
@@ -136,15 +140,17 @@ module.exports = async function handler(req, res) {
         return current;
       });
       let mail = null;
-      if (body.send) {
-        const db = await readDb();
-        mail = await notifyCompose(order, db.settings, origin);
-      }
+      const db = await readDb();
+      mail = await notifyCompose(order, db.settings, origin, {
+        email: Boolean(body.send),
+        whatsapp: Boolean(body.sendWhatsapp)
+      });
       return json(res, 200, {
         ok: true,
         order,
         payUrl: payUrl(origin, order),
         invoiceUrl: invoiceUrl(origin, order),
+        waLink: waLink(order.customer && order.customer.phone, customerCopy(order, origin)),
         mail
       });
     } catch (err) {
@@ -345,7 +351,7 @@ module.exports = async function handler(req, res) {
       SETTING_KEYS.forEach((key) => {
         if (body[key] == null) return;
         if (["gstRate", "shippingFlat", "shippingFreeAbove"].includes(key)) db.settings[key] = Number(body[key]) || 0;
-        else if (key === "whatsapp" || key === "phone") db.settings[key] = String(body[key]).replace(/\D/g, "");
+        else if (key === "whatsapp" || key === "whatsappAlert" || key === "phone") db.settings[key] = String(body[key]).replace(/\D/g, "");
         else db.settings[key] = String(body[key]).trim();
       });
       return db.settings;
@@ -378,6 +384,43 @@ module.exports = async function handler(req, res) {
       return json(res, 200, { ok: true, shiprocket: result.data, order: result.order });
     } catch (err) {
       return json(res, err.status || 500, { error: err.message || "Shiprocket failed." });
+    }
+  }
+  if (op === "whatsapp") {
+    if (req.method !== "POST") return json(res, 405, { error: "Use POST" });
+    const body = await readBody(req);
+    const origin = originOf(req);
+    try {
+      const db = await readDb();
+      if (body.test) {
+        const result = await pingAtelier(null, db.settings, origin);
+        return json(res, 200, {
+          ok: Boolean(result.ok),
+          sent: Boolean(result.ok),
+          api: apiReady(),
+          link: result.link || "",
+          error: result.error || "",
+          skipped: result.skipped || false
+        });
+      }
+      const id = String(body.txnid || body.id || "").trim().toUpperCase();
+      const order = db.orders[id];
+      if (!order) return json(res, 404, { error: "Order not found." });
+      const result = await messageCustomer(order, db.settings, origin);
+      await withDb(async (inner) => {
+        if (inner.orders[id]) inner.orders[id].customerWhatsapp = result;
+      });
+      return json(res, 200, {
+        ok: Boolean(result.ok),
+        sent: Boolean(result.ok),
+        api: apiReady(),
+        link: result.link || "",
+        error: result.error || "",
+        skipped: result.skipped || false,
+        reason: result.reason || ""
+      });
+    } catch (err) {
+      return json(res, err.status || 500, { error: err.message || "WhatsApp failed." });
     }
   }
   json(res, 404, { error: "Unknown admin route." });

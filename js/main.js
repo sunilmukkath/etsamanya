@@ -63,13 +63,12 @@ document.querySelectorAll(".filter").forEach((button) => {
 
 window.addEventListener("samanya:config", function (event) {
   var cfg = event.detail || {};
+  var wa = "";
+  if (window.SamanyaShop && window.SamanyaShop.waDigits) wa = window.SamanyaShop.waDigits(cfg.whatsapp || cfg.phone || "9940184841");
+  else wa = String(cfg.whatsapp || cfg.phone || "919940184841").replace(/\D/g, "");
   document.querySelectorAll("[data-whatsapp]").forEach(function (el) {
-    if (cfg.whatsapp) {
-      el.hidden = false;
-      if (el.tagName === "A") el.href = "https://wa.me/" + String(cfg.whatsapp).replace(/\D/g, "");
-    } else {
-      el.hidden = true;
-    }
+    el.hidden = false;
+    if (el.tagName === "A" && wa) el.href = "https://wa.me/" + wa;
   });
   document.querySelectorAll("[data-gstin]").forEach(function (el) {
     if (cfg.gstin) {

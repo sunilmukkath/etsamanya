@@ -170,6 +170,7 @@
                 <p class="ops-lede" id="composeTillHint" style="margin:0">Till updates as you add lines.</p>
                 <div class="ops-compose-foot">
                   <label class="check"><input type="checkbox" id="coSend" checked /> Email the customer</label>
+                  <label class="check"><input type="checkbox" id="coWhatsApp" /> WhatsApp the customer</label>
                   <button class="btn btn-primary" type="submit">Create</button>
                 </div>
               </div>
@@ -221,7 +222,9 @@
                   <div class="ops-field"><label>Public email</label><input name="email" type="email" /></div>
                   <div class="ops-field"><label>Alert email</label><input name="notifyEmail" type="email" /></div>
                   <div class="ops-field"><label>Phone</label><input name="phone" /></div>
-                  <div class="ops-field"><label>WhatsApp (digits)</label><input name="whatsapp" /></div>
+                  <div class="ops-field"><label>WhatsApp on the site</label><input name="whatsapp" placeholder="91… with country code" /></div>
+                  <div class="ops-field"><label>Alert mobile</label><input name="whatsappAlert" placeholder="Where Cloud API alerts land" /></div>
+                  <p class="ops-lede" style="margin:0">The site number is what customers tap. Automatic alerts and invoices need WHATSAPP_TOKEN and WHATSAPP_PHONE_ID on Vercel. Until then, Open WhatsApp drafts the message in the Business app.</p>
                 </div>
               </article>
               <article class="ops-card">
@@ -235,6 +238,7 @@
             </div>
             <div class="ops-compose-foot">
               <button class="btn btn-primary" type="submit">Save settings</button>
+              <button class="btn btn-ghost" type="button" id="waTest">Send a test WhatsApp alert</button>
             </div>
           </form>
         </section>
@@ -255,6 +259,6 @@
   </div>
 
   <div class="ops-toasts" id="opsToasts"></div>
-  <script src="js/admin.js?v=3"></script>
+  <script src="js/admin.js?v=4"></script>
 </body>
 </html>
