@@ -23,6 +23,20 @@
   var BOWL = 125;
   var RANGE = [
     {
+      id: "sweet-rituals-potli",
+      label: "Sweet Rituals Potli",
+      price: 499,
+      form: "Potli",
+      weight: "110g",
+      photo: "assets/range/sweet-rituals.jpg",
+      blurb: "A small potli of festive nuts and spice — for the desk, a journey, or a first hello.",
+      groups: [
+        { title: "What's inside", lines: ["Cashew 30g", "Almond 30g", "Raisin 30g", "Turmeric 15g", "Cardamom 5g"] }
+      ],
+      extras: ["Bookmark", "Note to the receiver", "Wooden spice spoon"],
+      bowl: false
+    },
+    {
       id: "sweet-rituals",
       label: "Sweet Rituals",
       price: 799,
