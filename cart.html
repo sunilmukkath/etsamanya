@@ -73,7 +73,7 @@
       <a href="index.html#contact">Contact us</a>
     </div>
   </footer>
-  <script src="js/shop.js?v=4"></script>
+  <script src="js/shop.js?v=5"></script>
   <script src="js/main.js?v=14"></script>
   <script>
     (function () {
@@ -109,8 +109,7 @@
         document.getElementById("cartPayable").textContent = shop.rupees(totals.payable);
         document.getElementById("cartMeta").textContent = [
           totals.count + " gifts",
-          totals.shipping ? "Shipping " + shop.rupees(totals.shipping) : "Shipping complimentary",
-          totals.savings ? shop.rupees(totals.savings) + " courtesy on ten or more" : ""
+          totals.shipping ? "Shipping " + shop.rupees(totals.shipping) : "Shipping complimentary"
         ].filter(Boolean).join(" · ");
         var big = shop.enquireItems();
         enquire.hidden = big.length === 0;

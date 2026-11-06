@@ -5,7 +5,7 @@ const { notifyPaid, notifyCompose } = require("../../lib/notify");
 const { pushOrder } = require("../../lib/shiprocket");
 const { assemble, convertEstimate, applyCustomer, applyTill, rememberPerson, payUrl, invoiceUrl } = require("../../lib/compose");
 const { ensureDocNumbers } = require("../../lib/invoice");
-const { catalogList } = require("../../lib/catalog");
+const { catalogList, stockList, skuId, isCoreSku, extrasOf } = require("../../lib/catalog");
 const { apiReady, pingAtelier, messageCustomer, waLink, customerCopy } = require("../../lib/whatsapp");
 
 function opOf(req) {
@@ -88,7 +88,51 @@ module.exports = async function handler(req, res) {
   }
   if (!requireAdmin(req, res)) return;
   if (op === "catalog") {
-    return json(res, 200, catalogList());
+    if (req.method === "GET") {
+      const db = await readDb();
+      return json(res, 200, catalogList(db.catalog));
+    }
+    if (req.method !== "POST") return json(res, 405, { error: "Use GET or POST" });
+    const body = await readBody(req);
+    if (body.remove) {
+      const id = String(body.id || "").trim();
+      if (!id || isCoreSku(id)) return json(res, 400, { error: "That gift is part of the house range." });
+      try {
+        const saved = await withDb(async (db) => {
+          const row = db.stock[id];
+          if (row && Number(row.reserved || 0) > 0) {
+            const err = new Error("This combination still has reserved stock. Close those orders first.");
+            err.status = 400;
+            throw err;
+          }
+          db.catalog = extrasOf(db).filter((item) => item.id !== id);
+          delete db.stock[id];
+          return { catalog: catalogList(db.catalog), stock: stockList(db) };
+        });
+        return json(res, 200, { ok: true, catalog: saved.catalog, stock: saved.stock });
+      } catch (err) {
+        return json(res, err.status || 500, { error: err.message || "Could not remove the combination." });
+      }
+    }
+    const label = String(body.label || "").trim().slice(0, 80);
+    const price = Math.max(0, Math.round(Number(body.price) || 0));
+    const qty = Math.max(0, parseInt(body.qty, 10) || 0);
+    if (!label) return json(res, 400, { error: "Name the combination." });
+    if (!price) return json(res, 400, { error: "Set a price." });
+    const created = await withDb(async (db) => {
+      const id = skuId(label);
+      const row = {
+        id,
+        label,
+        price,
+        bowl: !!body.bowl,
+        form: String(body.form || "Box").slice(0, 40)
+      };
+      db.catalog = extrasOf(db).concat([row]);
+      db.stock[id] = { label, qty, reserved: 0 };
+      return { row, catalog: catalogList(db.catalog), stock: stockList(db) };
+    });
+    return json(res, 200, { ok: true, item: created.row, catalog: created.catalog, stock: created.stock });
   }
   if (op === "compose") {
     if (req.method !== "POST") return json(res, 405, { error: "Use POST" });
@@ -247,14 +291,7 @@ module.exports = async function handler(req, res) {
   if (op === "stock") {
     if (req.method === "GET") {
       const db = await readDb();
-      const stock = Object.keys(db.stock).map((id) => ({
-        id,
-        label: db.stock[id].label,
-        qty: db.stock[id].qty,
-        reserved: db.stock[id].reserved || 0,
-        available: available(db, id)
-      }));
-      return json(res, 200, { stock });
+      return json(res, 200, { stock: stockList(db) });
     }
     if (req.method !== "PUT") return json(res, 405, { error: "Use GET or PUT" });
     const body = await readBody(req);
@@ -265,7 +302,7 @@ module.exports = async function handler(req, res) {
         if (row.qty != null) db.stock[row.id].qty = Math.max(0, parseInt(row.qty, 10) || 0);
         if (row.label) db.stock[row.id].label = String(row.label).slice(0, 80);
       });
-      return db.stock;
+      return stockList(db);
     });
     return json(res, 200, { ok: true, stock });
   }

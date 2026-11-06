@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/admin.css?v=2" />
+  <link rel="stylesheet" href="css/admin.css?v=3" />
 </head>
 <body>
   <main class="ops-login" id="loginGate">
@@ -179,7 +179,17 @@
         </section>
 
         <section class="ops-panel" data-panel="stock" hidden>
-          <p class="ops-lede">On-hand counts. Reserved is already promised to a pending or paid order.</p>
+          <p class="ops-lede">On-hand counts. Reserved is already promised to a pending or paid order. New combinations are for the atelier till — they do not appear on the public range until we add photography.</p>
+          <form id="addSkuForm" class="ops-card ops-add-sku" style="margin-bottom:14px">
+            <h3>Add a combination</h3>
+            <div class="ops-gift-card-row">
+              <div class="ops-field"><label for="skuName">Name</label><input id="skuName" name="label" required placeholder="Diwali pantry, 15 boxes…" /></div>
+              <div class="ops-field"><label for="skuPrice">Price ₹</label><input id="skuPrice" name="price" type="number" min="1" required /></div>
+              <div class="ops-field"><label for="skuQty">On hand</label><input id="skuQty" name="qty" type="number" min="0" value="40" /></div>
+              <label class="check" style="align-self:end;padding-bottom:8px"><input id="skuBowl" name="bowl" type="checkbox" /> Bowl</label>
+              <button class="btn btn-primary" type="submit" style="align-self:end">Add</button>
+            </div>
+          </form>
           <form id="stockForm"></form>
         </section>
 
@@ -259,6 +269,6 @@
   </div>
 
   <div class="ops-toasts" id="opsToasts"></div>
-  <script src="js/admin.js?v=4"></script>
+  <script src="js/admin.js?v=6"></script>
 </body>
 </html>

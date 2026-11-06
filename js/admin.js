@@ -36,12 +36,7 @@
   }
   function skuList() { return state.catalog.range.concat(state.catalog.custom); }
   function skuOf(id) { return skuList().find(function (row) { return row.id === id; }) || null; }
-  function bulkRate(qty) {
-    if (qty >= 25) return 1;
-    if (qty >= 10) return 0.95;
-    return 1;
-  }
-  function lineTotal(price, qty) { return Math.round(price * qty * bulkRate(qty)); }
+  function lineTotal(price, qty) { return Math.round(Number(price) * Number(qty)); }
   function payUrl(order) {
     if (!order || !order.invoiceToken) return "";
     return location.origin + "/pay.html?id=" + encodeURIComponent(order.txnid) + "&t=" + encodeURIComponent(order.invoiceToken);
@@ -366,6 +361,24 @@
     });
   }
 
+  function applyCatalog(data) {
+    if (!data) return;
+    if (data.catalog) state.catalog = data.catalog;
+    if (data.stock) state.stock = data.stock;
+    renderStock();
+    renderToday();
+    refreshSkuOptions();
+  }
+
+  function refreshSkuOptions() {
+    var html = optionsHtml();
+    document.querySelectorAll(".co-sku").forEach(function (sel) {
+      var current = sel.value;
+      sel.innerHTML = html;
+      if (current) sel.value = current;
+    });
+  }
+
   function renderStock() {
     var rows = state.stock;
     if (!rows.length) {
@@ -373,13 +386,14 @@
       return;
     }
     var max = Math.max.apply(null, rows.map(function (row) { return Number(row.qty) || 0; })) || 1;
-    $("stockForm").innerHTML = "<div class='ops-table-wrap'><table class='ops-table'><thead><tr><th>Gift</th><th>On hand</th><th>Reserved</th><th>Available</th></tr></thead><tbody>" +
+    $("stockForm").innerHTML = "<div class='ops-table-wrap'><table class='ops-table'><thead><tr><th>Gift</th><th>On hand</th><th>Reserved</th><th>Available</th><th></th></tr></thead><tbody>" +
       rows.map(function (row) {
         var cls = row.available <= 0 ? "ops-stock-zero" : (row.available <= 3 ? "ops-stock-low" : "");
         var pct = Math.min(100, Math.round((row.available / max) * 100));
-        return "<tr class='" + cls + "'><td><b>" + esc(row.label) + "</b><span class='ops-bar'><span style='width:" + pct + "%'></span></span></td>" +
+        return "<tr class='" + cls + "'><td><b>" + esc(row.label) + "</b>" + (row.extra ? "<small>atelier combination</small>" : "") + "<span class='ops-bar'><span style='width:" + pct + "%'></span></span></td>" +
           "<td><input class='ops-stock-qty' type='number' min='0' data-sku='" + esc(row.id) + "' value='" + row.qty + "' /></td>" +
-          "<td>" + row.reserved + "</td><td><b>" + row.available + "</b></td></tr>";
+          "<td>" + row.reserved + "</td><td><b>" + row.available + "</b></td>" +
+          "<td>" + (row.extra ? "<button class='ops-copy' type='button' data-remove-sku='" + esc(row.id) + "'>Remove</button>" : "") + "</td></tr>";
       }).join("") + "</tbody></table></div><div class='ops-compose-foot'><button class='btn btn-primary' type='submit'>Save stock</button></div>";
   }
 
@@ -769,10 +783,7 @@
     });
     api("/api/admin/stock", { method: "PUT", body: JSON.stringify({ stock: stock }) })
       .then(function (data) {
-        state.stock = Object.keys(data.stock || {}).map(function (id) {
-          var row = data.stock[id];
-          return { id: id, label: row.label, qty: row.qty, reserved: row.reserved || 0, available: Math.max(0, (row.qty || 0) - (row.reserved || 0)) };
-        });
+        state.stock = Array.isArray(data.stock) ? data.stock : [];
         if (!state.stock.length) {
           return api("/api/admin/stock").then(function (fresh) {
             state.stock = fresh.stock || [];
@@ -786,6 +797,38 @@
         toast("Stock saved.");
       })
       .catch(function (err) { toast(err.message, true); });
+  });
+
+  $("stockForm").addEventListener("click", function (event) {
+    var btn = event.target.closest("[data-remove-sku]");
+    if (!btn) return;
+    event.preventDefault();
+    var id = btn.getAttribute("data-remove-sku");
+    if (!id) return;
+    api("/api/admin/catalog", { method: "POST", body: JSON.stringify({ id: id, remove: true }) })
+      .then(function (data) {
+        applyCatalog(data);
+        toast("Combination removed.");
+      })
+      .catch(function (err) { toast(err.message, true); });
+  });
+
+  $("addSkuForm").addEventListener("submit", function (event) {
+    event.preventDefault();
+    api("/api/admin/catalog", {
+      method: "POST",
+      body: JSON.stringify({
+        label: $("skuName").value,
+        price: $("skuPrice").value,
+        qty: $("skuQty").value,
+        bowl: $("skuBowl").checked
+      })
+    }).then(function (data) {
+      applyCatalog(data);
+      event.target.reset();
+      $("skuQty").value = "40";
+      toast("Added " + (data.item && data.item.label ? data.item.label : "combination") + ".");
+    }).catch(function (err) { toast(err.message, true); });
   });
 
   $("salesChips").addEventListener("click", function (event) {

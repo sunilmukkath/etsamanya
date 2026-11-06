@@ -674,6 +674,17 @@ a { color: var(--leaf-deep); }
   align-items: center;
 }
 
+.ops-add-sku .ops-gift-card-row {
+  grid-template-columns: minmax(0, 1.4fr) 110px 90px auto auto;
+  align-items: end;
+}
+
+@media (max-width: 900px) {
+  .ops-add-sku .ops-gift-card-row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
 .ops-compose-foot {
   display: flex;
   flex-wrap: wrap;

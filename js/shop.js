@@ -130,15 +130,12 @@
     return "₹" + Math.round(n).toLocaleString("en-IN");
   }
 
-  function bulkRate(qty) {
-    if (qty >= ENQUIRE_AT) return 1;
-    if (qty >= 10) return 0.95;
+  function bulkRate() {
     return 1;
   }
 
   function bulkLabel(qty) {
     if (qty >= ENQUIRE_AT) return "Packed with us directly";
-    if (qty >= 10) return "5% bulk courtesy";
     return "";
   }
 
@@ -147,7 +144,7 @@
   }
 
   function lineTotal(price, qty) {
-    return Math.round(price * qty * bulkRate(qty));
+    return Math.round(Number(price) * Number(qty));
   }
 
   function readCart() {
