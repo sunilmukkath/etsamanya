@@ -227,7 +227,7 @@
       wrap.innerHTML = "<p class='ops-empty'>Nothing matches this filter.</p>";
       return;
     }
-    wrap.innerHTML = "<table class='ops-table'><thead><tr><th>Status</th><th>Who</th><th>Gift</th><th>Amount</th><th>When</th></tr></thead><tbody>" +
+    wrap.innerHTML = "<table class='ops-table'><thead><tr><th>Status</th><th>Who</th><th>Gift</th><th>Amount</th><th>When</th><th></th></tr></thead><tbody>" +
       rows.map(function (order) {
         var doc = order.invoiceNo || order.estimateNo || order.txnid;
         return "<tr data-open='" + esc(order.txnid) + "'" + (state.selected === order.txnid ? " class='is-on'" : "") + ">" +
@@ -235,7 +235,10 @@
           "<td><b>" + esc(order.name) + "</b><small>" + esc(order.city || order.email) + "</small></td>" +
           "<td>" + esc((order.items || []).join(", ")) + "<small>" + esc(doc) + "</small></td>" +
           "<td class='ops-amount'>" + rupees(order.payable) + "</td>" +
-          "<td><small>" + relTime(order.paidAt || order.createdAt) + "</small></td></tr>";
+          "<td><small>" + relTime(order.paidAt || order.createdAt) + "</small></td>" +
+          "<td class='ops-actions'><button type='button' class='ops-copy' data-open='" + esc(order.txnid) + "'>Edit</button>" +
+          (canDeleteOrder(order.status) ? "<button type='button' class='ops-copy' data-delete-order='" + esc(order.txnid) + "'>Delete</button>" : "") +
+          "</td></tr>";
       }).join("") + "</tbody></table>";
   }
 
@@ -287,6 +290,7 @@
     }
     if (order.status === "paid") actions.push("<button class='btn btn-primary' type='button' data-act='pack'>Mark packed</button>");
     if (order.status === "paid" || order.status === "packed") actions.push("<button class='btn btn-ghost' type='button' data-act='ship'>Send to Shiprocket</button>");
+    if (canDeleteOrder(order.status)) actions.push("<button class='btn btn-ghost' type='button' data-act='delete'>Delete</button>");
     if (view) {
       actions.push("<a class='btn btn-ghost' href='" + view + "' target='_blank'>" + docLabel + "</a>");
       actions.push("<a class='btn btn-ghost' href='" + pdf + "'>PDF</a>");
@@ -297,10 +301,14 @@
         "<div class='ops-field'><label>Discount ₹</label><input id='ordDiscount' type='number' min='0' value='" + Number(order.discount || 0) + "' /></div></div>"
       : "<p style='margin:0 0 8px'><small>Delivery " + (order.shipping ? rupees(order.shipping) : "complimentary") +
         (Number(order.discount) > 0 ? " · Discount −" + rupees(order.discount) : "") + "</small></p>";
+    var giftsBlock = openTill
+      ? "<div id='drawLines'>" + ((order.items || []).map(giftCardHtml).join("") || giftCardHtml({})) + "</div>" +
+        "<button class='btn btn-ghost' type='button' id='drawAddLine'>Add a gift</button>"
+      : (gifts || "<p class='ops-empty'>No lines.</p>");
     $("orderDetail").innerHTML =
       "<div class='ops-block'><p class='ops-amount' style='margin:0'>" + rupees(order.payable) + "</p><small>" + esc(numbers) +
       (order.goods != null ? " · gifts " + rupees(order.goods) : "") + "</small></div>" +
-      "<div class='ops-block'><h3>Gifts</h3>" + (gifts || "<p class='ops-empty'>No lines.</p>") + "</div>" +
+      "<div class='ops-block'><h3>Gifts</h3>" + giftsBlock + "</div>" +
       (order.stockWarning ? "<p class='ops-warn'>" + esc(order.stockWarning) + "</p>" : "") +
       (order.adminNote ? "<div class='ops-block'><h3>Atelier note</h3><p>" + esc(order.adminNote) + "</p></div>" : "") +
       "<div class='ops-block'><div class='btn-row'>" + actions.join("") + "</div></div>" +
@@ -319,6 +327,7 @@
       "<div class='ops-field'><label>Atelier note</label><textarea id='ordNote' rows='2'>" + esc(order.adminNote || "") + "</textarea></div>" +
       "<button class='btn btn-primary' type='submit'>Save</button></form>";
     $("drawForm").addEventListener("submit", saveDrawer);
+    if ($("drawLines")) paintGiftBowls("#drawLines");
     if (pay) $("orderDetail").dataset.pay = pay;
     else delete $("orderDetail").dataset.pay;
   }
@@ -336,6 +345,7 @@
       };
     if ($("ordShip")) body.shipping = $("ordShip").value;
     if ($("ordDiscount")) body.discount = $("ordDiscount").value;
+    if ($("drawLines")) body.items = readGiftCards("#drawLines");
     api("/api/admin/orders", {
       method: "PATCH",
       body: JSON.stringify(body)
@@ -503,27 +513,24 @@
     if ($("coPerson")) $("coPerson").value = row.email;
   }
 
-  function optionsHtml() {
+  function optionsHtml(selected) {
     return skuList().map(function (row) {
-      return "<option value='" + esc(row.id) + "' data-kind='" + esc(row.kind) + "' data-bowl='" + (row.bowl ? "1" : "0") + "' data-price='" + row.price + "'>" + esc(row.label) + " · " + rupees(row.price) + "</option>";
+      return "<option value='" + esc(row.id) + "' data-kind='" + esc(row.kind) + "' data-bowl='" + (row.bowl ? "1" : "0") + "' data-price='" + row.price + "'" + (row.id === selected ? " selected" : "") + ">" + esc(row.label) + " · " + rupees(row.price) + "</option>";
     }).join("");
   }
 
-  function addComposeLine() {
-    var wrap = $("composeLines");
-    var row = document.createElement("div");
-    row.className = "ops-gift-card";
-    row.innerHTML = "<div class='ops-gift-card-row'><select class='co-sku'>" + optionsHtml() + "</select>" +
-      "<input class='co-qty' type='number' min='1' max='500' value='1' aria-label='Quantity' /></div>" +
-      "<div class='ops-gift-card-row'><label class='check'><input class='co-bowl' type='checkbox' /> Bowl + " + rupees(BOWL) + "</label>" +
+  function giftCardHtml(item) {
+    item = item || {};
+    return "<div class='ops-gift-card'>" +
+      "<div class='ops-gift-card-row'><select class='co-sku'>" + optionsHtml(item.size) + "</select>" +
+      "<input class='co-qty' type='number' min='1' max='500' value='" + (item.qty || 1) + "' aria-label='Quantity' /></div>" +
+      "<div class='ops-gift-card-row'><label class='check'><input class='co-bowl' type='checkbox'" + (item.bowl ? " checked" : "") + " /> Bowl + " + rupees(BOWL) + "</label>" +
       "<button class='ops-copy' type='button' data-remove>Remove</button></div>" +
-      "<input class='co-msg' placeholder='Card line (optional)' />";
-    wrap.appendChild(row);
-    paintComposeTill();
+      "<input class='co-msg' placeholder='Card line (optional)' value='" + esc(item.message || "") + "' /></div>";
   }
 
-  function readComposeLines() {
-    return [].map.call(document.querySelectorAll("#composeLines .ops-gift-card"), function (row) {
+  function readGiftCards(root) {
+    return [].map.call(document.querySelectorAll(root + " .ops-gift-card"), function (row) {
       var sel = row.querySelector(".co-sku");
       var opt = sel.options[sel.selectedIndex];
       return {
@@ -536,8 +543,8 @@
     });
   }
 
-  function paintComposeTill() {
-    document.querySelectorAll("#composeLines .ops-gift-card").forEach(function (row) {
+  function paintGiftBowls(root) {
+    document.querySelectorAll(root + " .ops-gift-card").forEach(function (row) {
       var sel = row.querySelector(".co-sku");
       var opt = sel && sel.options[sel.selectedIndex];
       var bowl = row.querySelector(".co-bowl");
@@ -549,6 +556,35 @@
         if (lab) lab.style.opacity = allow ? "1" : "0.45";
       }
     });
+  }
+
+  function canDeleteOrder(status) {
+    return status !== "paid" && status !== "packed" && status !== "shipped";
+  }
+
+  function deleteOrder(id) {
+    if (!id) return;
+    if (!window.confirm("Remove " + id + " from the order book? Held stock on a PayU link will be released.")) return;
+    api("/api/admin/orders", { method: "PATCH", body: JSON.stringify({ txnid: id, remove: true }) })
+      .then(function () {
+        toast("Removed " + id + ".");
+        closeDrawer(true);
+        return refreshOrders();
+      })
+      .catch(function (err) { toast(err.message, true); });
+  }
+
+  function addComposeLine() {
+    $("composeLines").insertAdjacentHTML("beforeend", giftCardHtml({}));
+    paintComposeTill();
+  }
+
+  function readComposeLines() {
+    return readGiftCards("#composeLines");
+  }
+
+  function paintComposeTill() {
+    paintGiftBowls("#composeLines");
     var items = readComposeLines();
     var goods = 0;
     items.forEach(function (item) {
@@ -662,6 +698,13 @@
       }
       return;
     }
+    var delOrder = event.target.closest("[data-delete-order]");
+    if (delOrder) {
+      event.preventDefault();
+      event.stopPropagation();
+      deleteOrder(delOrder.getAttribute("data-delete-order"));
+      return;
+    }
     var open = event.target.closest("[data-open]");
     if (open) {
       setTab("orders", open.getAttribute("data-open"));
@@ -728,10 +771,23 @@
     if (event.key === "Escape") closeDrawer(true);
   });
 
+  $("orderDetail").addEventListener("input", function (event) {
+    if (event.target.closest("#drawLines")) paintGiftBowls("#drawLines");
+  });
   $("orderDetail").addEventListener("click", function (event) {
     var copy = event.target.closest("[data-copy]");
     if (copy) {
       copyText(copy.getAttribute("data-copy"));
+      return;
+    }
+    if (event.target.id === "drawAddLine") {
+      $("drawLines").insertAdjacentHTML("beforeend", giftCardHtml({}));
+      paintGiftBowls("#drawLines");
+      return;
+    }
+    if (event.target.getAttribute("data-remove") != null && event.target.closest("#drawLines")) {
+      var card = event.target.closest(".ops-gift-card");
+      if (card) card.remove();
       return;
     }
     var act = event.target.closest("[data-act]");
@@ -761,6 +817,10 @@
           return refreshOrders(state.selected);
         })
         .catch(function (err) { toast(err.message, true); });
+      return;
+    }
+    if (kind === "delete") {
+      deleteOrder(state.selected);
       return;
     }
     if (kind === "pack") {

@@ -3,7 +3,7 @@ const { requireAdmin, adminConfigured, checkAdminPassword, sessionCookie, readSe
 const { readDb, withDb, restock, available, storeReady, publicSettings } = require("../../lib/store");
 const { notifyPaid, notifyCompose } = require("../../lib/notify");
 const { pushOrder } = require("../../lib/shiprocket");
-const { assemble, convertEstimate, applyCustomer, applyTill, rememberPerson, payUrl, invoiceUrl } = require("../../lib/compose");
+const { assemble, convertEstimate, applyCustomer, applyTill, applyItems, removeOrder, rememberPerson, payUrl, invoiceUrl } = require("../../lib/compose");
 const { ensureDocNumbers } = require("../../lib/invoice");
 const { catalogList, stockList, skuId, isCoreSku, extrasOf } = require("../../lib/catalog");
 const { apiReady, pingAtelier, messageCustomer, waLink, customerCopy } = require("../../lib/whatsapp");
@@ -235,9 +235,17 @@ module.exports = async function handler(req, res) {
       }).filter(Boolean);
       return json(res, 200, { orders });
     }
-    if (req.method !== "PATCH") return json(res, 405, { error: "Use GET or PATCH" });
-    const body = await readBody(req);
+    const body = req.method === "GET" ? {} : await readBody(req);
     const id = String(body.txnid || body.id || "").trim().toUpperCase();
+    if (req.method === "DELETE" || body.remove) {
+      try {
+        await withDb(async (db) => removeOrder(db, id));
+        return json(res, 200, { ok: true, removed: id });
+      } catch (err) {
+        return json(res, err.status || 500, { error: err.message || "Could not delete the order." });
+      }
+    }
+    if (req.method !== "PATCH") return json(res, 405, { error: "Use GET, PATCH, or DELETE" });
     try {
       const order = await withDb(async (db) => {
         const current = db.orders[id];
@@ -245,6 +253,9 @@ module.exports = async function handler(req, res) {
           const err = new Error("Order not found.");
           err.status = 404;
           throw err;
+        }
+        if (Array.isArray(body.items)) {
+          applyItems(db, current, body.items);
         }
         if (body.shipping != null || body.discount != null) {
           applyTill(current, { shipping: body.shipping, discount: body.discount }, db.settings);

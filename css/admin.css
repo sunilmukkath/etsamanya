@@ -443,6 +443,16 @@ a { color: var(--leaf-deep); }
 
 .ops-table tbody tr { cursor: pointer; }
 
+.ops-table .ops-actions {
+  white-space: nowrap;
+  text-align: right;
+  cursor: default;
+}
+
+.ops-table .ops-actions button {
+  margin-left: 8px;
+}
+
 .ops-table tbody tr:hover,
 .ops-table tbody tr.is-on {
   background: color-mix(in srgb, var(--gold) 12%, white);
