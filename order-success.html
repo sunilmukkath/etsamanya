@@ -9,8 +9,8 @@
 </head>
 <body>
   <main class="wrap shop-page">
-    <p class="kicker">Received</p>
-    <h1 class="display">Thank you. PayU has the till.</h1>
+    <p class="kicker">Payment received</p>
+    <h1 class="display">Thank you. We have your gift.</h1>
     <p class="lede" id="okCopy">We will pack from this week’s lots and write when it leaves.</p>
     <p id="okLinks"><a class="btn btn-primary" href="account.html">Your orders</a> <a class="btn btn-ghost" href="index.html">Back home</a></p>
   </main>
@@ -23,7 +23,7 @@
       if (!txn) return;
       fetch("/api/orders/receipt?txnid=" + encodeURIComponent(txn)).then(function (res) { return res.json(); }).then(function (data) {
         var copy = document.getElementById("okCopy");
-        copy.textContent = "Order " + (data.txnid || txn) + (data.invoiceNo ? " · " + data.invoiceNo : "") + ". We will pack from this week’s lots and write when it leaves.";
+        copy.textContent = "Order " + (data.txnid || txn) + (data.invoiceNo ? " · invoice " + data.invoiceNo : "") + ". We will pack from this week’s lots and write when it leaves.";
         if (data.invoiceToken) {
           var links = document.getElementById("okLinks");
           var view = document.createElement("a");
