@@ -282,19 +282,20 @@ module.exports = async function handler(req, res) {
         if (body.resend) current.notifiedAt = 0;
         return current;
       });
-      if (body.resend && (order.status === "paid" || order.status === "pending" || order.status === "estimate")) {
+      let notify = null;
+      if (body.resend && ["paid", "packed", "shipped", "pending", "estimate"].includes(order.status)) {
         const db = await readDb();
-        const results = order.status === "paid"
+        notify = ["paid", "packed", "shipped"].includes(order.status)
           ? await notifyPaid(order, db.settings, originOf(req))
           : await notifyCompose(order, db.settings, originOf(req));
         await withDb(async (inner) => {
           if (inner.orders[id]) {
             inner.orders[id].notifiedAt = Date.now();
-            inner.orders[id].notify = results;
+            inner.orders[id].notify = notify;
           }
         });
       }
-      return json(res, 200, { ok: true, order });
+      return json(res, 200, { ok: true, order, notify });
     } catch (err) {
       return json(res, err.status || 500, { error: err.message || "Could not update the order." });
     }

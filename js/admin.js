@@ -282,8 +282,8 @@
     var actions = [];
     if (order.status === "estimate") actions.push("<button class='btn btn-primary' type='button' data-act='link'>Create PayU link</button>");
     if (order.status === "pending" && pay) actions.push("<button class='btn btn-primary' type='button' data-act='copy-pay'>Copy PayU link</button>");
-    if (order.status === "pending" || order.status === "estimate" || order.status === "paid") {
-      actions.push("<button class='btn btn-ghost' type='button' data-act='mail'>Email customer</button>");
+    if (order.status === "pending" || order.status === "estimate" || order.status === "paid" || order.status === "packed" || order.status === "shipped") {
+      actions.push("<button class='btn btn-ghost' type='button' data-act='mail'>" + (order.status === "estimate" || order.status === "pending" ? "Email customer" : "Email invoice") + "</button>");
     }
     if (c.phone && (order.status === "pending" || order.status === "estimate" || order.status === "paid" || order.status === "packed" || order.status === "shipped")) {
       actions.push("<button class='btn btn-ghost' type='button' data-act='whatsapp'>WhatsApp customer</button>");
@@ -799,7 +799,12 @@
     }
     if (kind === "mail") {
       api("/api/admin/orders", { method: "PATCH", body: JSON.stringify({ txnid: state.selected, resend: true }) })
-        .then(function () { toast("Email sent if Resend is configured."); })
+        .then(function (data) {
+          var mail = data.notify && data.notify.customer;
+          if (mail && mail.ok) toast("Invoice emailed to the customer.");
+          else if (mail && mail.skipped) toast("Add RESEND_API_KEY on Vercel to send mail.", true);
+          else toast((mail && mail.error) || "Could not send the email.", true);
+        })
         .catch(function (err) { toast(err.message, true); });
       return;
     }
