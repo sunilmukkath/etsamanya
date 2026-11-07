@@ -482,15 +482,47 @@ ul {
 }
 
 .hero-copy h1 {
-  font-size: clamp(2.8rem, 5.6vw, 5rem);
-  max-width: 16ch;
+  font-size: clamp(2.6rem, 5.2vw, 4.6rem);
+  max-width: 14ch;
   line-height: 1.05;
-  margin: var(--space-sm) 0 var(--space-md);
+  margin: 0 0 var(--space-md);
 }
 
 .hero-copy h1 em {
   font-style: italic;
   color: var(--saffron);
+}
+
+.hero-quote {
+  max-width: 28ch;
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 2.2vw, 1.85rem);
+  font-style: italic;
+  font-weight: 500;
+  line-height: 1.35;
+  color: var(--leaf-deep);
+}
+
+.hero-copy .kicker {
+  margin-top: var(--space-lg);
+}
+
+.hero-story {
+  max-width: 42rem;
+  margin-top: var(--space-md);
+}
+
+.hero-story p {
+  margin: 0 0 var(--space-md);
+  color: var(--ink);
+}
+
+.hero-sign {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--leaf-deep);
+  margin-bottom: 0;
 }
 
 .hero-actions {
